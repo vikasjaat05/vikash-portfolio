@@ -87,9 +87,9 @@ export default function Hero() {
         autoAngle += 0.025;
         // Smooth figure-8 loop over the model's face / head area
         const centerX = w * 0.5;
-        const centerY = h * 0.30;
-        const radiusX = w * 0.28;
-        const radiusY = h * 0.12;
+        const centerY = h * 0.35;
+        const radiusX = w * 0.30;
+        const radiusY = h * 0.15;
 
         const targetX = centerX + Math.sin(autoAngle) * radiusX;
         const targetY = centerY + Math.sin(autoAngle * 2) * radiusY;
@@ -107,7 +107,7 @@ export default function Hero() {
         smooth.y += (mouse.y - smooth.y) * 0.1;
       }
 
-      const radius = Math.round(Math.min(440, Math.max(150, w * (isMobile ? 0.38 : 0.16))));
+      const radius = Math.round(Math.min(440, Math.max(150, w * (isMobile ? 0.40 : 0.16))));
 
       // GPU hardware-accelerated CSS radial mask
       if (revealLayerRef.current && smooth.x > -500) {
@@ -150,28 +150,25 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative min-h-[95vh] sm:min-h-screen flex flex-col justify-between pt-20 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer"
+      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-between pt-24 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer"
     >
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* 1. Dual-Image Interactive Spotlight Reveal Background */}
+      {/* 1. Dual-Image Interactive Spotlight Reveal Background (100% Unobstructed on Mobile) */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
         {/* Base Layer: Image 1 */}
         <div
-          className="absolute inset-0 bg-cover bg-[center_top] sm:bg-center bg-no-repeat opacity-100 will-change-transform"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
           style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
         />
 
         {/* Reveal Layer: Aligned Image 2 */}
         <div
           ref={revealLayerRef}
-          className="absolute inset-0 bg-cover bg-[center_top] sm:bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
           style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
         />
-
-        {/* Mobile Subtle Bottom Gradient to make lower text extra crisp */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/40 to-transparent md:bg-none pointer-events-none" />
 
         {/* Parallax SVG Grid */}
         <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
@@ -195,39 +192,39 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* 2. Typography Layout — Placed at the bottom on mobile (mt-auto) so the face animation is 100% visible, centered on desktop */}
+      {/* 2. Typography Layout — Hidden on Mobile (hidden md:block), 100% preserved on Desktop */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="max-w-[1400px] mx-auto w-full relative z-10 mt-auto md:my-auto py-2 sm:py-4"
+        className="hidden md:block max-w-[1400px] mx-auto w-full relative z-10 my-auto py-4"
       >
-        <div className="max-w-md sm:max-w-lg bg-white/85 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 sm:p-5 md:p-0 rounded-2xl border border-black/10 md:border-none shadow-xs md:shadow-none">
+        <div className="max-w-md sm:max-w-lg">
           {/* Top L-Corner Bracket */}
-          <div className="mb-2 text-black/60">
+          <div className="mb-3 text-black/60">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3 h-3">
               <path d="M0 11.5V0.5H11.5" />
             </svg>
           </div>
 
           {/* Micro Category Tag */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-black/10 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-black/80 mb-2 sm:mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/70 backdrop-blur-md border border-black/10 text-xs font-mono font-semibold uppercase tracking-widest text-black/70 mb-3">
             <Sparkles size={11} className="text-red" />
             <span>Web &amp; Shopify Developer</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-display font-bold leading-[1.12] tracking-tight text-xl sm:text-3xl md:text-4xl text-black">
+          <h1 className="font-display font-bold leading-[1.12] tracking-tight text-3xl md:text-4xl text-black">
             Crafting high-speed web apps &amp; Shopify storefronts.
           </h1>
 
           {/* Bottom L-Corner Bracket */}
-          <div className="mt-2 mb-2 text-black/60">
+          <div className="mt-3 mb-3 text-black/60">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3 h-3">
               <path d="M0 0.5V11.5H11.5" />
             </svg>
           </div>
 
           {/* Subtext */}
-          <p className="text-xs sm:text-sm text-black/80 leading-relaxed max-w-sm sm:max-w-md font-normal">
+          <p className="text-sm text-black/75 leading-relaxed max-w-md font-normal bg-white/30 backdrop-blur-xs p-1.5 rounded-lg">
             Hi, I&apos;m <strong className="text-black font-semibold">Vikash Choudhary</strong>. I help modern brands scale with lightning-fast e-commerce stores, custom Next.js web applications, and precision UI engineering &mdash; built for speed, designed to convert.
           </p>
 
@@ -236,13 +233,13 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: START + 0.3, duration: 0.5 }}
-            className="mt-4 sm:mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3"
+            className="mt-6 flex flex-wrap items-center gap-3"
           >
             <Magnetic>
               <Link
                 href="/contact"
                 data-cursor-hover
-                className="group inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white font-semibold text-xs px-4 sm:px-5 py-2.5 rounded-full hover:bg-red transition-colors duration-300 shadow-sm"
+                className="group inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-red transition-colors duration-300 shadow-sm"
               >
                 <span>Start a Project</span>
                 <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300" />
@@ -252,7 +249,7 @@ export default function Hero() {
             <Link
               href="/work"
               data-cursor-hover
-              className="inline-flex items-center gap-1.5 border border-black/15 bg-white/90 backdrop-blur-md text-black px-4 py-2.5 rounded-full text-xs font-semibold hover:border-black transition-colors"
+              className="inline-flex items-center gap-1.5 border border-black/15 bg-white/80 backdrop-blur-md text-black px-4 py-2.5 rounded-full text-xs font-semibold hover:border-black transition-colors"
             >
               <span>Explore Work (14)</span>
             </Link>
@@ -261,7 +258,7 @@ export default function Hero() {
       </motion.div>
 
       {/* 3. Infinite Marquee Ticker */}
-      <div className="relative mt-2 sm:mt-4 border-t border-b border-black/10 py-2 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">
+      <div className="relative mt-auto border-t border-b border-black/10 py-2.5 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...WORDS, ...WORDS, ...WORDS].map((w, i) => (
             <span
