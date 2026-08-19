@@ -24,6 +24,8 @@ export default function Hero() {
   const mouseRef = useRef({ x: -1000, y: -1000 });
   const smoothRef = useRef({ x: -1000, y: -1000 });
   const gridOffsetRef = useRef({ x: 0, y: 0 });
+  const isTouchActiveRef = useRef(false);
+  const touchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -36,8 +38,10 @@ export default function Hero() {
   useEffect(() => {
     let animId: number;
     let isRunning = true;
+    let autoAngle = 0;
 
     const handleMouseMove = (e: MouseEvent) => {
+      isTouchActiveRef.current = false;
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
       if (smoothRef.current.x < -500) {
@@ -46,33 +50,64 @@ export default function Hero() {
       }
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
+    const handleTouch = (e: TouchEvent) => {
       if (e.touches.length > 0) {
+        isTouchActiveRef.current = true;
         mouseRef.current.x = e.touches[0].clientX;
         mouseRef.current.y = e.touches[0].clientY;
         if (smoothRef.current.x < -500) {
           smoothRef.current.x = e.touches[0].clientX;
           smoothRef.current.y = e.touches[0].clientY;
         }
+
+        // Reset auto animation resume timer
+        if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
+        touchTimeoutRef.current = setTimeout(() => {
+          isTouchActiveRef.current = false;
+        }, 2500);
       }
     };
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("touchstart", handleTouchMove, { passive: true });
-    window.addEventListener("touchmove", handleTouchMove, { passive: true });
+    window.addEventListener("touchstart", handleTouch, { passive: true });
+    window.addEventListener("touchmove", handleTouch, { passive: true });
 
     const render = () => {
       if (!isRunning) return;
 
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const isMobile = w < 1024;
+
       const mouse = mouseRef.current;
       const smooth = smoothRef.current;
 
-      smooth.x += (mouse.x - smooth.x) * 0.1;
-      smooth.y += (mouse.y - smooth.y) * 0.1;
+      // On mobile / touch devices when not actively dragging: Auto-loop the reveal animation
+      if (isMobile && !isTouchActiveRef.current) {
+        autoAngle += 0.025;
+        // Smooth figure-8 loop over the model's face / head area
+        const centerX = w * 0.5;
+        const centerY = h * 0.30;
+        const radiusX = w * 0.28;
+        const radiusY = h * 0.12;
 
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      const radius = Math.round(Math.min(440, Math.max(140, w * (w < 768 ? 0.35 : 0.16))));
+        const targetX = centerX + Math.sin(autoAngle) * radiusX;
+        const targetY = centerY + Math.sin(autoAngle * 2) * radiusY;
+
+        if (smooth.x < -500) {
+          smooth.x = targetX;
+          smooth.y = targetY;
+        } else {
+          smooth.x += (targetX - smooth.x) * 0.08;
+          smooth.y += (targetY - smooth.y) * 0.08;
+        }
+      } else {
+        // Desktop / active touch: Smoothly follow cursor
+        smooth.x += (mouse.x - smooth.x) * 0.1;
+        smooth.y += (mouse.y - smooth.y) * 0.1;
+      }
+
+      const radius = Math.round(Math.min(440, Math.max(150, w * (isMobile ? 0.38 : 0.16))));
 
       // GPU hardware-accelerated CSS radial mask
       if (revealLayerRef.current && smooth.x > -500) {
@@ -104,9 +139,10 @@ export default function Hero() {
     return () => {
       isRunning = false;
       cancelAnimationFrame(animId);
+      if (touchTimeoutRef.current) clearTimeout(touchTimeoutRef.current);
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("touchstart", handleTouchMove);
-      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("touchstart", handleTouch);
+      window.removeEventListener("touchmove", handleTouch);
     };
   }, []);
 
@@ -114,28 +150,28 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-between pt-24 sm:pt-28 pb-6 sm:pb-8 px-5 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer"
+      className="relative min-h-[95vh] sm:min-h-screen flex flex-col justify-between pt-20 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer"
     >
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* 1. Dual-Image Interactive Spotlight Reveal Background (Mobile + Desktop Visible) */}
+      {/* 1. Dual-Image Interactive Spotlight Reveal Background */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
         {/* Base Layer: Image 1 */}
         <div
-          className="absolute inset-0 bg-cover bg-center sm:bg-center bg-no-repeat opacity-100 will-change-transform"
+          className="absolute inset-0 bg-cover bg-[center_top] sm:bg-center bg-no-repeat opacity-100 will-change-transform"
           style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
         />
 
         {/* Reveal Layer: Aligned Image 2 */}
         <div
           ref={revealLayerRef}
-          className="absolute inset-0 bg-cover bg-center sm:bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
+          className="absolute inset-0 bg-cover bg-[center_top] sm:bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
           style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
         />
 
-        {/* Mobile Subtle Readability Gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/90 via-white/60 to-transparent md:from-white/50 md:via-transparent md:to-transparent pointer-events-none" />
+        {/* Mobile Subtle Bottom Gradient to make lower text extra crisp */}
+        <div className="absolute inset-0 bg-gradient-to-t from-white/95 via-white/40 to-transparent md:bg-none pointer-events-none" />
 
         {/* Parallax SVG Grid */}
         <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
@@ -159,12 +195,12 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* 2. Refined Typography Layout */}
+      {/* 2. Typography Layout — Placed at the bottom on mobile (mt-auto) so the face animation is 100% visible, centered on desktop */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="max-w-[1400px] mx-auto w-full relative z-10 my-auto py-2 sm:py-4"
+        className="max-w-[1400px] mx-auto w-full relative z-10 mt-auto md:my-auto py-2 sm:py-4"
       >
-        <div className="max-w-md sm:max-w-lg bg-white/70 md:bg-transparent backdrop-blur-xs md:backdrop-blur-none p-4 sm:p-6 md:p-0 rounded-2xl border border-black/5 md:border-none shadow-xs md:shadow-none">
+        <div className="max-w-md sm:max-w-lg bg-white/85 md:bg-transparent backdrop-blur-md md:backdrop-blur-none p-4 sm:p-5 md:p-0 rounded-2xl border border-black/10 md:border-none shadow-xs md:shadow-none">
           {/* Top L-Corner Bracket */}
           <div className="mb-2 text-black/60">
             <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-3 h-3">
@@ -173,13 +209,13 @@ export default function Hero() {
           </div>
 
           {/* Micro Category Tag */}
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/80 backdrop-blur-md border border-black/10 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-black/80 mb-3">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/90 backdrop-blur-md border border-black/10 text-[10px] sm:text-xs font-mono font-semibold uppercase tracking-widest text-black/80 mb-2 sm:mb-3">
             <Sparkles size={11} className="text-red" />
             <span>Web &amp; Shopify Developer</span>
           </div>
 
           {/* Headline */}
-          <h1 className="font-display font-bold leading-[1.12] tracking-tight text-2xl sm:text-3xl md:text-4xl text-black">
+          <h1 className="font-display font-bold leading-[1.12] tracking-tight text-xl sm:text-3xl md:text-4xl text-black">
             Crafting high-speed web apps &amp; Shopify storefronts.
           </h1>
 
@@ -200,13 +236,13 @@ export default function Hero() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: START + 0.3, duration: 0.5 }}
-            className="mt-5 flex flex-wrap items-center gap-3"
+            className="mt-4 sm:mt-5 flex flex-wrap items-center gap-2.5 sm:gap-3"
           >
             <Magnetic>
               <Link
                 href="/contact"
                 data-cursor-hover
-                className="group inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-red transition-colors duration-300 shadow-sm"
+                className="group inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white font-semibold text-xs px-4 sm:px-5 py-2.5 rounded-full hover:bg-red transition-colors duration-300 shadow-sm"
               >
                 <span>Start a Project</span>
                 <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300" />
@@ -225,12 +261,12 @@ export default function Hero() {
       </motion.div>
 
       {/* 3. Infinite Marquee Ticker */}
-      <div className="relative mt-3 sm:mt-4 border-t border-b border-black/10 py-2.5 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">
+      <div className="relative mt-2 sm:mt-4 border-t border-b border-black/10 py-2 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">
         <div className="flex whitespace-nowrap animate-marquee">
           {[...WORDS, ...WORDS, ...WORDS].map((w, i) => (
             <span
               key={i}
-              className="font-display text-lg sm:text-2xl font-bold px-4 sm:px-6 flex items-center gap-3 sm:gap-4 text-black/25"
+              className="font-display text-base sm:text-2xl font-bold px-3 sm:px-6 flex items-center gap-2 sm:gap-4 text-black/25"
             >
               {w} <span className="w-1.5 h-1.5 rounded-full bg-red inline-block" />
             </span>
