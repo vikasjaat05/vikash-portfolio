@@ -1,0 +1,102 @@
+.root {
+  --p-bg: 0 0% 4%;
+  --p-surface: 0 0% 8%;
+  --p-text: 0 0% 96%;
+  --p-muted: 0 0% 53%;
+  --p-stroke: 0 0% 12%;
+
+  background: hsl(var(--p-bg));
+  color: hsl(var(--p-text));
+  font-family: var(--font-inter), Inter, sans-serif;
+  position: relative;
+  isolation: isolate;
+}
+
+.root :global(.font-display) {
+  font-family: var(--font-instrument-serif), "Instrument Serif", serif;
+}
+
+.accentGradient {
+  background-image: linear-gradient(90deg, #89aacc 0%, #4e85bf 100%);
+}
+
+.accentGradientAnimated {
+  background-image: linear-gradient(
+    90deg,
+    #89aacc 0%,
+    #4e85bf 50%,
+    #89aacc 100%
+  );
+  background-size: 200% 100%;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes scrollDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(200%);
+  }
+}
+.scrollDown {
+  animation: scrollDown 1.5s ease-in-out infinite;
+}
+
+@keyframes roleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.roleFadeIn {
+  animation: roleFadeIn 0.4s ease-out;
+}
+
+.bgSurface {
+  background: hsl(var(--p-surface));
+}
+.bgStroke {
+  background: hsl(var(--p-stroke));
+}
+.borderStroke {
+  border-color: hsl(var(--p-stroke));
+}
+.textMuted {
+  color: hsl(var(--p-muted));
+}
+.textPrimary {
+  color: hsl(var(--p-text));
+}
+.bgPrimary {
+  background: hsl(var(--p-text));
+}
+
+.navLink {
+  color: hsl(var(--p-muted));
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+.navLink:hover {
+  color: hsl(var(--p-text));
+  background: hsl(var(--p-stroke) / 0.5);
+}
+.navLinkActive {
+  color: hsl(var(--p-text));
+  background: hsl(var(--p-stroke) / 0.5);
+}

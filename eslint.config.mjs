@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Separate sibling project with its own tooling (oxlint) — not part of the Next.js app.
+    "synapsex/**",
   ]),
 ]);
 

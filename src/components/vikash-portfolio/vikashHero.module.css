@@ -1,0 +1,157 @@
+.hero {
+  --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navLink {
+  position: relative;
+  display: inline-flex;
+  gap: 4px;
+  color: rgba(255, 255, 255, 0.85);
+  transition: color 0.3s ease;
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s var(--ease-spring);
+}
+
+.navLink:hover {
+  color: #fff;
+}
+
+.navLink:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.mobilePanel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 420ms var(--ease-spring);
+}
+
+.mobilePanelOpen {
+  grid-template-rows: 1fr;
+}
+
+.roleLink {
+  transition: transform 0.3s var(--ease-spring), opacity 0.3s ease;
+}
+
+.roleLink:hover {
+  transform: translateX(4px);
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  animation: dotPulse 1.6s ease-in-out infinite;
+}
+
+.reveal {
+  opacity: 0;
+}
+
+.revealUp {
+  transform: translateY(80px);
+  transition: opacity 0.9s var(--ease-spring), transform 0.9s var(--ease-spring);
+}
+
+.revealRight {
+  transform: translateX(100px);
+  transition: opacity 0.9s var(--ease-spring), transform 0.9s var(--ease-spring);
+}
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translate(0, 0);
+}
+
+.startButton {
+  position: relative;
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  padding: 14px 28px;
+  color: #fff;
+  transition: color 0.4s ease, border-color 0.4s ease;
+}
+
+.startButtonLabel {
+  position: relative;
+  z-index: 1;
+  font-size: 14px;
+  font-weight: 500;
+  text-transform: lowercase;
+  letter-spacing: -0.14px;
+}
+
+.startButton::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #f598f2;
+  transform: translateY(101%);
+  transition: transform 0.5s var(--ease-spring);
+  z-index: 0;
+}
+
+.startButton:hover {
+  color: #000;
+  border-color: #f598f2;
+}
+
+.startButton:hover::before {
+  transform: translateY(0);
+}
+
+@keyframes videoFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dotPulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(1.45);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .dot {
+    animation: none;
+  }
+
+  .mobilePanel,
+  .navLink::after,
+  .roleLink,
+  .startButton,
+  .startButton::before {
+    transition: none !important;
+  }
+}
