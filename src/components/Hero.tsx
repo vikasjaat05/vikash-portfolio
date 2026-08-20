@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Sparkles, Wand2, Eye } from "lucide-react";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { ArrowUpRight, Sparkles, Wand2, Eye, Zap, Flame } from "lucide-react";
 import Link from "next/link";
 import Magnetic from "./Magnetic";
 import { useBackgroundAudio } from "./BackgroundAudioContext";
@@ -25,6 +25,7 @@ export default function Hero() {
 
   // State to toggle between Static Mode & Creative Animation Mode
   const [isCreativeMode, setIsCreativeMode] = useState(false);
+  const [isSwitching, setIsSwitching] = useState(false);
 
   const { playing, toggle, trackTitle } = useBackgroundAudio();
 
@@ -41,6 +42,14 @@ export default function Hero() {
 
   const contentY = useTransform(scrollYProgress, [0, 1], [0, 60]);
   const contentOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  // Handle Mode Toggle with Animation Pulse
+  const handleToggleMode = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSwitching(true);
+    setIsCreativeMode((prev) => !prev);
+    setTimeout(() => setIsSwitching(false), 600);
+  };
 
   useEffect(() => {
     let animId: number;
@@ -155,88 +164,149 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-between pt-24 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer"
+      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-between pt-24 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer select-none"
     >
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* Mode Switch Button (Toggle between Static Image & Creative Reveal Animation) */}
+      {/* Mode Switch Button (Luxury Glowing Morphing Capsule) */}
       <div className="absolute top-20 right-4 sm:top-24 sm:right-8 lg:top-28 lg:right-12 z-30 pointer-events-auto">
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsCreativeMode((prev) => !prev);
-          }}
-          data-cursor-hover
-          className={`group flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 shadow-md backdrop-blur-md border ${
-            isCreativeMode
-              ? "bg-[#0a0a0a] text-white border-red/40 hover:bg-red hover:border-red"
-              : "bg-white/90 text-black border-black/15 hover:bg-black hover:text-white hover:border-black"
-          }`}
-          title={isCreativeMode ? "Switch to Normal Mode" : "Switch to Creative Animation Mode"}
+        <Magnetic>
+          <button
+            type="button"
+            onClick={handleToggleMode}
+            data-cursor-hover
+            className="relative group p-[2px] rounded-full overflow-hidden transition-transform duration-300 active:scale-95 shadow-lg hover:shadow-xl focus:outline-none"
+          >
+            {/* Animated Rotating Gradient Glow Ring */}
+            <span className="absolute inset-0 bg-gradient-to-r from-red via-black to-red opacity-80 group-hover:opacity-100 animate-spin [animation-duration:4s] rounded-full" />
+
+            {/* Inner Pill Container */}
+            <div
+              className={`relative flex items-center gap-2.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full backdrop-blur-xl transition-all duration-500 ${
+                isCreativeMode
+                  ? "bg-[#0a0a0a] text-white shadow-[0_0_20px_rgba(225,6,0,0.35)]"
+                  : "bg-white/95 text-black hover:bg-white"
+              }`}
+            >
+              {/* Animated Switch Pill Icon with Spring Rotation */}
+              <motion.div
+                key={isCreativeMode ? "creative-icon" : "normal-icon"}
+                initial={{ scale: 0.5, rotate: -45, opacity: 0 }}
+                animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                exit={{ scale: 0.5, rotate: 45, opacity: 0 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                className="flex items-center justify-center"
+              >
+                {isCreativeMode ? (
+                  <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-red text-white shadow-xs">
+                    <Eye size={12} />
+                    <span className="absolute inset-0 rounded-full bg-red animate-ping opacity-50" />
+                  </span>
+                ) : (
+                  <span className="relative flex items-center justify-center w-5 h-5 rounded-full bg-red/10 text-red">
+                    <Wand2 size={12} className="animate-bounce [animation-duration:2s]" />
+                  </span>
+                )}
+              </motion.div>
+
+              {/* Animated Label Text */}
+              <div className="relative overflow-hidden font-display text-xs sm:text-sm font-bold tracking-tight">
+                <AnimatePresence mode="wait">
+                  {isCreativeMode ? (
+                    <motion.span
+                      key="label-normal"
+                      initial={{ y: 15, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -15, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="flex items-center gap-1 text-white"
+                    >
+                      Normal Mode
+                    </motion.span>
+                  ) : (
+                    <motion.span
+                      key="label-creative"
+                      initial={{ y: 15, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -15, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeOut" }}
+                      className="flex items-center gap-1 text-black"
+                    >
+                      Make Creative <Sparkles size={12} className="text-red animate-pulse" />
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              {/* Status Indicator Dot */}
+              <span
+                className={`w-2 h-2 rounded-full transition-colors duration-300 ${
+                  isCreativeMode ? "bg-red animate-pulse" : "bg-black/25"
+                }`}
+              />
+            </div>
+          </button>
+        </Magnetic>
+      </div>
+
+      {/* 1. Hero Background Layers with Smooth Fade & Scale Transition */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={isCreativeMode ? "creative-bg-mode" : "static-bg-mode"}
+          initial={{ opacity: 0, scale: 1.03 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 0.55, ease: [0.25, 1, 0.5, 1] }}
+          className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu"
+          aria-hidden="true"
         >
           {isCreativeMode ? (
+            /* Creative Mode: Dual-Image Spotlight Reveal Background */
             <>
-              <Eye size={14} className="text-red group-hover:text-white transition-colors" />
-              <span>Normal</span>
+              {/* Base Layer: Image 1 */}
+              <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
+                style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
+              />
+
+              {/* Reveal Layer: Aligned Image 2 */}
+              <div
+                ref={revealLayerRef}
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
+                style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
+              />
             </>
           ) : (
-            <>
-              <Wand2 size={14} className="text-red group-hover:text-white animate-pulse" />
-              <span>Make Creative</span>
-            </>
-          )}
-        </button>
-      </div>
-
-      {/* 1. Hero Background Layers */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
-        {isCreativeMode ? (
-          /* Creative Mode: Dual-Image Spotlight Reveal Background */
-          <>
-            {/* Base Layer: Image 1 */}
+            /* Normal Mode: Clean Single Static Image */
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
-              style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
+              style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
             />
+          )}
 
-            {/* Reveal Layer: Aligned Image 2 */}
-            <div
-              ref={revealLayerRef}
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
-              style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
-            />
-          </>
-        ) : (
-          /* Normal Mode: Clean Single Static Image */
-          <div
-            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform transition-opacity duration-500"
-            style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
-          />
-        )}
-
-        {/* Parallax SVG Grid */}
-        <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
-          <defs>
-            <pattern
-              id="hero-grid"
-              ref={patternRef}
-              width="48"
-              height="48"
-              patternUnits="userSpaceOnUse"
-            >
-              <path
-                d="M 48 0 L 0 0 0 48"
-                fill="none"
-                stroke="#64748b"
-                strokeWidth="0.6"
-              />
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#hero-grid)" />
-        </svg>
-      </div>
+          {/* Parallax SVG Grid */}
+          <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
+            <defs>
+              <pattern
+                id="hero-grid"
+                ref={patternRef}
+                width="48"
+                height="48"
+                patternUnits="userSpaceOnUse"
+              >
+                <path
+                  d="M 48 0 L 0 0 0 48"
+                  fill="none"
+                  stroke="#64748b"
+                  strokeWidth="0.6"
+                />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-grid)" />
+          </svg>
+        </motion.div>
+      </AnimatePresence>
 
       {/* 2. Typography Layout — Preserved on Desktop */}
       <motion.div
