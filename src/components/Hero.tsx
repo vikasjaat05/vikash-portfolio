@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { ArrowUpRight, Sparkles } from "lucide-react";
+import { ArrowUpRight, Sparkles, Wand2, Eye } from "lucide-react";
 import Link from "next/link";
 import Magnetic from "./Magnetic";
 import { useBackgroundAudio } from "./BackgroundAudioContext";
@@ -11,10 +11,9 @@ import MusicCursorToggle from "./MusicCursorToggle";
 // Static Hero Background Image requested by user
 const HERO_STATIC_BG = "https://res.cloudinary.com/dh0amtajw/image/upload/v1787203179/ChatGPT_Image_Aug_20_2026_10_49_32_AM_rmnxml.png";
 
-// Preserved Dual-Image Reveal Assets (Hidden, NOT removed)
+// Creative Dual-Image Reveal Assets
 const BG_IMAGE_1 = "/images/model_1.png";
 const BG_IMAGE_2 = "/images/model_aligned_2.png";
-const ENABLE_DUAL_REVEAL_ANIMATION = false; // Set to true to re-enable interactive spotlight animation
 
 const WORDS = ["Shopify Plus", "Next.js Web Apps", "AI Prompting", "Speed Optimization", "Liquid Themes", "UI/UX Engineering"];
 const START = 0.6;
@@ -23,6 +22,9 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const revealLayerRef = useRef<HTMLDivElement>(null);
   const patternRef = useRef<SVGPatternElement>(null);
+
+  // State to toggle between Static Mode & Creative Animation Mode
+  const [isCreativeMode, setIsCreativeMode] = useState(false);
 
   const { playing, toggle, trackTitle } = useBackgroundAudio();
 
@@ -87,7 +89,7 @@ export default function Hero() {
       const mouse = mouseRef.current;
       const smooth = smoothRef.current;
 
-      if (ENABLE_DUAL_REVEAL_ANIMATION) {
+      if (isCreativeMode) {
         // On mobile / touch devices when not actively dragging: Auto-loop the reveal animation
         if (isMobile && !isTouchActiveRef.current) {
           autoAngle += 0.025;
@@ -147,7 +149,7 @@ export default function Hero() {
       window.removeEventListener("touchstart", handleTouch);
       window.removeEventListener("touchmove", handleTouch);
     };
-  }, []);
+  }, [isCreativeMode]);
 
   return (
     <section
@@ -158,27 +160,60 @@ export default function Hero() {
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* 1. Hero Background (Active Single Image) */}
-      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
-        {/* Active Hero Image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
-          style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
-        />
+      {/* Mode Switch Button (Toggle between Static Image & Creative Reveal Animation) */}
+      <div className="absolute top-20 right-4 sm:top-24 sm:right-8 lg:top-28 lg:right-12 z-30 pointer-events-auto">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsCreativeMode((prev) => !prev);
+          }}
+          data-cursor-hover
+          className={`group flex items-center gap-2 px-4 py-2 sm:px-5 sm:py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 shadow-md backdrop-blur-md border ${
+            isCreativeMode
+              ? "bg-[#0a0a0a] text-white border-red/40 hover:bg-red hover:border-red"
+              : "bg-white/90 text-black border-black/15 hover:bg-black hover:text-white hover:border-black"
+          }`}
+          title={isCreativeMode ? "Switch to Normal Mode" : "Switch to Creative Animation Mode"}
+        >
+          {isCreativeMode ? (
+            <>
+              <Eye size={14} className="text-red group-hover:text-white transition-colors" />
+              <span>Normal</span>
+            </>
+          ) : (
+            <>
+              <Wand2 size={14} className="text-red group-hover:text-white animate-pulse" />
+              <span>Make Creative</span>
+            </>
+          )}
+        </button>
+      </div>
 
-        {/* Preserved Dual-Image Reveal Animation (Kept in code, currently hidden) */}
-        {ENABLE_DUAL_REVEAL_ANIMATION && (
+      {/* 1. Hero Background Layers */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
+        {isCreativeMode ? (
+          /* Creative Mode: Dual-Image Spotlight Reveal Background */
           <>
+            {/* Base Layer: Image 1 */}
             <div
               className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
               style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
             />
+
+            {/* Reveal Layer: Aligned Image 2 */}
             <div
               ref={revealLayerRef}
               className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
               style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
             />
           </>
+        ) : (
+          /* Normal Mode: Clean Single Static Image */
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform transition-opacity duration-500"
+            style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
+          />
         )}
 
         {/* Parallax SVG Grid */}
