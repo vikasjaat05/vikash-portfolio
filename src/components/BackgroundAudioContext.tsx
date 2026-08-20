@@ -15,7 +15,7 @@ let globalAudio: HTMLAudioElement | null = null;
 
 function getOrCreateGlobalAudio(): HTMLAudioElement {
   if (!globalAudio && typeof window !== "undefined") {
-    globalAudio = new Audio("/audio/hero_track.mp3");
+    globalAudio = new Audio("/audio/dancin.mp3");
     globalAudio.loop = true;
     globalAudio.volume = 0.65;
     globalAudio.preload = "auto";
@@ -31,7 +31,7 @@ export function BackgroundAudioProvider({ children }: { children: ReactNode }) {
     return false;
   });
 
-  const trackTitle = "Happy Nation — Ace of Base";
+  const trackTitle = "Aaron Smith — Dancin (KRONO Remix)";
 
   useEffect(() => {
     const audio = getOrCreateGlobalAudio();
