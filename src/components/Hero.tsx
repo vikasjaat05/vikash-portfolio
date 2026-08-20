@@ -8,8 +8,13 @@ import Magnetic from "./Magnetic";
 import { useBackgroundAudio } from "./BackgroundAudioContext";
 import MusicCursorToggle from "./MusicCursorToggle";
 
+// Static Hero Background Image requested by user
+const HERO_STATIC_BG = "https://res.cloudinary.com/dh0amtajw/image/upload/v1787203179/ChatGPT_Image_Aug_20_2026_10_49_32_AM_rmnxml.png";
+
+// Preserved Dual-Image Reveal Assets (Hidden, NOT removed)
 const BG_IMAGE_1 = "/images/model_1.png";
 const BG_IMAGE_2 = "/images/model_aligned_2.png";
+const ENABLE_DUAL_REVEAL_ANIMATION = false; // Set to true to re-enable interactive spotlight animation
 
 const WORDS = ["Shopify Plus", "Next.js Web Apps", "AI Prompting", "Speed Optimization", "Liquid Themes", "UI/UX Engineering"];
 const START = 0.6;
@@ -82,47 +87,45 @@ export default function Hero() {
       const mouse = mouseRef.current;
       const smooth = smoothRef.current;
 
-      // On mobile / touch devices when not actively dragging: Auto-loop the reveal animation
-      if (isMobile && !isTouchActiveRef.current) {
-        autoAngle += 0.025;
-        // Smooth figure-8 loop over the model's face / head area
-        const centerX = w * 0.5;
-        const centerY = h * 0.35;
-        const radiusX = w * 0.30;
-        const radiusY = h * 0.15;
+      if (ENABLE_DUAL_REVEAL_ANIMATION) {
+        // On mobile / touch devices when not actively dragging: Auto-loop the reveal animation
+        if (isMobile && !isTouchActiveRef.current) {
+          autoAngle += 0.025;
+          const centerX = w * 0.5;
+          const centerY = h * 0.35;
+          const radiusX = w * 0.30;
+          const radiusY = h * 0.15;
 
-        const targetX = centerX + Math.sin(autoAngle) * radiusX;
-        const targetY = centerY + Math.sin(autoAngle * 2) * radiusY;
+          const targetX = centerX + Math.sin(autoAngle) * radiusX;
+          const targetY = centerY + Math.sin(autoAngle * 2) * radiusY;
 
-        if (smooth.x < -500) {
-          smooth.x = targetX;
-          smooth.y = targetY;
+          if (smooth.x < -500) {
+            smooth.x = targetX;
+            smooth.y = targetY;
+          } else {
+            smooth.x += (targetX - smooth.x) * 0.08;
+            smooth.y += (targetY - smooth.y) * 0.08;
+          }
         } else {
-          smooth.x += (targetX - smooth.x) * 0.08;
-          smooth.y += (targetY - smooth.y) * 0.08;
+          // Desktop / active touch: Smoothly follow cursor
+          smooth.x += (mouse.x - smooth.x) * 0.1;
+          smooth.y += (mouse.y - smooth.y) * 0.1;
         }
-      } else {
-        // Desktop / active touch: Smoothly follow cursor
-        smooth.x += (mouse.x - smooth.x) * 0.1;
-        smooth.y += (mouse.y - smooth.y) * 0.1;
-      }
 
-      const radius = Math.round(Math.min(440, Math.max(150, w * (isMobile ? 0.40 : 0.16))));
+        const radius = Math.round(Math.min(440, Math.max(150, w * (isMobile ? 0.40 : 0.16))));
 
-      // GPU hardware-accelerated CSS radial mask
-      if (revealLayerRef.current && smooth.x > -500) {
-        const maskGradient = `radial-gradient(circle ${radius}px at ${smooth.x.toFixed(1)}px ${smooth.y.toFixed(1)}px, #000 0%, #000 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.5) 72%, rgba(0,0,0,0.18) 88%, transparent 100%)`;
-        revealLayerRef.current.style.maskImage = maskGradient;
-        revealLayerRef.current.style.webkitMaskImage = maskGradient;
+        // GPU hardware-accelerated CSS radial mask
+        if (revealLayerRef.current && smooth.x > -500) {
+          const maskGradient = `radial-gradient(circle ${radius}px at ${smooth.x.toFixed(1)}px ${smooth.y.toFixed(1)}px, #000 0%, #000 35%, rgba(0,0,0,0.85) 55%, rgba(0,0,0,0.5) 72%, rgba(0,0,0,0.18) 88%, transparent 100%)`;
+          revealLayerRef.current.style.maskImage = maskGradient;
+          revealLayerRef.current.style.webkitMaskImage = maskGradient;
+        }
       }
 
       // Parallax Grid GPU ease
       if (patternRef.current && w > 0 && h > 0) {
-        const normX = smooth.x / w - 0.5;
-        const normY = smooth.y / h - 0.5;
-
-        const targetOffsetX = normX * 16;
-        const targetOffsetY = normY * 16;
+        const targetOffsetX = (smooth.x / w - 0.5) * 16;
+        const targetOffsetY = (smooth.y / h - 0.5) * 16;
 
         gridOffsetRef.current.x += (targetOffsetX - gridOffsetRef.current.x) * 0.06;
         gridOffsetRef.current.y += (targetOffsetY - gridOffsetRef.current.y) * 0.06;
@@ -155,20 +158,28 @@ export default function Hero() {
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* 1. Dual-Image Interactive Spotlight Reveal Background (100% Unobstructed on Mobile) */}
+      {/* 1. Hero Background (Active Single Image) */}
       <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden transform-gpu" aria-hidden="true">
-        {/* Base Layer: Image 1 */}
+        {/* Active Hero Image */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
-          style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
+          style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
         />
 
-        {/* Reveal Layer: Aligned Image 2 */}
-        <div
-          ref={revealLayerRef}
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
-          style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
-        />
+        {/* Preserved Dual-Image Reveal Animation (Kept in code, currently hidden) */}
+        {ENABLE_DUAL_REVEAL_ANIMATION && (
+          <>
+            <div
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
+              style={{ backgroundImage: `url(${BG_IMAGE_1})` }}
+            />
+            <div
+              ref={revealLayerRef}
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-[mask-image,transform]"
+              style={{ backgroundImage: `url(${BG_IMAGE_2})` }}
+            />
+          </>
+        )}
 
         {/* Parallax SVG Grid */}
         <svg className="absolute inset-0 w-full h-full opacity-10 pointer-events-none">
@@ -192,7 +203,7 @@ export default function Hero() {
         </svg>
       </div>
 
-      {/* 2. Typography Layout — Hidden on Mobile (hidden md:block), 100% preserved on Desktop */}
+      {/* 2. Typography Layout — Preserved on Desktop */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
         className="hidden md:block max-w-[1400px] mx-auto w-full relative z-10 my-auto py-4"
