@@ -38,6 +38,9 @@ export const metadata: Metadata = {
   title: "Vikash Choudhary — Web & Shopify Developer",
   description:
     "Portfolio of Vikash Choudhary, a Web & Shopify Developer crafting high-impact websites, e-commerce storefronts, and web applications.",
+  verification: {
+    google: "U5huw9R97lwtTJD3vxKt68aYrJFGC123qT8b8DGsg4M",
+  },
 };
 
 export const viewport: Viewport = {
@@ -55,6 +58,7 @@ export default function RootLayout({
       className={`${outfit.variable} ${syne.variable} ${instrumentSerif.variable} ${kanit.variable} ${inter.variable} h-full antialiased`}
     >
       <head>
+        <meta name="google-site-verification" content="U5huw9R97lwtTJD3vxKt68aYrJFGC123qT8b8DGsg4M" />
         <link
           href="https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11"
           rel="stylesheet"
