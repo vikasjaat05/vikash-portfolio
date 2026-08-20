@@ -8,8 +8,9 @@ import Magnetic from "./Magnetic";
 import { useBackgroundAudio } from "./BackgroundAudioContext";
 import MusicCursorToggle from "./MusicCursorToggle";
 
-// Static Hero Background Image requested by user
-const HERO_STATIC_BG = "https://res.cloudinary.com/dh0amtajw/image/upload/v1787203179/ChatGPT_Image_Aug_20_2026_10_49_32_AM_rmnxml.png";
+// Static Hero Background Images
+const HERO_STATIC_BG_DESKTOP = "https://res.cloudinary.com/dh0amtajw/image/upload/v1787203179/ChatGPT_Image_Aug_20_2026_10_49_32_AM_rmnxml.png";
+const HERO_STATIC_BG_MOBILE = "https://res.cloudinary.com/dh0amtajw/image/upload/v1787203925/ChatGPT_Image_Aug_20_2026_11_01_59_AM_jmwr2y.png";
 
 // Creative Dual-Image Reveal Assets
 const BG_IMAGE_1 = "/images/model_1.png";
@@ -278,11 +279,20 @@ export default function Hero() {
               />
             </>
           ) : (
-            /* Normal Mode: Clean Single Static Image */
-            <div
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
-              style={{ backgroundImage: `url(${HERO_STATIC_BG})` }}
-            />
+            /* Normal Mode: Responsive Static Images */
+            <>
+              {/* Mobile View Background */}
+              <div
+                className="block md:hidden absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
+                style={{ backgroundImage: `url(${HERO_STATIC_BG_MOBILE})` }}
+              />
+
+              {/* Desktop View Background */}
+              <div
+                className="hidden md:block absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100 will-change-transform"
+                style={{ backgroundImage: `url(${HERO_STATIC_BG_DESKTOP})` }}
+              />
+            </>
           )}
 
           {/* Parallax SVG Grid */}
