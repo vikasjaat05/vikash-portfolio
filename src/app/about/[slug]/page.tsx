@@ -6,8 +6,6 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import PortfolioGrid from "@/components/PortfolioGrid";
-import MemberPortfolioGrid from "@/components/MemberPortfolioGrid";
-import CategorizedWorkSection from "@/components/CategorizedWorkSection";
 import FadeSection from "@/components/FadeSection";
 import SkillCard from "@/components/SkillCard";
 import Counter from "@/components/Counter";
@@ -15,14 +13,7 @@ import CTA from "@/components/CTA";
 import ResumeExperienceSection from "@/components/ResumeExperienceSection";
 import WorkspaceGear from "@/components/WorkspaceGear";
 import { getCategory } from "@/data/portfolio";
-import { getFounderForViewer, getAllFounderSlugs } from "@/lib/team-data";
-import { getPublishedProjects, getOwnerProjects, getMemberIdBySlug } from "@/lib/project-data";
-import { getMemberSession } from "@/lib/auth/member-session";
-import MemberEditGate from "@/components/MemberEditGate";
-
-// This page reads the visitor's session cookie to show a logged-in member
-// their own unpublished draft, so it can't be a static prerendered page.
-export const dynamic = "force-dynamic";
+import { getFounder, getAllFounderSlugs } from "@/lib/team-data";
 
 export async function generateStaticParams() {
   const slugs = await getAllFounderSlugs();
@@ -35,29 +26,14 @@ export default async function TeamMemberPage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const session = await getMemberSession();
-  const result = await getFounderForViewer(slug, session?.slug ?? null);
-  if (!result) notFound();
-  const { founder, hasDraft } = result;
-  const isOwner = session?.slug === slug;
-
-  const memberId = await getMemberIdBySlug(slug);
-  const supabaseProjects = memberId
-    ? await (isOwner ? getOwnerProjects(memberId) : getPublishedProjects(memberId))
-    : [];
+  const founder = await getFounder(slug);
+  if (!founder) notFound();
 
   const category = getCategory(founder.categorySlug);
-  const hasRealProjects = supabaseProjects.length > 0;
-  const hasCategorizedProjects = supabaseProjects.some((p) => p.category !== "general");
 
   return (
     <>
       <Navbar />
-      {hasDraft && (
-        <div className="relative z-20 bg-red text-white text-center text-sm font-semibold py-2.5 px-6">
-          You&apos;re previewing your unpublished draft — visitors see your last published version until you click Publish.
-        </div>
-      )}
       <main className="relative">
         {/* 1. Hero */}
         <PageHeader
@@ -210,7 +186,7 @@ export default async function TeamMemberPage({
         <WorkspaceGear />
 
         {/* 5. Work */}
-        {(hasRealProjects || category) && (
+        {category && category.items.length > 0 && (
           <section id="work" className="px-6 md:px-10 py-20 md:py-28">
             <div className="max-w-[1400px] mx-auto">
               <FadeSection>
@@ -221,26 +197,18 @@ export default async function TeamMemberPage({
                   </span>
                 </div>
                 <h2 className="font-display font-extrabold text-3xl md:text-5xl leading-[1.05] mb-14 md:mb-16 max-w-2xl">
-                  {category?.label ?? founder.focus} <span className="text-red">projects.</span>
+                  {category.label} <span className="text-red">projects.</span>
                 </h2>
               </FadeSection>
 
-              {hasCategorizedProjects ? (
-                <CategorizedWorkSection projects={supabaseProjects} memberSlug={slug} />
-              ) : (
-                <FadeSection>
-                  {hasRealProjects ? (
-                    <MemberPortfolioGrid items={supabaseProjects} memberSlug={slug} />
-                  ) : (
-                    category && <PortfolioGrid items={category.items} categorySlug={category.slug} />
-                  )}
-                </FadeSection>
-              )}
+              <FadeSection>
+                <PortfolioGrid items={category.items} categorySlug={category.slug} />
+              </FadeSection>
             </div>
           </section>
         )}
 
-        {/* 5. Stats */}
+        {/* 6. Stats */}
         <section id="stats" className="px-6 md:px-10 py-20 md:py-28 bg-[#f5f1ea]">
           <div className="max-w-[1400px] mx-auto">
             <FadeSection>
@@ -268,11 +236,10 @@ export default async function TeamMemberPage({
           </div>
         </section>
 
-        {/* 6. Contact */}
+        {/* 7. Contact */}
         <CTA />
       </main>
       <Footer />
-      <MemberEditGate pageSlug={slug} />
     </>
   );
 }
