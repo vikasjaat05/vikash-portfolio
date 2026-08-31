@@ -16,13 +16,26 @@ const contentSecurityPolicy = [
   "font-src 'self' data:",
 ].join("; ");
 
-const securityHeaders = [
+const pageSecurityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
   { key: "Permissions-Policy", value: "camera=(), microphone=(self), geolocation=()" },
   { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
+];
+
+const sitemapHeaders = [
+  { key: "Content-Type", value: "application/xml; charset=utf-8" },
+  { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+  { key: "Access-Control-Allow-Origin", value: "*" },
+  { key: "X-Robots-Tag", value: "noindex, follow" },
+];
+
+const robotsHeaders = [
+  { key: "Content-Type", value: "text/plain; charset=utf-8" },
+  { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
+  { key: "Access-Control-Allow-Origin", value: "*" },
 ];
 
 const nextConfig: NextConfig = {
@@ -55,8 +68,16 @@ const nextConfig: NextConfig = {
   async headers() {
     return [
       {
-        source: "/:path*",
-        headers: securityHeaders,
+        source: "/sitemap.xml",
+        headers: sitemapHeaders,
+      },
+      {
+        source: "/robots.txt",
+        headers: robotsHeaders,
+      },
+      {
+        source: "/((?!api|_next/static|_next/image|sitemap.xml|robots.txt|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4|webm|xml|txt)).*)",
+        headers: pageSecurityHeaders,
       },
     ];
   },

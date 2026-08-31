@@ -3,103 +3,103 @@ import { MetadataRoute } from "next";
 const BASE_URL = "https://vikash.website";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const currentDate = new Date().toISOString();
+  const lastMod = new Date();
 
   // Core High-Priority Pages
   const coreRoutes: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}/`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 1.0,
     },
     {
       url: `${BASE_URL}/work`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/services`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/about`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.9,
     },
     {
       url: `${BASE_URL}/about/vikash-choudhary`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/contact`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/pricing`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/resume`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/journal`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 0.8,
     },
     {
       url: `${BASE_URL}/careers`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/who-we-are`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/fashion`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/vanguard`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/lgpsm`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "monthly",
       priority: 0.7,
     },
     {
       url: `${BASE_URL}/privacy`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "yearly",
       priority: 0.4,
     },
     {
       url: `${BASE_URL}/terms`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "yearly",
       priority: 0.4,
     },
@@ -109,13 +109,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const categoryRoutes: MetadataRoute.Sitemap = [
     {
       url: `${BASE_URL}/work/web`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 0.85,
     },
     {
       url: `${BASE_URL}/work/app`,
-      lastModified: currentDate,
+      lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 0.85,
     },
@@ -142,7 +142,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const projectRoutes: MetadataRoute.Sitemap = projectSlugs.map((p) => ({
     url: `${BASE_URL}/work/${p.cat}/${p.project}`,
-    lastModified: currentDate,
+    lastModified: lastMod,
     changeFrequency: "monthly",
     priority: 0.8,
   }));
@@ -157,7 +157,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const journalRoutes: MetadataRoute.Sitemap = journalSlugs.map((slug) => ({
     url: `${BASE_URL}/journal/${slug}`,
-    lastModified: currentDate,
+    lastModified: lastMod,
     changeFrequency: "monthly",
     priority: 0.75,
   }));

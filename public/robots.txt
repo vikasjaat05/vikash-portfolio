@@ -1,8 +1,0 @@
-# Robots.txt for Vikash Choudhary Portfolio
-# https://vikash.website/
-
-User-agent: *
-Allow: /
-Disallow: /api/
-
-Sitemap: https://vikash.website/sitemap.xml
