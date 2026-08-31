@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import ContactPageClient from "@/components/ContactPageClient";
 
 export const metadata: Metadata = {
-  title: "Contact Vikash Choudhary | Hire Web & Shopify Developer",
+  title: {
+    absolute: "Contact Vikash Choudhary | Hire Web & Shopify Developer",
+  },
   description:
     "Get in touch with Web & Shopify Developer Vikash Choudhary for custom Shopify store builds, Next.js web applications, or performance optimization projects.",
   alternates: {

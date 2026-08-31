@@ -8,7 +8,9 @@ import CTA from "@/components/CTA";
 import { OPENINGS, VALUES, PERKS } from "@/data/careers";
 
 export const metadata: Metadata = {
-  title: "Careers & Collaboration | Vikash Choudhary",
+  title: {
+    absolute: "Careers & Collaboration | Vikash Choudhary",
+  },
   description:
     "Join and collaborate on high-impact Shopify and Next.js engineering projects with Vikash Choudhary.",
   alternates: {

@@ -35,7 +35,9 @@ export async function generateMetadata({
   const url = `https://vikash.website/about/${founder.slug}`;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     alternates: {
       canonical: url,

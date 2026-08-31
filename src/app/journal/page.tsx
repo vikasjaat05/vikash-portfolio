@@ -7,7 +7,9 @@ import ArticleRow from "@/components/ArticleRow";
 import { ARTICLES } from "@/data/journal";
 
 export const metadata: Metadata = {
-  title: "Web & E-Commerce Engineering Journal | Vikash Choudhary",
+  title: {
+    absolute: "Web & E-Commerce Engineering Journal | Vikash Choudhary",
+  },
   description:
     "Actionable technical insights on web performance, Shopify theme engineering, SEO strategies, and modern frontend architecture by Vikash Choudhary.",
   alternates: {

@@ -9,7 +9,9 @@ import CTA from "@/components/CTA";
 import { SERVICES } from "@/data/services";
 
 export const metadata: Metadata = {
-  title: "Web & Shopify Development Services | Vikash Choudhary",
+  title: {
+    absolute: "Web & Shopify Development Services | Vikash Choudhary",
+  },
   description:
     "Bespoke Shopify store development, custom Liquid theme engineering, fullstack Next.js web applications, and sub-1s Core Web Vitals speed optimization by Vikash Choudhary.",
   alternates: {

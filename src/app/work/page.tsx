@@ -8,7 +8,9 @@ import StickyProjects from "@/components/StickyProjects";
 import CTA from "@/components/CTA";
 
 export const metadata: Metadata = {
-  title: "Web & Shopify Development Projects | Vikash Choudhary",
+  title: {
+    absolute: "Web & Shopify Development Projects | Vikash Choudhary",
+  },
   description:
     "Explore 14+ live Shopify e-commerce stores, custom Liquid themes, and modern Next.js web applications engineered by Web & Shopify Developer Vikash Choudhary.",
   alternates: {

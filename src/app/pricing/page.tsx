@@ -8,7 +8,9 @@ import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
 
 export const metadata: Metadata = {
-  title: "Web & Shopify Development Pricing | Vikash Choudhary",
+  title: {
+    absolute: "Web & Shopify Development Pricing | Vikash Choudhary",
+  },
   description:
     "Transparent pricing and packages for custom Shopify theme development, web application engineering, and e-commerce optimization by Vikash Choudhary.",
   alternates: {

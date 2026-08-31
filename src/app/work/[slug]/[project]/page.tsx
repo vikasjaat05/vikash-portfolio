@@ -29,7 +29,9 @@ export async function generateMetadata({
   const url = `https://vikash.website/work/${category.slug}/${item.slug}`;
 
   return {
-    title,
+    title: {
+      absolute: title,
+    },
     description,
     alternates: {
       canonical: url,

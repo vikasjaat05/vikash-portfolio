@@ -7,7 +7,9 @@ import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
 
 export const metadata: Metadata = {
-  title: "Who We Are & Philosophy | Vikash Choudhary",
+  title: {
+    absolute: "Who We Are & Philosophy | Vikash Choudhary",
+  },
   description:
     "Independent web engineering and Shopify development backed by senior attention. Learn the values and approach behind Vikash Choudhary's work.",
   alternates: {

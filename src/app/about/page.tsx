@@ -15,7 +15,9 @@ import ResumeExperienceSection from "@/components/ResumeExperienceSection";
 import WorkspaceGear from "@/components/WorkspaceGear";
 
 export const metadata: Metadata = {
-  title: "About Vikash Choudhary | Web & Shopify Developer",
+  title: {
+    absolute: "About Vikash Choudhary | Web & Shopify Developer",
+  },
   description:
     "Learn about Vikash Choudhary, a Web & Shopify Developer specializing in high-converting luxury e-commerce storefronts, bespoke Liquid themes, and modern Next.js engineering.",
   alternates: {
