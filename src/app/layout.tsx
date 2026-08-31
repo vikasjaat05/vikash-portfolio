@@ -36,7 +36,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://vikash-portfolio-sandy.vercel.app"),
+  metadataBase: new URL("https://vikash.website"),
   title: {
     default: "Vikash Choudhary | Web & Shopify Developer",
     template: "%s | Vikash Choudhary",
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     "UI/UX Developer",
     "Performance Optimization",
   ],
-  authors: [{ name: "Vikash Choudhary", url: "https://vikash-portfolio-sandy.vercel.app" }],
+  authors: [{ name: "Vikash Choudhary", url: "https://vikash.website" }],
   creator: "Vikash Choudhary",
   publisher: "Vikash Choudhary",
   alternates: {
@@ -76,7 +76,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://vikash-portfolio-sandy.vercel.app/",
+    url: "https://vikash.website/",
     title: "Vikash Choudhary | Web & Shopify Developer",
     description:
       "Vikash Choudhary is a Web & Shopify Developer creating modern, high-performance websites, eCommerce experiences, and interactive digital products.",

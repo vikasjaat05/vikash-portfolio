@@ -9,6 +9,6 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ["/api/"],
       },
     ],
-    sitemap: "https://vikash-portfolio-sandy.vercel.app/sitemap.xml",
+    sitemap: "https://vikash.website/sitemap.xml",
   };
 }

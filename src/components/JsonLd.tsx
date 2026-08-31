@@ -4,12 +4,12 @@ export default function JsonLd() {
     "@graph": [
       {
         "@type": "Person",
-        "@id": "https://vikash-portfolio-sandy.vercel.app/#person",
+        "@id": "https://vikash.website/#person",
         "name": "Vikash Choudhary",
         "givenName": "Vikash",
         "familyName": "Choudhary",
         "jobTitle": "Web & Shopify Developer",
-        "url": "https://vikash-portfolio-sandy.vercel.app/",
+        "url": "https://vikash.website/",
         "image":
           "https://res.cloudinary.com/dh0amtajw/image/upload/v1783076813/ChatGPT_Image_Jul_3_2026_12_25_31_PM_t7giml.png",
         "description":
@@ -42,21 +42,21 @@ export default function JsonLd() {
       },
       {
         "@type": "WebSite",
-        "@id": "https://vikash-portfolio-sandy.vercel.app/#website",
-        "url": "https://vikash-portfolio-sandy.vercel.app/",
+        "@id": "https://vikash.website/#website",
+        "url": "https://vikash.website/",
         "name": "Vikash Choudhary | Web & Shopify Developer",
         "description":
           "Vikash Choudhary is a Web & Shopify Developer creating modern, high-performance websites, eCommerce experiences, and interactive digital products.",
         "inLanguage": "en-US",
         "publisher": {
-          "@id": "https://vikash-portfolio-sandy.vercel.app/#person"
+          "@id": "https://vikash.website/#person"
         }
       },
       {
         "@type": "ProfessionalService",
-        "@id": "https://vikash-portfolio-sandy.vercel.app/#service",
+        "@id": "https://vikash.website/#service",
         "name": "Vikash Choudhary — Web & Shopify Development Services",
-        "url": "https://vikash-portfolio-sandy.vercel.app/",
+        "url": "https://vikash.website/",
         "image":
           "https://res.cloudinary.com/dh0amtajw/image/upload/v1783076813/ChatGPT_Image_Jul_3_2026_12_25_31_PM_t7giml.png",
         "description":
@@ -70,7 +70,7 @@ export default function JsonLd() {
           "addressCountry": "IN"
         },
         "founder": {
-          "@id": "https://vikash-portfolio-sandy.vercel.app/#person"
+          "@id": "https://vikash.website/#person"
         }
       }
     ]
