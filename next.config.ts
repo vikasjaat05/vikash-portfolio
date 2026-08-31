@@ -29,7 +29,6 @@ const sitemapHeaders = [
   { key: "Content-Type", value: "application/xml; charset=utf-8" },
   { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
   { key: "Access-Control-Allow-Origin", value: "*" },
-  { key: "X-Robots-Tag", value: "noindex, follow" },
 ];
 
 const robotsHeaders = [
