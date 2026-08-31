@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Outfit, Syne, Instrument_Serif, Kanit, Inter } from "next/font/google";
 import "./globals.css";
 import SiteChrome from "@/components/SiteChrome";
+import JsonLd from "@/components/JsonLd";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -35,9 +36,70 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Vikash Choudhary — Web & Shopify Developer",
+  metadataBase: new URL("https://vikash-portfolio-sandy.vercel.app"),
+  title: {
+    default: "Vikash Choudhary | Web & Shopify Developer",
+    template: "%s | Vikash Choudhary",
+  },
   description:
-    "Portfolio of Vikash Choudhary, a Web & Shopify Developer crafting high-impact websites, e-commerce storefronts, and web applications.",
+    "Vikash Choudhary is a Web & Shopify Developer creating modern, high-performance websites, eCommerce experiences, and interactive digital products.",
+  keywords: [
+    "Vikash Choudhary",
+    "Web Developer",
+    "Shopify Developer",
+    "Shopify Plus Developer",
+    "Liquid Theme Development",
+    "Next.js Developer",
+    "React Developer",
+    "E-commerce Developer",
+    "Frontend Engineer",
+    "UI/UX Developer",
+    "Performance Optimization",
+  ],
+  authors: [{ name: "Vikash Choudhary", url: "https://vikash-portfolio-sandy.vercel.app" }],
+  creator: "Vikash Choudhary",
+  publisher: "Vikash Choudhary",
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://vikash-portfolio-sandy.vercel.app/",
+    title: "Vikash Choudhary | Web & Shopify Developer",
+    description:
+      "Vikash Choudhary is a Web & Shopify Developer creating modern, high-performance websites, eCommerce experiences, and interactive digital products.",
+    siteName: "Vikash Choudhary Portfolio",
+    images: [
+      {
+        url: "https://res.cloudinary.com/dh0amtajw/image/upload/v1783076813/ChatGPT_Image_Jul_3_2026_12_25_31_PM_t7giml.png",
+        width: 1200,
+        height: 630,
+        alt: "Vikash Choudhary — Web & Shopify Developer Portfolio",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vikash Choudhary | Web & Shopify Developer",
+    description:
+      "Vikash Choudhary is a Web & Shopify Developer creating modern, high-performance websites, eCommerce experiences, and interactive digital products.",
+    images: [
+      "https://res.cloudinary.com/dh0amtajw/image/upload/v1783076813/ChatGPT_Image_Jul_3_2026_12_25_31_PM_t7giml.png",
+    ],
+    creator: "@vikasjaat05",
+  },
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -85,6 +147,7 @@ export default function RootLayout({
           href="https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11"
           rel="stylesheet"
         />
+        <JsonLd />
       </head>
       <body className="min-h-full flex flex-col bg-[#faf8f5] text-[#0a0a0a]">
         <div className="noise" />

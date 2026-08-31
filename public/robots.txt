@@ -1,0 +1,8 @@
+# Robots.txt for Vikash Choudhary Portfolio
+# https://vikash-portfolio-sandy.vercel.app/
+
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://vikash-portfolio-sandy.vercel.app/sitemap.xml

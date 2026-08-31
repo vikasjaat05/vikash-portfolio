@@ -318,10 +318,10 @@ export default function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* 2. Typography Layout — Preserved on Desktop */}
+      {/* 2. Typography Layout — Responsive for all devices & Search Crawlers */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="hidden md:block max-w-[1400px] mx-auto w-full relative z-10 my-auto py-4"
+        className="block max-w-[1400px] mx-auto w-full relative z-10 my-auto py-4 px-4 sm:px-6 md:px-0"
       >
         <div className="max-w-md sm:max-w-lg">
           {/* Top L-Corner Bracket */}
@@ -337,9 +337,9 @@ export default function Hero() {
             <span>Web &amp; Shopify Developer</span>
           </div>
 
-          {/* Headline */}
+          {/* Primary H1 Headline */}
           <h1 className="font-display font-bold leading-[1.12] tracking-tight text-3xl md:text-4xl text-black">
-            Crafting high-speed web apps &amp; Shopify storefronts.
+            Vikash Choudhary <span className="text-red">&mdash;</span> Web &amp; Shopify Developer
           </h1>
 
           {/* Bottom L-Corner Bracket */}
