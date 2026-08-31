@@ -22,7 +22,7 @@ const SECTIONS = [
   },
   {
     title: "Your choices",
-    body: "You can ask me to delete any information you've shared with me at any time by emailing vikashchoudhary@gmail.com.",
+    body: "You can ask me to delete any information you've shared with me at any time by emailing vikkijaat800@gmail.com.",
   },
 ];
 

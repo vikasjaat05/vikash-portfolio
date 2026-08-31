@@ -106,18 +106,18 @@ export default async function AboutPage() {
                     <Link
                       href="/resume"
                       data-cursor-hover
-                      className="group inline-flex items-center gap-2 bg-red text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-black transition-colors duration-300 shadow-md"
+                      className="group liquid-btn-red !text-sm !font-semibold !px-6 !py-3 gap-2"
                     >
-                      View &amp; Download Resume
+                      <span>View &amp; Download Resume</span>
                       <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform duration-300" />
                     </Link>
 
                     <Link
                       href={`/about/${vikash.slug}`}
                       data-cursor-hover
-                      className="group inline-flex items-center gap-2 bg-[#0a0a0a] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-red transition-colors duration-300"
+                      className="group liquid-btn-dark !text-sm !font-semibold !px-6 !py-3 gap-2"
                     >
-                      View Dedicated Profile
+                      <span>View Dedicated Profile</span>
                       <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform duration-300" />
                     </Link>
                   </div>

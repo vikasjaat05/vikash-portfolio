@@ -116,25 +116,25 @@ export default function Team({ members }: { members: Founder[] }) {
               <Link
                 href="/resume"
                 data-cursor-hover
-                className="group inline-flex items-center gap-2 bg-red text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-black transition-colors duration-300 shadow-sm"
+                className="group liquid-btn-red !text-sm !font-semibold !px-6 !py-3 gap-2"
               >
-                View Resume (CV)
+                <span>View Resume (CV)</span>
                 <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform duration-300" />
               </Link>
 
               <Link
                 href={`/about/${vikash.slug}`}
                 data-cursor-hover
-                className="group inline-flex items-center gap-2 bg-[#0a0a0a] text-white text-sm font-semibold px-6 py-3 rounded-full hover:bg-red transition-colors duration-300"
+                className="group liquid-btn-dark !text-sm !font-semibold !px-6 !py-3 gap-2"
               >
-                Full Profile
+                <span>Full Profile</span>
                 <ArrowUpRight size={16} className="group-hover:rotate-45 transition-transform duration-300" />
               </Link>
 
               <Link
                 href="#contact"
                 data-cursor-hover
-                className="inline-flex items-center gap-2 border border-black/15 text-black/80 hover:text-red hover:border-red text-sm font-semibold px-5 py-3 rounded-full transition-colors duration-300"
+                className="liquid-nav px-5 py-3 rounded-full text-sm font-semibold text-black/80 hover:text-black hover:scale-105 transition-all duration-300"
               >
                 Get in touch
               </Link>

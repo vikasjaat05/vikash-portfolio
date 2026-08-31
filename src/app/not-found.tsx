@@ -1,119 +1,65 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Home, Sparkles } from "lucide-react";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
+import { ArrowLeft } from "lucide-react";
 
 export default function NotFound() {
-  const textRef = useRef<HTMLDivElement>(null);
-  const [scaleY, setScaleY] = useState(1);
-
-  useEffect(() => {
-    const updateScale = () => {
-      if (textRef.current) {
-        const height = textRef.current.offsetHeight;
-        if (height > 0) {
-          const calculated = window.innerHeight / height;
-          setScaleY(calculated);
-        }
-      }
-    };
-
-    updateScale();
-    window.addEventListener("resize", updateScale);
-    return () => window.removeEventListener("resize", updateScale);
-  }, []);
-
   return (
-    <>
-      <Navbar />
-      <main className="relative w-full min-h-screen overflow-hidden flex flex-col justify-between bg-[#fbf9f4] pt-28 pb-16 px-6">
-        {/* Background "404" text dynamic scale + mask effect */}
-        <div
-          className="absolute inset-0 pointer-events-none flex items-center justify-center select-none overflow-hidden"
+    <main className="relative w-full h-screen h-[100dvh] overflow-hidden bg-white flex flex-col items-center justify-between py-6 sm:py-10 px-4 select-none">
+      {/* 1. Background 404 Numbers (Responsive across Mobile & Desktop) */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span
+          className="font-display font-black leading-none text-[#FBBF24] opacity-95 select-none text-center"
           style={{
-            opacity: 0.85,
-            maskImage: "linear-gradient(to bottom, black 40%, transparent 95%)",
-            WebkitMaskImage: "linear-gradient(to bottom, black 40%, transparent 95%)",
+            fontSize: "clamp(150px, 26vw, 380px)",
+            letterSpacing: "-0.04em",
           }}
         >
-          {/* Scaled 404 Text */}
-          <div
-            ref={textRef}
-            className="font-display font-black leading-none tracking-tighter text-black/[0.045] whitespace-nowrap transition-transform duration-200"
-            style={{
-              fontSize: "clamp(200px, 48vw, 800px)",
-              transform: `scale(1.15, ${scaleY * 1.4})`,
-              transformOrigin: "center",
-            }}
-          >
-            404
-          </div>
+          404
+        </span>
+      </div>
 
-          {/* Centered Soft Oval Glow */}
-          <div
-            className="absolute rounded-full bg-red/[0.04] blur-3xl pointer-events-none"
+      {/* Top spacing */}
+      <div className="w-full h-2 sm:h-4" />
+
+      {/* 2. Center Animated Fox (Blends seamlessly with zero white box) */}
+      <div className="relative my-auto flex items-center justify-center pointer-events-none">
+        <div className="w-[260px] h-[260px] sm:w-[320px] sm:h-[320px] md:w-[390px] md:h-[390px] max-w-[90vw] max-h-[48vh] flex items-center justify-center">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-contain pointer-events-none"
             style={{
-              height: "clamp(200px, 50vh, 600px)",
-              width: "clamp(160px, 30vw, 500px)",
-              transform: `scale(1, ${scaleY})`,
-              transformOrigin: "center",
+              mixBlendMode: "multiply",
             }}
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4"
           />
         </div>
+      </div>
 
-        {/* Center Animated Video Animation */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10 -mt-10 sm:-mt-16">
-          <div className="w-[115vw] h-[75vh] sm:w-[70vw] sm:h-[70vh] md:w-[55vw] md:h-[75vh] max-w-[850px] flex items-center justify-center">
-            <video
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="w-full h-full object-contain pointer-events-none mix-blend-multiply drop-shadow-xl"
-              src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260713_234424_b1332b69-2e69-4302-8dbc-40f86846afbd.mp4"
-            />
-          </div>
-        </div>
+      {/* 3. Bottom Copy & Mobile Responsive Button */}
+      <div className="relative flex flex-col items-center text-center max-w-sm sm:max-w-md mx-auto pb-4 sm:pb-8">
+        <h1 className="text-[#0a0a0a] text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mb-1.5 sm:mb-2 leading-snug">
+          Oops, something went wrong!
+        </h1>
+        <p className="text-black/60 text-xs sm:text-sm md:text-base font-medium mb-5 sm:mb-6">
+          This page does not exist.
+        </p>
 
-        {/* Bottom Content & Navigation Links */}
-        <div className="relative z-30 mt-auto flex flex-col items-center text-center max-w-xl mx-auto pt-60 sm:pt-72 md:pt-80">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red/10 border border-red/20 text-red text-xs font-semibold uppercase tracking-wider mb-4 shadow-2xs">
-            <Sparkles size={13} />
-            Page Not Found
-          </div>
-
-          <h1 className="font-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-black mb-3">
-            Oops, you took a wrong turn!
-          </h1>
-          <p className="text-sm sm:text-base text-black/60 max-w-md mb-8 leading-relaxed">
-            The page you&apos;re looking for doesn&apos;t exist, was renamed, or has gone off the grid.
-          </p>
-
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <Link
-              href="/"
-              data-cursor-hover
-              className="inline-flex items-center gap-2 bg-[#0a0a0a] text-white font-semibold text-sm sm:text-base px-7 py-3.5 sm:px-8 sm:py-4 rounded-full hover:bg-red hover:scale-105 hover:shadow-xl transition-all duration-300 shadow-md"
-            >
-              <ArrowLeft size={18} />
-              Back to Home
-            </Link>
-
-            <Link
-              href="/work"
-              data-cursor-hover
-              className="inline-flex items-center gap-2 bg-white border border-black/15 text-black font-semibold text-sm sm:text-base px-6 py-3.5 sm:px-7 sm:py-4 rounded-full hover:border-red hover:text-red transition-all duration-300 shadow-2xs"
-            >
-              <Home size={18} />
-              Explore Works
-            </Link>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+        <Link
+          href="/"
+          className="group liquid-btn-dark !px-8 !py-3.5 !text-sm sm:!text-base !font-semibold gap-2.5 hover:!scale-105 transition-all duration-300"
+        >
+          <ArrowLeft
+            size={18}
+            strokeWidth={2.5}
+            className="group-hover:-translate-x-1 transition-transform duration-200"
+          />
+          <span>Back to Home</span>
+        </Link>
+      </div>
+    </main>
   );
 }

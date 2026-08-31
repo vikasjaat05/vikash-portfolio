@@ -61,7 +61,7 @@ export default function PortfolioFooter() {
             Let&apos;s build <span className="italic">something.</span>
           </h2>
           <a
-            href="mailto:vikashchoudhary@gmail.com"
+            href="mailto:vikkijaat800@gmail.com"
             data-cursor-hover
             className="group relative inline-flex rounded-full"
           >
@@ -69,7 +69,7 @@ export default function PortfolioFooter() {
               className={`absolute inset-[-2px] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${styles.accentGradient}`}
             />
             <span className="relative flex items-center gap-2 rounded-full border border-white/20 px-7 py-3.5 text-white">
-              vikashchoudhary@gmail.com
+              vikkijaat800@gmail.com
             </span>
           </a>
         </div>

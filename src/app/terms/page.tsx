@@ -30,7 +30,7 @@ const SECTIONS = [
   },
   {
     title: "Questions",
-    body: "If anything here is unclear, or you want to talk through terms before starting a project, email me at vikashchoudhary@gmail.com.",
+    body: "If anything here is unclear, or you want to talk through terms before starting a project, email me at vikkijaat800@gmail.com.",
   },
 ];
 

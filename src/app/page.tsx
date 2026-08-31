@@ -1,6 +1,5 @@
 import Navbar from "@/components/Navbar";
 import AmbientBackground from "@/components/AmbientBackground";
-import ScrollCurveLine from "@/components/ScrollCurveLine";
 import Hero from "@/components/Hero";
 import Clients from "@/components/Clients";
 import TrustBar from "@/components/TrustBar";
@@ -22,7 +21,6 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <ScrollCurveLine />
       <main className="relative">
         <Hero />
         <AmbientBackground />

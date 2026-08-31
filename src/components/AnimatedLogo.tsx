@@ -19,13 +19,13 @@ export default function AnimatedLogo({
       data-cursor-hover
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      className={`group relative z-50 inline-flex items-center gap-3 select-none py-1.5 ${className}`}
+      className={`group relative z-50 inline-flex items-center gap-2 sm:gap-3 select-none py-1 ${className}`}
     >
       {/* 1. Continuous Looping Calligraphic Signature (Vikash) */}
       <div className="relative flex flex-col justify-center">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           {/* Animated SVG Signature "Vikash" with Continuous Infinite Looping Stroke */}
-          <div className="relative h-10 sm:h-11 w-32 sm:w-36 flex items-center">
+          <div className="relative h-9 sm:h-11 w-28 sm:w-36 flex items-center">
             {/* Ambient continuous glow halo */}
             <motion.div
               animate={{
@@ -236,9 +236,9 @@ export default function AnimatedLogo({
             </svg>
           </div>
 
-          {/* 2. Bold Complementary Typographic Suffix: CHOUDHARY */}
-          <div className="flex flex-col justify-center pl-1 border-l border-black/15 dark:border-white/15">
-            <div className="flex items-center font-display text-base sm:text-lg font-black tracking-wider leading-none">
+          {/* 2. Bold Complementary Typographic Suffix: CHOUDHARY (Hidden on extra small mobile, visible on >=480px) */}
+          <div className="hidden sm:flex flex-col justify-center pl-1 border-l border-black/15 dark:border-white/15">
+            <div className="flex items-center font-display text-sm sm:text-base font-black tracking-wider leading-none">
               <motion.span
                 animate={{
                   letterSpacing: ["0.04em", "0.08em", "0.04em"],
@@ -279,7 +279,7 @@ export default function AnimatedLogo({
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="text-[8px] sm:text-[9px] font-mono uppercase font-bold text-red mt-1"
+              className="text-[8px] sm:text-[9px] font-mono uppercase font-bold text-red mt-0.5"
             >
               WEB &amp; SHOPIFY DEV
             </motion.span>

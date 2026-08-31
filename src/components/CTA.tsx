@@ -34,10 +34,10 @@ export default function CTA() {
                   data-inview={inView}
                   href="mailto:vikkijaat800@gmail.com"
                   data-cursor-hover
-                  className="group inline-flex items-center gap-2 bg-white text-red font-semibold px-8 py-4 rounded-full transition-colors duration-300 hover:bg-[#0a0a0a] hover:text-white data-[inview=true]:bg-[#0a0a0a] data-[inview=true]:text-white"
+                  className="group liquid-btn !px-8 !py-4 !text-base !font-semibold gap-2.5 hover:!scale-105"
                 >
                   <Mail size={18} />
-                  vikkijaat800@gmail.com
+                  <span>vikkijaat800@gmail.com</span>
                   <ArrowUpRight
                     size={18}
                     className="transition-transform duration-300 group-hover:rotate-45 group-data-[inview=true]:rotate-45"

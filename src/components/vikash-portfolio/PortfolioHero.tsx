@@ -158,10 +158,11 @@ export default function PortfolioHero() {
 
           <div className="hidden flex-col items-end gap-1 md:flex">
             <a
-              href="mailto:vikashchoudhary@gmail.com"
-              className="text-xs font-medium uppercase leading-4 tracking-[-0.12px] text-white/80 transition-colors hover:text-white"
+              href="mailto:vikkijaat800@gmail.com"
+              data-cursor-hover
+              className="text-xs uppercase tracking-[0.2em] text-white/55 hover:text-white transition-colors"
             >
-              vikashchoudhary@gmail.com
+              vikkijaat800@gmail.com
             </a>
             <span
               role="status"

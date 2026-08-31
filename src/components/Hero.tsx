@@ -365,7 +365,7 @@ export default function Hero() {
               <Link
                 href="/contact"
                 data-cursor-hover
-                className="group inline-flex items-center gap-1.5 bg-[#0a0a0a] text-white font-semibold text-xs px-5 py-2.5 rounded-full hover:bg-red transition-colors duration-300 shadow-sm"
+                className="group liquid-btn-dark !text-xs !px-6 !py-3 !font-semibold gap-1.5"
               >
                 <span>Start a Project</span>
                 <ArrowUpRight size={14} className="group-hover:rotate-45 transition-transform duration-300" />
@@ -375,7 +375,7 @@ export default function Hero() {
             <Link
               href="/work"
               data-cursor-hover
-              className="inline-flex items-center gap-1.5 border border-black/15 bg-white/80 backdrop-blur-md text-black px-4 py-2.5 rounded-full text-xs font-semibold hover:border-black transition-colors"
+              className="inline-flex items-center gap-1.5 liquid-nav px-5 py-2.5 rounded-full text-xs font-semibold text-black/85 hover:text-black hover:scale-105 transition-all duration-300"
             >
               <span>Explore Work (14)</span>
             </Link>
