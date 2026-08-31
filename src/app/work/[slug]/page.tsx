@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,6 +10,34 @@ import { WORK_CATEGORIES, getCategory } from "@/data/portfolio";
 
 export function generateStaticParams() {
   return WORK_CATEGORIES.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const category = getCategory(slug);
+  if (!category) return {};
+
+  const title = `${category.label} Projects & Case Studies | Vikash Choudhary`;
+  const description = `${category.description} Built by Web & Shopify Developer Vikash Choudhary.`;
+  const url = `https://vikash.website/work/${category.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "website",
+    },
+  };
 }
 
 export default async function WorkCategoryPage({

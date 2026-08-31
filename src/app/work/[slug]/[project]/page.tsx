@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,6 +12,36 @@ import { getAllProjectParams, getProject } from "@/data/portfolio";
 
 export function generateStaticParams() {
   return getAllProjectParams();
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string; project: string }>;
+}): Promise<Metadata> {
+  const { slug, project } = await params;
+  const result = getProject(slug, project);
+  if (!result || !result.item) return {};
+
+  const { item, category } = result;
+  const title = `${item.title} — ${category.label} Case Study | Vikash Choudhary`;
+  const description = `${item.description} Built with ${item.tags.slice(0, 3).join(", ")} by Web & Shopify Developer Vikash Choudhary.`;
+  const url = `https://vikash.website/work/${category.slug}/${item.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      images: item.imageUrl ? [{ url: item.imageUrl, alt: `${item.title} — ${category.label} project by Vikash Choudhary` }] : undefined,
+    },
+  };
 }
 
 export default async function ProjectDetailPage({

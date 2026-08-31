@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import FadeSection from "@/components/FadeSection";
 import Clients from "@/components/Clients";
 import CTA from "@/components/CTA";
+
+export const metadata: Metadata = {
+  title: "Who We Are & Philosophy | Vikash Choudhary",
+  description:
+    "Independent web engineering and Shopify development backed by senior attention. Learn the values and approach behind Vikash Choudhary's work.",
+  alternates: {
+    canonical: "https://vikash.website/who-we-are",
+  },
+  openGraph: {
+    title: "Who We Are & Philosophy | Vikash Choudhary",
+    description:
+      "Independent web engineering and Shopify development backed by senior attention. Learn the values and approach behind Vikash Choudhary's work.",
+    url: "https://vikash.website/who-we-are",
+    type: "website",
+  },
+};
 
 const VALUES = [
   {

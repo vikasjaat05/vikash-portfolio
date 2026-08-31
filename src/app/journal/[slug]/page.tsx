@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -10,6 +11,36 @@ import { ARTICLES, getArticle } from "@/data/journal";
 
 export function generateStaticParams() {
   return ARTICLES.map((a) => ({ slug: a.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const article = getArticle(slug);
+  if (!article) return {};
+
+  const title = `${article.title} | Vikash Choudhary`;
+  const description = article.excerpt;
+  const url = `https://vikash.website/journal/${article.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "article",
+      publishedTime: article.date,
+      authors: ["Vikash Choudhary"],
+    },
+  };
 }
 
 export default async function ArticlePage({

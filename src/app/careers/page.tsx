@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
@@ -5,6 +6,22 @@ import FadeSection from "@/components/FadeSection";
 import JobOpeningRow from "@/components/JobOpeningRow";
 import CTA from "@/components/CTA";
 import { OPENINGS, VALUES, PERKS } from "@/data/careers";
+
+export const metadata: Metadata = {
+  title: "Careers & Collaboration | Vikash Choudhary",
+  description:
+    "Join and collaborate on high-impact Shopify and Next.js engineering projects with Vikash Choudhary.",
+  alternates: {
+    canonical: "https://vikash.website/careers",
+  },
+  openGraph: {
+    title: "Careers & Collaboration | Vikash Choudhary",
+    description:
+      "Join and collaborate on high-impact Shopify and Next.js engineering projects with Vikash Choudhary.",
+    url: "https://vikash.website/careers",
+    type: "website",
+  },
+};
 
 export default function CareersPage() {
   return (

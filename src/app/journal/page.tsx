@@ -1,9 +1,26 @@
+import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import PageHeader from "@/components/PageHeader";
 import FadeSection from "@/components/FadeSection";
 import ArticleRow from "@/components/ArticleRow";
 import { ARTICLES } from "@/data/journal";
+
+export const metadata: Metadata = {
+  title: "Web & E-Commerce Engineering Journal | Vikash Choudhary",
+  description:
+    "Actionable technical insights on web performance, Shopify theme engineering, SEO strategies, and modern frontend architecture by Vikash Choudhary.",
+  alternates: {
+    canonical: "https://vikash.website/journal",
+  },
+  openGraph: {
+    title: "Web & E-Commerce Engineering Journal | Vikash Choudhary",
+    description:
+      "Actionable technical insights on web performance, Shopify theme engineering, SEO strategies, and modern frontend architecture by Vikash Choudhary.",
+    url: "https://vikash.website/journal",
+    type: "website",
+  },
+};
 
 export default function JournalPage() {
   return (

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -18,6 +19,35 @@ import { getFounder, getAllFounderSlugs } from "@/lib/team-data";
 export async function generateStaticParams() {
   const slugs = await getAllFounderSlugs();
   return slugs.map((slug) => ({ slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const founder = await getFounder(slug);
+  if (!founder) return {};
+
+  const title = `${founder.name} — ${founder.role} Profile | Vikash Choudhary`;
+  const description = `${founder.bio} Specialized in ${founder.focus}.`;
+  const url = `https://vikash.website/about/${founder.slug}`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: "profile",
+      images: founder.avatar ? [{ url: founder.avatar, alt: `${founder.name} — ${founder.role}` }] : undefined,
+    },
+  };
 }
 
 export default async function TeamMemberPage({

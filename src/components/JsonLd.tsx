@@ -37,7 +37,8 @@ export default function JsonLd() {
           "Tailwind CSS",
           "E-Commerce CRO & Speed Optimization",
           "UI/UX Engineering",
-          "Web Applications"
+          "Web Applications",
+          "GSAP Animations"
         ]
       },
       {
@@ -63,6 +64,7 @@ export default function JsonLd() {
           "Custom Shopify 2.0 store development, luxury Liquid themes, high-speed Next.js web applications, and conversion rate optimization.",
         "priceRange": "$$ - $$$",
         "telephone": "+91 8000165311",
+        "areaServed": "Global",
         "address": {
           "@type": "PostalAddress",
           "addressLocality": "Alwar",
@@ -71,6 +73,36 @@ export default function JsonLd() {
         },
         "founder": {
           "@id": "https://vikash.website/#person"
+        },
+        "hasOfferCatalog": {
+          "@type": "OfferCatalog",
+          "name": "Web & Shopify Development Services",
+          "itemListElement": [
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Shopify Store Development",
+                "description": "Custom Shopify Liquid theme development, headless storefronts, speed optimization, and high-converting checkout flows."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Next.js Web Applications",
+                "description": "Modern responsive full-stack web applications and interactive platforms built with Next.js, React, and TypeScript."
+              }
+            },
+            {
+              "@type": "Offer",
+              "itemOffered": {
+                "@type": "Service",
+                "name": "Core Web Vitals & Speed Optimization",
+                "description": "Sub-1s page load speeds, image compression, code splitting, and Lighthouse 90+ score optimization."
+              }
+            }
+          ]
         }
       }
     ]
