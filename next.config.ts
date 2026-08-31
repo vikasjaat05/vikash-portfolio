@@ -37,6 +37,21 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "res.cloudinary.com" },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [
+          {
+            type: "host",
+            value: "vikash-portfolio-sandy.vercel.app",
+          },
+        ],
+        destination: "https://vikash.website/:path*",
+        permanent: true,
+      },
+    ];
+  },
   async headers() {
     return [
       {
