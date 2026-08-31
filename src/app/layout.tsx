@@ -38,6 +38,22 @@ export const metadata: Metadata = {
   title: "Vikash Choudhary — Web & Shopify Developer",
   description:
     "Portfolio of Vikash Choudhary, a Web & Shopify Developer crafting high-impact websites, e-commerce storefronts, and web applications.",
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    shortcut: ["/favicon.ico"],
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Vikash Portfolio",
+  },
   verification: {
     google: "U5huw9R97lwtTJD3vxKt68aYrJFGC123qT8b8DGsg4M",
   },
@@ -45,6 +61,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#e10600",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({
