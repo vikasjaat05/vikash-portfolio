@@ -77,6 +77,10 @@ export default function RootLayout({
     >
       <head>
         <meta name="google-site-verification" content="U5huw9R97lwtTJD3vxKt68aYrJFGC123qT8b8DGsg4M" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+        <link rel="manifest" href="/manifest.json" />
         <link
           href="https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11"
           rel="stylesheet"
