@@ -3,12 +3,12 @@ import { MetadataRoute } from "next";
 const BASE_URL = "https://vikash.website";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastMod = new Date();
+  const lastMod = new Date().toISOString().split("T")[0];
 
   // Core High-Priority Pages
   const coreRoutes: MetadataRoute.Sitemap = [
     {
-      url: `${BASE_URL}/`,
+      url: `${BASE_URL}`,
       lastModified: lastMod,
       changeFrequency: "weekly",
       priority: 1.0,

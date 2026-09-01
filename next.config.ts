@@ -25,18 +25,6 @@ const pageSecurityHeaders = [
   { key: "Content-Security-Policy", value: contentSecurityPolicy },
 ];
 
-const sitemapHeaders = [
-  { key: "Content-Type", value: "application/xml; charset=utf-8" },
-  { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
-  { key: "Access-Control-Allow-Origin", value: "*" },
-];
-
-const robotsHeaders = [
-  { key: "Content-Type", value: "text/plain; charset=utf-8" },
-  { key: "Cache-Control", value: "public, max-age=0, s-maxage=3600, must-revalidate" },
-  { key: "Access-Control-Allow-Origin", value: "*" },
-];
-
 const nextConfig: NextConfig = {
   devIndicators: false,
   images: {
@@ -66,14 +54,6 @@ const nextConfig: NextConfig = {
   },
   async headers() {
     return [
-      {
-        source: "/sitemap.xml",
-        headers: sitemapHeaders,
-      },
-      {
-        source: "/robots.txt",
-        headers: robotsHeaders,
-      },
       {
         source: "/((?!api|_next/static|_next/image|sitemap.xml|robots.txt|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|mp4|webm|xml|txt)).*)",
         headers: pageSecurityHeaders,
