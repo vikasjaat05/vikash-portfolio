@@ -17,6 +17,7 @@ import {
   Code2,
   FileText,
   Star,
+  ShoppingBag,
   Mail,
   Search,
   Volume2,
@@ -30,6 +31,7 @@ import { useBackgroundAudio } from "./BackgroundAudioContext";
 type DockItemConfig = {
   id: string;
   title: string;
+  shortTitle?: string;
   renderIcon: (props: { isPlaying?: boolean; isActive?: boolean; isHovered?: boolean }) => React.ReactNode;
   href?: string;
   action?: () => void;
@@ -165,6 +167,21 @@ export default function FloatingDock() {
       href: "/pricing",
     },
     {
+      id: "buy-portfolio",
+      title: "Buy Portfolio",
+      shortTitle: "Buy",
+      renderIcon: ({ isActive, isHovered }) => (
+        <ShoppingBag
+          size={18}
+          strokeWidth={2.2}
+          className={`transition-colors duration-200 ${
+            isActive || isHovered ? "text-red fill-red/20" : "text-[#0a0a0a]"
+          }`}
+        />
+      ),
+      href: "/buy-portfolio",
+    },
+    {
       id: "contact",
       title: "Contact",
       renderIcon: ({ isActive, isHovered }) => (
@@ -181,6 +198,7 @@ export default function FloatingDock() {
     {
       id: "search",
       title: "Search (⌘K)",
+      shortTitle: "Search",
       renderIcon: ({ isHovered }) => (
         <Search
           size={18}
@@ -221,6 +239,7 @@ export default function FloatingDock() {
     { title: "About Vikash Choudhary", href: "/about", category: "Bio & Story" },
     { title: "Services & Tech Stack", href: "/services", category: "Offerings" },
     { title: "Resume & Experience (CV)", href: "/resume", category: "Career" },
+    { title: "Buy Portfolio / Source Code", href: "/buy-portfolio", category: "Store" },
     { title: "FAQ & Client Reviews", href: "/pricing", category: "Pricing" },
     { title: "Start a Project / Contact", href: "/contact", category: "Action" },
   ];
@@ -339,8 +358,8 @@ export default function FloatingDock() {
                       }`}
                     >
                       {item.renderIcon({ isActive: pathname === item.href, isPlaying: item.id === "audio" && playing })}
-                      <span className="text-[9px] font-bold text-black/80 max-w-[44px] truncate">
-                        {item.title}
+                      <span className="text-[9px] font-bold text-black/80 max-w-[48px] truncate">
+                        {item.shortTitle ?? item.title}
                       </span>
                     </button>
                   ))}

@@ -21,6 +21,7 @@ const COMPANY_LINKS = [
   { label: "Resume (CV)", href: "/resume" },
 ];
 const RESOURCES_LINKS = [
+  { label: "Buy Portfolio", href: "/buy-portfolio" },
   { label: "FAQ & Reviews", href: "/pricing" },
   { label: "Journal", href: "/journal" },
   { label: "Contact", href: "/contact" },
