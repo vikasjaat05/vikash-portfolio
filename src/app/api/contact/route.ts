@@ -12,37 +12,33 @@ const contactSchema = z.object({
   website: z.string().optional().default(""),
 });
 
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX_REQUESTS = 5;
-const rateLimitStore = new Map<string, { count: number; windowStart: number }>();
-
-function isRateLimited(key: string): boolean {
-  const now = Date.now();
-  const entry = rateLimitStore.get(key);
-
-  if (!entry || now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
-    rateLimitStore.set(key, { count: 1, windowStart: now });
-    return false;
-  }
-
-  entry.count += 1;
-  return entry.count > RATE_LIMIT_MAX_REQUESTS;
-}
-
-function getClientIp(req: NextRequest): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  if (forwardedFor) return forwardedFor.split(",")[0].trim();
-  return req.headers.get("x-real-ip") ?? "unknown";
-}
+import { checkRateLimit } from "@/lib/rate-limiter";
 
 export async function POST(req: NextRequest) {
-  const ip = getClientIp(req);
+  const rateLimit = checkRateLimit(req, {
+    max: 5,
+    windowMs: 60_000,
+    keyPrefix: "contact-form",
+  });
 
-  if (isRateLimited(ip)) {
+  if (!rateLimit.allowed) {
     return NextResponse.json(
-      { error: "Too many requests. Please try again in a minute." },
-      { status: 429 }
+      { error: "Too many requests. Please wait a minute before submitting again." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": "60",
+          "X-RateLimit-Limit": "5",
+          "X-RateLimit-Remaining": "0",
+        },
+      }
     );
+  }
+
+  // Prevent payload buffer overflow (max 50KB)
+  const contentLength = req.headers.get("content-length");
+  if (contentLength && parseInt(contentLength, 10) > 50_000) {
+    return NextResponse.json({ error: "Payload too large." }, { status: 413 });
   }
 
   let body: unknown;

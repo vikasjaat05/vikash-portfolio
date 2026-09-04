@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { checkRateLimit } from "@/lib/rate-limiter";
 
 // Comprehensive list of Hindi/Hinglish indicators
 const HINDI_INDICATORS = [
@@ -41,14 +42,45 @@ function detectSalutation(rawNameText: string): { name: string; salutation: stri
 }
 
 export async function POST(req: NextRequest) {
-  try {
-    const { message, conversationState = {} } = await req.json();
+  // Rate limit: 20 requests per minute per IP
+  const rateLimit = checkRateLimit(req, {
+    max: 20,
+    windowMs: 60_000,
+    keyPrefix: "eva-chat",
+  });
 
-    if (!message) {
-      return NextResponse.json({ error: "Message is required" }, { status: 400 });
+  if (!rateLimit.allowed) {
+    return NextResponse.json(
+      { error: "Too many messages. Please slow down." },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": "60",
+          "X-RateLimit-Limit": "20",
+          "X-RateLimit-Remaining": "0",
+        },
+      }
+    );
+  }
+
+  // Prevent memory payload exhaustion (max 20KB)
+  const contentLength = req.headers.get("content-length");
+  if (contentLength && parseInt(contentLength, 10) > 20_000) {
+    return NextResponse.json({ error: "Payload too large." }, { status: 413 });
+  }
+
+  try {
+    const body = await req.json();
+    const { message, conversationState = {} } = body;
+
+    if (!message || typeof message !== "string") {
+      return NextResponse.json({ error: "Valid text message is required" }, { status: 400 });
     }
 
-    const query = message.toLowerCase().trim();
+    // Limit message length to prevent spam
+    const safeMessage = message.slice(0, 1000);
+
+    const query = safeMessage.toLowerCase().trim();
     const isHindi = isHindiQuery(query);
 
     let replyText = "";
