@@ -1,4 +1,4 @@
-export type StoreCategory = "all" | "theme" | "design" | "shopify" | "components";
+export type StoreCategory = "all" | "theme" | "marketing" | "design" | "shopify" | "components";
 
 export type StoreItem = {
   id: string;
@@ -21,6 +21,7 @@ export type StoreItem = {
 export const STORE_CATEGORIES: { key: StoreCategory; label: string }[] = [
   { key: "all", label: "All Items" },
   { key: "theme", label: "Portfolio Themes" },
+  { key: "marketing", label: "Digital Marketing" },
   { key: "design", label: "UI/UX & Figma Designs" },
   { key: "shopify", label: "Shopify & E-Commerce" },
   { key: "components", label: "Web Kits & Components" },
@@ -49,6 +50,31 @@ export const STORE_ITEMS: StoreItem[] = [
       "Perpetual commercial license for personal & client projects",
     ],
     liveDemoUrl: "https://tech1-six.vercel.app/",
+    downloadOrRepoNote: "Instant GitHub repository access + documentation zip.",
+  },
+  {
+    id: "victor-digital-marketing-portfolio",
+    title: "Victor — Digital Marketing Manager & Performance Marketer Portfolio",
+    category: "theme",
+    categoryLabel: "Marketing Portfolio",
+    badge: "Bestseller",
+    popular: true,
+    tagline: "Conversion-engineered luxury portfolio for senior digital marketers, growth managers, and paid media directors.",
+    description:
+      "Crafted for performance marketers managing multi-million ad spends across Meta, Google PMax, and TikTok. Features live interactive ROAS metrics, ad creative showcase, case studies, attribution blueprints, and direct consultation booking funnel.",
+    priceUsd: "$24",
+    priceInr: "₹1,999",
+    image: "https://res.cloudinary.com/dh0amtajw/image/upload/v1788532410/Screenshot_2026-09-04_at_8.03.20_PM_nohf3v.png",
+    techStack: ["React 19", "Vite", "Tailwind CSS", "Instrument Serif", "Framer Motion", "Vercel"],
+    features: [
+      "Full React 19 + Vite production source code repository",
+      "Instrument Serif & Plus Jakarta Sans editorial typography layout",
+      "Interactive ROAS metrics, ad creative gallery & case studies",
+      "Ultra-fast sub-second load speed & 100 Lighthouse score",
+      "Client lead capture & consultation booking funnel",
+      "Perpetual commercial license for personal & client projects",
+    ],
+    liveDemoUrl: "https://digital-marketing-portfolio-six-psi.vercel.app/",
     downloadOrRepoNote: "Instant GitHub repository access + documentation zip.",
   },
   {

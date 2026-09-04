@@ -8,8 +8,7 @@ import { checkRateLimit } from "@/lib/rate-limiter";
 
 const execAsync = promisify(exec);
 
-const ELEVENLABS_API_KEY =
-  process.env.ELEVENLABS_API_KEY || "sk_a32451dacc8a3b79a71f57eba3cfe59607d4b3ea0231343a";
+const ELEVENLABS_API_KEY = process.env.ELEVENLABS_API_KEY || "";
 
 export async function POST(req: NextRequest) {
   // Rate limit: 10 audio synthesis requests per minute per IP
@@ -43,42 +42,44 @@ export async function POST(req: NextRequest) {
     // Limit text length to prevent credit depletion and buffer strain
     const trimmedText = text.slice(0, 500);
 
-    // 1. Attempt ElevenLabs Cloud TTS API
-    try {
-      const response = await fetch(
-        `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "xi-api-key": ELEVENLABS_API_KEY,
-          },
-          body: JSON.stringify({
-            text: trimmedText,
-            model_id: "eleven_multilingual_v2",
-            voice_settings: {
-              stability: 0.85,
-              similarity_boost: 0.85,
-              style: 0.0,
-              use_speaker_boost: true,
+    // 1. Attempt ElevenLabs Cloud TTS API if key is provided
+    if (ELEVENLABS_API_KEY) {
+      try {
+        const response = await fetch(
+          `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(voiceId)}?output_format=mp3_44100_128`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "xi-api-key": ELEVENLABS_API_KEY,
             },
-          }),
-        }
-      );
+            body: JSON.stringify({
+              text: trimmedText,
+              model_id: "eleven_multilingual_v2",
+              voice_settings: {
+                stability: 0.85,
+                similarity_boost: 0.85,
+                style: 0.0,
+                use_speaker_boost: true,
+              },
+            }),
+          }
+        );
 
-      if (response.ok) {
-        const audioBuffer = await response.arrayBuffer();
-        return new NextResponse(audioBuffer, {
-          status: 200,
-          headers: {
-            "Content-Type": "audio/mpeg",
-            "Content-Length": audioBuffer.byteLength.toString(),
-            "Cache-Control": "public, max-age=3600, s-maxage=86400",
-          },
-        });
+        if (response.ok) {
+          const audioBuffer = await response.arrayBuffer();
+          return new NextResponse(audioBuffer, {
+            status: 200,
+            headers: {
+              "Content-Type": "audio/mpeg",
+              "Content-Length": audioBuffer.byteLength.toString(),
+              "Cache-Control": "public, max-age=3600, s-maxage=86400",
+            },
+          });
+        }
+      } catch (elevenErr) {
+        console.warn("ElevenLabs cloud notice, checking local engine:", elevenErr);
       }
-    } catch (elevenErr) {
-      console.warn("ElevenLabs cloud notice, checking local engine:", elevenErr);
     }
 
     // 2. Local Fallback (Strictly sanitized for macOS local dev environments)

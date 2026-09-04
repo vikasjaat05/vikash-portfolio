@@ -61,11 +61,18 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
     return isNaN(num) ? 0 : num;
   };
 
+  const isItemInCat = (item: StoreItem, catKey: StoreCategory) => {
+    if (catKey === "all") return true;
+    if (catKey === "theme") return item.category === "theme" || item.category === "marketing";
+    if (catKey === "marketing") return item.category === "marketing" || item.categoryLabel.toLowerCase().includes("marketing");
+    return item.category === catKey;
+  };
+
   // Filter items by category, search query & sort
   const filteredItems = useMemo(() => {
     const q = (internalSearch || searchQuery).trim().toLowerCase();
     let result = STORE_ITEMS.filter((item) => {
-      const matchCat = activeCategory === "all" || item.category === activeCategory;
+      const matchCat = isItemInCat(item, activeCategory);
       const matchSearch =
         !q ||
         item.title.toLowerCase().includes(q) ||
@@ -149,10 +156,7 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
           {/* Category Filter Pills */}
           <div className="flex items-center gap-1.5 overflow-x-auto p-1 no-scrollbar">
             {STORE_CATEGORIES.map((cat) => {
-              const count =
-                cat.key === "all"
-                  ? STORE_ITEMS.length
-                  : STORE_ITEMS.filter((i) => i.category === cat.key).length;
+              const count = STORE_ITEMS.filter((i) => isItemInCat(i, cat.key)).length;
               const isActive = activeCategory === cat.key;
 
               return (

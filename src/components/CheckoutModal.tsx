@@ -17,7 +17,9 @@ import {
   Phone,
   Mail,
   Building2,
-  FileText
+  FileText,
+  Loader2,
+  Award
 } from "lucide-react";
 import { useCart } from "./CartContext";
 import { soundFX } from "@/lib/ui-sounds";
@@ -31,6 +33,8 @@ export default function CheckoutModal() {
     setIsCheckoutOpen,
     currency,
     formattedTotal,
+    discountCode,
+    setLatestReceipt,
     clearCart,
   } = useCart();
 
@@ -40,8 +44,11 @@ export default function CheckoutModal() {
   const [buyerCompany, setBuyerCompany] = useState("");
   const [buyerNotes, setBuyerNotes] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState("");
   const [generatedMessageText, setGeneratedMessageText] = useState("");
+  const [verifiedOrderRef, setVerifiedOrderRef] = useState("");
+  const [verifiedLicenseKey, setVerifiedLicenseKey] = useState("");
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
 
@@ -58,15 +65,68 @@ export default function CheckoutModal() {
     }
 
     setError("");
+    setIsSubmitting(true);
     soundFX.playPurchaseChime();
 
-    // Construct clean, beautifully structured WhatsApp message
+    let serverOrderNumber = "";
+    let serverLicenseKey = "";
+    let serverTotal = totalAmount;
+
+    // 1. Authoritative Server-Side Order Reservation
+    try {
+      const orderRes = await fetch("/api/orders/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((i) => ({ id: i.item.id, quantity: i.quantity })),
+          customer: {
+            name: buyerName.trim(),
+            email: buyerEmail.trim(),
+            phone: buyerPhone.trim(),
+            company: buyerCompany.trim() || undefined,
+            notes: buyerNotes.trim() || undefined,
+          },
+          discountCode: discountCode || undefined,
+          currency,
+        }),
+      });
+
+      if (orderRes.ok) {
+        const orderData = await orderRes.json();
+        if (orderData.order) {
+          serverOrderNumber = orderData.order.orderNumber;
+          serverLicenseKey = orderData.order.licenseKey;
+          serverTotal = orderData.order.formattedTotal;
+          setVerifiedOrderRef(serverOrderNumber);
+          setVerifiedLicenseKey(serverLicenseKey);
+
+          // Store verified receipt for certificate generation
+          setLatestReceipt({
+            buyerName: buyerName.trim(),
+            buyerEmail: buyerEmail.trim(),
+            buyerPhone: buyerPhone.trim(),
+            licenseKey: serverLicenseKey,
+            purchaseDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+            items: items.map((i) => i.item),
+            totalAmount: serverTotal,
+            currency: currency as any,
+            paymentMethod: "Direct Official Order Inquiry",
+          });
+        }
+      }
+    } catch (orderErr) {
+      console.warn("Server order reservation notice:", orderErr);
+    } finally {
+      setIsSubmitting(false);
+    }
+
+    // 2. Construct Clean, Authenticated WhatsApp message with Server Order Reference
     const waMessage = `🛍️ *NEW PORTFOLIO THEME ORDER INQUIRY*
 ━━━━━━━━━━━━━━━━━━━━
-📦 *Selected Theme(s):*
+${serverOrderNumber ? `🔖 *Official Order Ref:* ${serverOrderNumber}\n🔐 *License Key:* ${serverLicenseKey}\n` : ""}📦 *Selected Theme(s):*
 ${itemsList}
 
-💰 *Total Amount:* ${totalAmount} (${currency})
+💰 *Verified Total:* ${serverTotal} (${currency})
 ━━━━━━━━━━━━━━━━━━━━
 👤 *Customer Information:*
 • *Name:* ${buyerName.trim()}
@@ -97,8 +157,8 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
           name: buyerName,
           email: buyerEmail,
           company: buyerCompany ? `${buyerCompany} (Phone: ${buyerPhone})` : `Phone: ${buyerPhone}`,
-          budget: totalAmount,
-          service: `WhatsApp Order: ${items.map((i) => i.item.title).join(", ") || "Portfolio Theme"}`,
+          budget: serverTotal,
+          service: `Theme Order: ${items.map((i) => i.item.title).join(", ") || "Portfolio Theme"}`,
           message: waMessage,
         }),
       }).catch(() => {});
@@ -176,7 +236,7 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
                     Order Theme &amp; Connect
                   </h3>
                   <p className="text-xs sm:text-sm text-black/60 mt-1 leading-relaxed">
-                    Fill in your details below. Your order will be sent directly to Vikash&apos;s WhatsApp (<strong>+91 8000165311</strong>) for instant source code delivery &amp; setup.
+                    Fill in your details below. Your order will be registered on our secure server and sent directly to Vikash&apos;s WhatsApp (<strong>+91 8000165311</strong>) for instant code delivery.
                   </p>
                 </div>
 
@@ -209,9 +269,9 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
                   <div className="pt-2 border-t border-black/[0.05] flex items-center justify-between text-[11px] font-mono text-black/55">
                     <span className="flex items-center gap-1 text-emerald-700 font-semibold">
                       <ShieldCheck size={12} />
-                      Commercial License Included
+                      Server-Verified Commercial License
                     </span>
-                    <span>No Payment Gateway Wait</span>
+                    <span>Direct Delivery</span>
                   </div>
                 </div>
 
@@ -221,96 +281,94 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
                   </div>
                 )}
 
-                {/* Main Order Form */}
+                {/* Form Inputs */}
                 <form onSubmit={handleFormSubmit} className="space-y-3.5">
-                  {/* Name */}
+                  {/* Name Input */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
-                      Full Name *
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black/70 mb-1">
+                      Full Name <span className="text-red">*</span>
                     </label>
                     <div className="relative">
-                      <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
                       <input
                         type="text"
                         required
+                        placeholder="e.g. John Doe / Alex Morgan"
                         value={buyerName}
                         onChange={(e) => setBuyerName(e.target.value)}
-                        placeholder="e.g. Rahul Sharma / Alex Hunter"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs text-black placeholder:text-black/35 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all"
                       />
+                      <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
                     </div>
                   </div>
 
-                  {/* Phone & Email in 2 columns */}
+                  {/* Contact Row: Phone & Email */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* WhatsApp Phone */}
                     <div>
-                      <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
-                        WhatsApp Number *
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black/70 mb-1">
+                        WhatsApp Number <span className="text-red">*</span>
                       </label>
                       <div className="relative">
-                        <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
                         <input
                           type="tel"
                           required
+                          placeholder="+91 98765 43210"
                           value={buyerPhone}
                           onChange={(e) => setBuyerPhone(e.target.value)}
-                          placeholder="+91 98765 43210"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs text-black placeholder:text-black/35 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all"
                         />
+                        <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
                       </div>
                     </div>
 
-                    {/* Email */}
                     <div>
-                      <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
-                        Email Address *
+                      <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black/70 mb-1">
+                        Email Address <span className="text-red">*</span>
                       </label>
                       <div className="relative">
-                        <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
                         <input
                           type="email"
                           required
+                          placeholder="john@example.com"
                           value={buyerEmail}
                           onChange={(e) => setBuyerEmail(e.target.value)}
-                          placeholder="yourname@gmail.com"
-                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                          className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs text-black placeholder:text-black/35 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all"
                         />
+                        <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
                       </div>
                     </div>
                   </div>
 
                   {/* Company / Brand (Optional) */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
-                      Company / Brand Name <span className="text-black/40 font-normal">(Optional)</span>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black/70 mb-1">
+                      Company / Brand / Portfolio Name <span className="text-black/40 font-normal">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <Building2 size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
                       <input
                         type="text"
+                        placeholder="e.g. Acme Studios / Personal Portfolio"
                         value={buyerCompany}
                         onChange={(e) => setBuyerCompany(e.target.value)}
-                        placeholder="e.g. Studio Vertex or personal portfolio"
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                        className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-black/15 bg-white text-xs text-black placeholder:text-black/35 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all"
                       />
+                      <Building2 size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-black/40" />
                     </div>
                   </div>
 
-                  {/* Requirements / Notes (Optional) */}
+                  {/* Notes / Special Requests */}
                   <div>
-                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
-                      Requirements / Message <span className="text-black/40 font-normal">(Optional)</span>
+                    <label className="block text-xs font-mono font-bold uppercase tracking-wider text-black/70 mb-1">
+                      Project Notes / Special Setup Requirements <span className="text-black/40 font-normal">(Optional)</span>
                     </label>
                     <div className="relative">
-                      <FileText size={15} className="absolute left-3.5 top-3 text-black/40" />
                       <textarea
                         rows={2}
+                        placeholder="e.g. Need help with Vercel deployment and custom domain setup..."
                         value={buyerNotes}
                         onChange={(e) => setBuyerNotes(e.target.value)}
-                        placeholder="e.g. Want setup assistance on Vercel, need custom color palette, etc."
-                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all resize-none"
+                        className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-black/15 bg-white text-xs text-black placeholder:text-black/35 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all resize-none"
                       />
+                      <FileText size={14} className="absolute left-3 top-3 text-black/40" />
                     </div>
                   </div>
 
@@ -318,19 +376,29 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
                   <div className="pt-2">
                     <button
                       type="submit"
+                      disabled={isSubmitting}
                       data-cursor-hover
-                      className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_10px_25px_rgba(16,185,129,0.35)] active:scale-[0.99] transition-all cursor-pointer"
+                      className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_10px_25px_rgba(16,185,129,0.35)] active:scale-[0.99] transition-all cursor-pointer disabled:opacity-75"
                     >
-                      <MessageCircle size={18} />
-                      <span>Send Order via WhatsApp 💬</span>
-                      <ArrowRight size={15} />
+                      {isSubmitting ? (
+                        <>
+                          <Loader2 size={18} className="animate-spin" />
+                          <span>Securing Order on Server...</span>
+                        </>
+                      ) : (
+                        <>
+                          <MessageCircle size={18} />
+                          <span>Send Order via WhatsApp 💬</span>
+                          <ArrowRight size={15} />
+                        </>
+                      )}
                     </button>
                   </div>
 
                   {/* Direct Contact reassurance */}
                   <div className="text-center pt-1">
                     <p className="text-[11px] text-black/50 font-mono">
-                      🔒 Your details will be sent directly to Vikash&apos;s WhatsApp (<strong className="text-black/80">+91 8000165311</strong>).
+                      🔒 Server-verified order will be sent directly to Vikash&apos;s WhatsApp (<strong className="text-black/80">+91 8000165311</strong>).
                     </p>
                   </div>
                 </form>
@@ -344,15 +412,31 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
 
                 <div>
                   <span className="text-xs font-mono uppercase tracking-wider text-emerald-700 font-bold block mb-1">
-                    Order Details Prepared!
+                    Server Order Confirmed!
                   </span>
                   <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0a0a0a]">
                     Redirecting to WhatsApp...
                   </h3>
                   <p className="text-xs sm:text-sm text-black/60 mt-1.5 max-w-sm mx-auto leading-relaxed">
-                    Thank you, <strong>{buyerName}</strong>! Your order message has been formatted. If WhatsApp did not open automatically, click the button below:
+                    Thank you, <strong>{buyerName}</strong>! Your order has been securely registered on our server. If WhatsApp did not open automatically, click below:
                   </p>
                 </div>
+
+                {/* Verified Order Info Badge */}
+                {verifiedOrderRef && (
+                  <div className="p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-left text-xs font-mono space-y-1">
+                    <div className="flex items-center justify-between text-emerald-900 font-bold">
+                      <span>Order Reference:</span>
+                      <span>{verifiedOrderRef}</span>
+                    </div>
+                    {verifiedLicenseKey && (
+                      <div className="flex items-center justify-between text-emerald-700 text-[11px]">
+                        <span>License Key:</span>
+                        <span>{verifiedLicenseKey}</span>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Big Green Direct WhatsApp Button */}
                 <div className="space-y-2.5 pt-2">
@@ -386,6 +470,19 @@ Hi Vikash! I have submitted this theme order inquiry on your store. Please share
                       </>
                     )}
                   </button>
+
+                  {/* Verify Certificate Link */}
+                  {verifiedLicenseKey && (
+                    <a
+                      href={`/verify?lic=${encodeURIComponent(verifiedLicenseKey)}&buyer=${encodeURIComponent(buyerName)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-full py-2.5 px-4 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-xs font-mono font-semibold text-black/80 flex items-center justify-center gap-2 transition-colors"
+                    >
+                      <Award size={14} className="text-emerald-600" />
+                      <span>View Official License Certificate</span>
+                    </a>
+                  )}
                 </div>
 
                 {/* Done / Close Button */}

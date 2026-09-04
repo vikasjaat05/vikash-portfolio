@@ -275,12 +275,18 @@ export default function LicenseCertificateModal() {
             {/* Bottom Stamps */}
             <div className="flex items-center justify-between pt-6 mt-4 border-t border-black/10">
               {certQrUrl && (
-                <div className="flex items-center gap-2 text-left">
-                  <img src={certQrUrl} alt="Verify QR" className="w-12 h-12 rounded border p-0.5 bg-white" />
-                  <span className="text-[9px] font-mono text-black/50 uppercase leading-tight">
-                    Scan to Verify<br />Authenticity
+                <a
+                  href={`/verify?lic=${encodeURIComponent(latestReceipt.licenseKey)}&buyer=${encodeURIComponent(latestReceipt.buyerName)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 text-left group hover:opacity-80 transition-opacity"
+                  title="Click to verify online"
+                >
+                  <img src={certQrUrl} alt="Verify QR" className="w-12 h-12 rounded border p-0.5 bg-white shadow-xs group-hover:border-emerald-500 transition-colors" />
+                  <span className="text-[9px] font-mono text-black/50 group-hover:text-emerald-700 uppercase leading-tight">
+                    Scan / Tap to<br />Verify Online ↗
                   </span>
-                </div>
+                </a>
               )}
 
               <div className="text-right">
@@ -312,16 +318,27 @@ export default function LicenseCertificateModal() {
               <span>Download Official Certificate (PNG / High-Res)</span>
             </button>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+              <a
+                href={`/verify?lic=${encodeURIComponent(latestReceipt.licenseKey)}&buyer=${encodeURIComponent(latestReceipt.buyerName)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                data-cursor-hover
+                className="py-2.5 px-3 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors border border-emerald-200"
+              >
+                <ShieldCheck size={14} className="text-emerald-600" />
+                <span>Verify Online</span>
+              </a>
+
               <a
                 href="https://github.com/vikasjaat05"
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-hover
-                className="py-2.5 px-4 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-black text-xs font-semibold flex items-center justify-center gap-2 transition-colors"
+                className="py-2.5 px-3 rounded-xl bg-black/[0.04] hover:bg-black/[0.08] text-black text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
               >
                 <ExternalLink size={14} />
-                <span>Access GitHub Repository</span>
+                <span>GitHub Repo</span>
               </a>
 
               <a
@@ -329,10 +346,10 @@ export default function LicenseCertificateModal() {
                 target="_blank"
                 rel="noopener noreferrer"
                 data-cursor-hover
-                className="py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-xs"
+                className="py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
               >
                 <MessageCircle size={14} />
-                <span>Connect with Vikash on WhatsApp</span>
+                <span>WhatsApp</span>
               </a>
             </div>
           </div>
