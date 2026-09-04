@@ -109,18 +109,6 @@ export default function MusicCursorToggle({
           </span>
         </div>
       </div>
-
-      {/* Mobile / touch: fixed corner button */}
-      <button
-        onClick={toggle}
-        data-cursor-hover
-        aria-label={playing ? "Pause background music" : "Play background music"}
-        className="md:hidden absolute bottom-6 right-6 z-20"
-      >
-        <span className="flex items-center justify-center w-12 h-12 rounded-full bg-[#0a0a0a]/90 text-white text-xs font-semibold shadow-lg border border-white/20">
-          {playing ? "❚❚" : "▶"}
-        </span>
-      </button>
     </>
   );
 }

@@ -143,7 +143,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { cat: "web", project: "american-bullion-brokers" },
     { cat: "web", project: "zhongpan-client" },
     { cat: "app", project: "avara-sound-of-emotion" },
-    { cat: "app", project: "lgpsm-fashion" },
+    { cat: "app", project: "khushbu-choudhary" },
   ];
 
   const projectRoutes: MetadataRoute.Sitemap = projectSlugs.map((p) => ({

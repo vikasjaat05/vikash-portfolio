@@ -8,12 +8,13 @@ import BuyPortfolioFAQ from "./BuyPortfolioFAQ";
 import CartDrawer from "./CartDrawer";
 import CheckoutModal from "./CheckoutModal";
 import LicenseCertificateModal from "./LicenseCertificateModal";
+import AddToCartToast from "./AddToCartToast";
+import CountrySelectorModal from "./CountrySelectorModal";
 import CTA from "./CTA";
 import { CartProvider } from "./CartContext";
 
 export default function BuyPortfolioStoreClient() {
   const [searchQuery, setSearchQuery] = useState("");
-  const [currency, setCurrency] = useState<"USD" | "INR">("USD");
 
   return (
     <CartProvider>
@@ -26,7 +27,6 @@ export default function BuyPortfolioStoreClient() {
       {/* 3. Digital Store Catalog (Search, filters, product cards & Add to Cart) */}
       <BuyPortfolioCatalog
         searchQuery={searchQuery}
-        currency={currency}
       />
 
       {/* 4. Buyer Assurance FAQ */}
@@ -34,6 +34,12 @@ export default function BuyPortfolioStoreClient() {
 
       {/* 5. Contact CTA */}
       <CTA />
+
+      {/* Non-intrusive Add to Cart Floating Toast Notification */}
+      <AddToCartToast />
+
+      {/* Welcome / Region Country Selector Modal */}
+      <CountrySelectorModal />
 
       {/* Interactive Cart & Checkout Modals */}
       <CartDrawer />

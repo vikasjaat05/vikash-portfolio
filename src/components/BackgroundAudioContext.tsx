@@ -9,19 +9,13 @@ export type Track = {
   src: string;
 };
 
-// Playlist of background tracks — dynamically picked on each visit
+// Single background track
 export const TRACK_PLAYLIST: Track[] = [
   {
     id: "dancin",
     title: "Dancin (KRONO Remix)",
     artist: "Aaron Smith",
     src: "/audio/dancin.mp3",
-  },
-  {
-    id: "happy-nation",
-    title: "Happy Nation",
-    artist: "Ace of Base",
-    src: "/audio/hero_track.mp3",
   },
 ];
 
@@ -56,10 +50,9 @@ function getRandomTrackIndex(): number {
 
 function getOrCreateGlobalAudio(): HTMLAudioElement {
   if (!globalAudio && typeof window !== "undefined") {
-    currentTrackIndex = getRandomTrackIndex();
-    const track = TRACK_PLAYLIST[currentTrackIndex] || TRACK_PLAYLIST[0];
+    const track = TRACK_PLAYLIST[0];
     globalAudio = new Audio(track.src);
-    globalAudio.loop = false; // We use onEnded to cycle next track
+    globalAudio.loop = true;  // Loop the single track
     globalAudio.volume = 0.65;
     globalAudio.preload = "auto";
   }
@@ -162,7 +155,7 @@ function GlobalPersistentAudioWidget() {
   if (!show || !playing) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[999] animate-fade-in pointer-events-auto flex items-center gap-1.5 bg-[#0a0a0a]/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-2xl">
+    <div className="hidden md:flex fixed bottom-5 right-5 z-[999] animate-fade-in pointer-events-auto items-center gap-1.5 bg-[#0a0a0a]/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-2xl">
       <button
         onClick={toggle}
         data-cursor-hover
@@ -179,21 +172,6 @@ function GlobalPersistentAudioWidget() {
           {trackTitle}
         </span>
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-      </button>
-
-      {/* Skip / Next Song Button */}
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          nextTrack();
-        }}
-        data-cursor-hover
-        className="ml-1 p-1 rounded-full text-white/70 hover:text-white hover:bg-white/10 transition-colors"
-        title="Next Song ⏭️"
-      >
-        <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-          <path d="M5.5 3.5v17l10-8.5-10-8.5zm11 0v17h2v-17h-2z" />
-        </svg>
       </button>
     </div>
   );

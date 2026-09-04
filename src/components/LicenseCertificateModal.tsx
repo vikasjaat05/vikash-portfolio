@@ -15,15 +15,17 @@ import {
   FileText
 } from "lucide-react";
 import { useCart } from "./CartContext";
+import { soundFX } from "@/lib/ui-sounds";
 
 export default function LicenseCertificateModal() {
   const { latestReceipt, setLatestReceipt } = useCart();
   const [certQrUrl, setCertQrUrl] = useState<string>("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Generate QR Code for the certificate verification
+  // Play celebratory fanfare and generate QR Code for the certificate verification
   useEffect(() => {
     if (latestReceipt) {
+      soundFX.playPurchaseChime();
       const verifyUrl = `https://vikash.website/verify?lic=${latestReceipt.licenseKey}&buyer=${encodeURIComponent(latestReceipt.buyerName)}`;
       QRCode.toDataURL(verifyUrl, { width: 160, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } })
         .then((url) => setCertQrUrl(url))

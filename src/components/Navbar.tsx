@@ -5,10 +5,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
 import AnimatedLogo from "./AnimatedLogo";
+import { useBackgroundAudio } from "./BackgroundAudioContext";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const { playing, toggle } = useBackgroundAudio();
 
   const DARK_HERO_PAGES = ["/about", "/contact", "/vanguard"];
   const onDarkHero = DARK_HERO_PAGES.includes(pathname) && !scrolled;
@@ -45,6 +47,35 @@ export default function Navbar() {
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
             <span>Available for Q3</span>
           </div>
+
+          {/* Sound / Music Toggle Button */}
+          <button
+            type="button"
+            onClick={toggle}
+            data-cursor-hover
+            aria-label={playing ? "Pause Music" : "Play Music"}
+            className={`inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full text-xs font-mono font-medium transition-all duration-300 cursor-pointer active:scale-95 ${
+              playing
+                ? "bg-black text-white shadow-xs border border-white/20"
+                : onDarkHero
+                ? "bg-white/10 text-white/90 hover:bg-white/20 border border-white/15"
+                : "bg-black/[0.04] text-black/75 hover:bg-black/10 border border-black/[0.06]"
+            }`}
+            title={playing ? "Pause Music (Aaron Smith — Dancin)" : "Play Music (Aaron Smith — Dancin)"}
+          >
+            {playing ? (
+              <span className="flex items-end gap-0.5 h-3 w-3 justify-center">
+                <span className="w-0.5 bg-emerald-400 rounded-full animate-[bounce_0.6s_infinite] h-full" />
+                <span className="w-0.5 bg-emerald-400 rounded-full animate-[bounce_0.8s_0.2s_infinite] h-2.5" />
+                <span className="w-0.5 bg-emerald-400 rounded-full animate-[bounce_0.5s_0.4s_infinite] h-1.5" />
+              </span>
+            ) : (
+              <span className="text-[11px] leading-none">♫</span>
+            )}
+            <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider">
+              {playing ? "Pause" : "Play"}
+            </span>
+          </button>
 
           {/* Liquid Glass CTA Button (Optimized for mobile touch) */}
           <Link

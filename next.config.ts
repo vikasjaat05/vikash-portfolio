@@ -11,8 +11,8 @@ const contentSecurityPolicy = [
   "media-src 'self' https: blob: data:",
   "connect-src 'self' https://www.youtube.com https://unpkg.com https://lottie.host https://api.elevenlabs.io wss://api.elevenlabs.io blob: data:",
   "worker-src 'self' blob: data:",
-  "child-src 'self' blob:",
-  "frame-src https://www.youtube.com",
+  "child-src 'self' blob: https://tech1-six.vercel.app https://*.vercel.app",
+  "frame-src 'self' https://www.youtube.com https://tech1-six.vercel.app https://*.vercel.app",
   "font-src 'self' data:",
 ].join("; ");
 

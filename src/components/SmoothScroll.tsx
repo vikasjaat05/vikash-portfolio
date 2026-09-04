@@ -31,7 +31,23 @@ export default function SmoothScroll({ ready = true }: { ready?: boolean }) {
     document.fonts?.ready.then(() => lenis.resize());
     window.addEventListener("load", () => lenis.resize());
 
+    // Intercept internal anchor clicks (e.g. #catalog) for buttery smooth Lenis scroll
+    const handleAnchorClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement).closest("a");
+      if (!target) return;
+      const href = target.getAttribute("href");
+      if (href && href.startsWith("#") && href.length > 1) {
+        const el = document.querySelector(href);
+        if (el) {
+          e.preventDefault();
+          lenis.scrollTo(el as HTMLElement, { offset: -70, duration: 1.2 });
+        }
+      }
+    };
+    document.addEventListener("click", handleAnchorClick);
+
     return () => {
+      document.removeEventListener("click", handleAnchorClick);
       cancelAnimationFrame(raf);
       resizeObserver.disconnect();
       lenis.destroy();

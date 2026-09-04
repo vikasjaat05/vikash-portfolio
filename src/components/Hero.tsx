@@ -165,13 +165,60 @@ export default function Hero() {
     <section
       ref={sectionRef}
       id="top"
-      className="relative min-h-[92vh] sm:min-h-screen flex flex-col justify-between pt-24 sm:pt-28 pb-4 sm:pb-8 px-4 sm:px-8 md:px-12 overflow-hidden bg-white cursor-pointer select-none"
+      className="relative min-h-screen flex flex-col justify-between overflow-hidden bg-white cursor-pointer select-none"
     >
+      {/* Mobile Top Header: Proper H1 + Make Creative Capsule (Zero collision, in white sky) */}
+      <div className="block md:hidden relative z-10 w-full pt-16 sm:pt-20 px-4">
+        <div className="flex items-start justify-between gap-2">
+          {/* Proper H1 Headline on Left */}
+          <div className="max-w-[210px] text-left">
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold uppercase tracking-widest text-red mb-1">
+              <Sparkles size={10} className="text-red" />
+              <span>Portfolio &bull; 2026</span>
+            </span>
+            <h1 className="font-display font-black text-xl leading-[1.14] tracking-tight text-black">
+              Vikash Choudhary
+              <span className="block text-xs font-mono font-bold text-red tracking-wider uppercase mt-0.5">
+                Web &amp; Shopify Developer
+              </span>
+            </h1>
+          </div>
+
+          {/* Make Creative Toggle Capsule on Right */}
+          <button
+            type="button"
+            onClick={handleToggleMode}
+            data-cursor-hover
+            className="relative group p-[2px] rounded-full overflow-hidden transition-transform duration-300 active:scale-95 shadow-md shrink-0 mt-0.5"
+          >
+            <span className="absolute inset-0 bg-gradient-to-r from-red via-black to-red opacity-80 animate-spin [animation-duration:4s] rounded-full" />
+            <div
+              className={`relative flex items-center gap-1.5 px-3 py-1.5 rounded-full backdrop-blur-xl text-xs font-bold transition-all ${
+                isCreativeMode ? "bg-[#0a0a0a] text-white" : "bg-white/95 text-black"
+              }`}
+            >
+              <Wand2 size={11} className="text-red animate-bounce [animation-duration:2s]" />
+              <span className="text-[11px] font-semibold">
+                {isCreativeMode ? "Normal" : "Creative"}
+              </span>
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isCreativeMode ? "bg-red animate-pulse" : "bg-black/20"
+                }`}
+              />
+            </div>
+          </button>
+        </div>
+      </div>
+
+      {/* Spacer to keep center photo 100% visible and unblocked */}
+      <div className="block md:hidden flex-1 min-h-[300px]" />
+
       {/* Cursor-Following Floating Audio Player Badge */}
       <MusicCursorToggle targetRef={sectionRef} />
 
-      {/* Mode Switch Button (Luxury Glowing Morphing Capsule) */}
-      <div className="absolute top-20 right-4 sm:top-24 sm:right-8 lg:top-28 lg:right-12 z-30 pointer-events-auto">
+      {/* Mode Switch Button (Luxury Glowing Morphing Capsule) — Desktop Only */}
+      <div className="hidden md:block absolute top-20 right-4 sm:top-24 sm:right-8 lg:top-28 lg:right-12 z-30 pointer-events-auto">
         <Magnetic>
           <button
             type="button"
@@ -318,10 +365,10 @@ export default function Hero() {
         </motion.div>
       </AnimatePresence>
 
-      {/* 2. Typography Layout — Responsive for all devices & Search Crawlers */}
+      {/* 2. Desktop Typography Layout — Rendered on desktop screens */}
       <motion.div
         style={{ y: contentY, opacity: contentOpacity }}
-        className="block max-w-[1400px] mx-auto w-full relative z-10 my-auto py-4 px-4 sm:px-6 md:px-0"
+        className="hidden md:block max-w-[1400px] mx-auto w-full relative z-10 my-auto md:absolute md:bottom-12 md:left-12 md:px-0 md:pt-28 md:pb-4"
       >
         <div className="max-w-md sm:max-w-lg">
           {/* Top L-Corner Bracket */}
@@ -382,6 +429,23 @@ export default function Hero() {
           </motion.div>
         </div>
       </motion.div>
+
+      {/* Mobile CTA Buttons — Cleanly placed at desk level right above Marquee */}
+      <div className="block md:hidden relative z-10 px-4 pb-3 flex items-center justify-center gap-3">
+        <Link
+          href="/contact"
+          className="liquid-btn-dark !text-xs !px-5 !py-2.5 !font-semibold gap-1.5 shadow-md"
+        >
+          <span>Start a Project</span>
+          <ArrowUpRight size={13} />
+        </Link>
+        <Link
+          href="/work"
+          className="inline-flex items-center gap-1.5 liquid-nav px-4 py-2.5 rounded-full text-xs font-semibold text-black/85 bg-white/90 backdrop-blur-md border border-black/10 shadow-xs"
+        >
+          <span>Explore Work (14)</span>
+        </Link>
+      </div>
 
       {/* 3. Infinite Marquee Ticker */}
       <div className="relative mt-auto border-t border-b border-black/10 py-2.5 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">

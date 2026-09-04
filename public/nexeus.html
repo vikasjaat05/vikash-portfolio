@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Nexeus — Build your future now</title>
+  
+  <!-- Preload fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
+
+  <script>
+    // Entrance setup before initial paint
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('js-enter');
+    }
+  </script>
+
+  <style>
+    :root {
+      --font-display: 'Instrument Serif', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --fw-regular: 400;
+      --fw-medium: 500;
+      --text-primary: #fff;
+      --text-heading: rgba(255,255,255,.86);
+      --text-muted: rgba(255,255,255,.68);
+      --text-invert: #000;
+
+      /* Desktop layout system */
+      --u: min(calc(100vw / 1600), calc(100vh / 780), 1.6px);
+      --fw: calc(1600 * var(--u));
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #1d8fb8;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .viewport {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    /* Background video & poster */
+    .bg {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #1d8fb8;
+    }
+
+    .bg video {
+      position: absolute;
+      right: 0;
+      bottom: calc(-45 * var(--u));
+      width: calc(1668 * var(--u));
+      height: calc(1037 * var(--u));
+      min-width: 100%;
+      min-height: calc(100% + 45 * var(--u));
+      object-fit: cover;
+      object-position: right bottom;
+      filter: saturate(0.86);
+    }
+
+    /* Aspect-ratio scrims */
+    .scrim {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 0;
+      pointer-events: none;
+    }
+
+    @media (min-aspect-ratio: 17/10) {
+      .scrim {
+        height: calc(450 * var(--u));
+        background: linear-gradient(180deg, rgba(4,20,32,0.48) 0%, rgba(4,20,32,0.25) 55%, rgba(4,20,32,0) 100%);
+      }
+    }
+
+    @media (min-aspect-ratio: 19/10) {
+      .scrim {
+        height: calc(470 * var(--u));
+        background: linear-gradient(180deg, rgba(4,20,32,0.58) 0%, rgba(4,20,32,0.31) 55%, rgba(4,20,32,0) 100%);
+      }
+    }
+
+    @media (min-aspect-ratio: 21/10) {
+      .bg video {
+        object-position: right 76%;
+      }
+      .scrim {
+        height: calc(480 * var(--u));
+        background: linear-gradient(180deg, rgba(4,20,32,0.56) 0%, rgba(4,20,32,0.30) 55%, rgba(4,20,32,0) 100%);
+      }
+    }
+
+    @media (min-aspect-ratio: 5/4) and (max-aspect-ratio: 31/20) {
+      .scrim {
+        height: calc(410 * var(--u));
+        background: linear-gradient(180deg, rgba(4,20,32,0.26) 0%, rgba(4,20,32,0.13) 55%, rgba(4,20,32,0) 100%);
+      }
+    }
+
+    /* Stage */
+    .stage {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      width: var(--fw);
+      height: 100%;
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .stage > * {
+      pointer-events: auto;
+    }
+
+    .abs {
+      position: absolute;
+    }
+
+    /* Hero elements */
+    .eyebrow {
+      left: calc(46.6 * var(--u));
+      top: calc(128.2 * var(--u));
+      font-size: calc(15.0 * var(--u));
+      font-weight: var(--fw-medium);
+      line-height: 1;
+      letter-spacing: calc(0.2163 * var(--u));
+      color: #fff;
+      text-transform: uppercase;
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    .headline-mask {
+      left: calc(46.0 * var(--u));
+      top: calc(163.0 * var(--u));
+      overflow: hidden;
+    }
+
+    .headline {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: calc(71.2 * var(--u));
+      line-height: 1;
+      letter-spacing: calc(0.5696 * var(--u));
+      color: #fff;
+      white-space: nowrap;
+      margin: 0;
+    }
+
+    .lede {
+      left: calc(46.4 * var(--u));
+      top: calc(245.2 * var(--u));
+      width: calc(432 * var(--u));
+      font-size: calc(17.0 * var(--u));
+      font-weight: var(--fw-medium);
+      line-height: calc(22.9 * var(--u));
+      letter-spacing: calc(-0.15232 * var(--u));
+      color: #fff;
+      margin: 0;
+    }
+
+    .cta {
+      left: calc(46.8 * var(--u));
+      top: calc(335.0 * var(--u));
+      width: calc(157.0 * var(--u));
+      height: calc(40.6 * var(--u));
+      border-radius: calc(4.2 * var(--u));
+      background: #fff;
+      display: block;
+      text-decoration: none;
+      transition: background .25s ease, transform .25s ease, box-shadow .25s ease;
+    }
+
+    .cta:hover {
+      background: #eef2f3;
+      transform: translateY(calc(-1.5 * var(--u)));
+      box-shadow: 0 calc(8 * var(--u)) calc(22 * var(--u)) rgba(0,0,0,.20);
+    }
+
+    .cta span {
+      position: absolute;
+      left: calc(32.0 * var(--u));
+      top: calc(13.8 * var(--u));
+      font-size: calc(15.8 * var(--u));
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: calc(0.057828 * var(--u));
+      color: #000;
+      white-space: nowrap;
+    }
+
+    /* Footer - Glass pane */
+    .footer {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: calc(342 * var(--u));
+      backdrop-filter: blur(calc(50 * var(--u))) saturate(0.85);
+      -webkit-backdrop-filter: blur(calc(50 * var(--u))) saturate(0.85);
+      background: 
+        linear-gradient(90deg, rgba(255,255,255,0.022) 0, rgba(255,255,255,0.072) calc(20 * var(--u)), rgba(255,255,255,0) calc(58 * var(--u))),
+        linear-gradient(270deg, rgba(255,255,255,0.02) 0, rgba(255,255,255,0.05) calc(20 * var(--u)), rgba(255,255,255,0) calc(58 * var(--u))),
+        linear-gradient(180deg, rgba(34,14,0,0.28) 0%, rgba(70,34,0,0.24) 52%, rgba(160,120,48,0.6) 100%);
+      box-shadow: 
+        inset 1px 0 0 0 rgba(255,255,255,0.145),
+        inset -1px 0 0 0 rgba(255,255,255,0.125),
+        inset 0 -1px 0 0 rgba(255,255,255,0.17),
+        inset 0 1px 0 0 rgba(255,255,255,0.03);
+      overflow: hidden;
+    }
+
+    .finner {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: var(--fw);
+      height: 100%;
+    }
+
+    /* Starburst logo mark */
+    .mark {
+      left: calc(26.6 * var(--u));
+      top: calc(36.2 * var(--u));
+      width: calc(25.4 * var(--u));
+      height: calc(25.4 * var(--u));
+    }
+
+    .wordmark {
+      left: calc(62.8 * var(--u));
+      top: calc(36.0 * var(--u));
+      font-size: calc(23.4 * var(--u));
+      font-weight: 400;
+      letter-spacing: calc(0.2808 * var(--u));
+      color: #fff;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .tagline {
+      left: calc(26.6 * var(--u));
+      top: calc(73.0 * var(--u));
+      width: calc(274 * var(--u));
+      font-size: calc(13.5 * var(--u));
+      font-weight: var(--fw-medium);
+      line-height: calc(17.4 * var(--u));
+      letter-spacing: calc(-0.18576 * var(--u));
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    /* Columns */
+    .nav {
+      position: static;
+    }
+
+    .col {
+      position: absolute;
+      top: calc(37.0 * var(--u));
+    }
+
+    .col.c1 { left: calc(938.4 * var(--u)); }
+    .col.c2 { left: calc(1185.0 * var(--u)); }
+    .col.c3 { left: calc(1450.6 * var(--u)); }
+
+    .col h3 {
+      font-size: calc(15.84 * var(--u));
+      font-weight: 400;
+      letter-spacing: calc(0.183744 * var(--u));
+      color: var(--text-heading);
+      white-space: nowrap;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .col ul {
+      position: absolute;
+      top: calc(31.0 * var(--u));
+      left: 0;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .col li {
+      line-height: calc(25.27 * var(--u));
+      white-space: nowrap;
+    }
+
+    .col a {
+      font-size: calc(15.55 * var(--u));
+      font-weight: 400;
+      letter-spacing: calc(-0.07775 * var(--u));
+      color: #fff;
+      text-decoration: none;
+      transition: opacity .2s ease;
+      display: inline-block;
+    }
+
+    .col a:hover {
+      opacity: .6;
+    }
+
+    .rule {
+      left: calc(26.6 * var(--u));
+      width: calc(1546.8 * var(--u));
+      top: calc(207.5 * var(--u));
+      height: max(1px, calc(1 * var(--u)));
+      background: rgba(255,255,255,.42);
+    }
+
+    .legal {
+      left: calc(26.6 * var(--u));
+      top: calc(271.2 * var(--u));
+      font-size: calc(14.0 * var(--u));
+      font-weight: var(--fw-medium);
+      letter-spacing: calc(-0.30422 * var(--u));
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .socials {
+      left: calc(1375.8 * var(--u));
+      top: calc(264.4 * var(--u));
+      display: flex;
+      gap: calc(47.1 * var(--u));
+    }
+
+    .socials a {
+      width: calc(30 * var(--u));
+      height: calc(30 * var(--u));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: opacity .2s ease;
+      text-decoration: none;
+    }
+
+    .socials a:hover {
+      opacity: .68;
+    }
+
+    .socials svg {
+      width: 100%;
+      height: 100%;
+      fill: currentColor;
+    }
+
+    /* ==================================================
+       ENTRANCE ANIMATION STYLES (first load)
+       ================================================== */
+    html.js-enter .eyebrow,
+    html.js-enter .lede,
+    html.js-enter .cta,
+    html.js-enter .mark,
+    html.js-enter .wordmark,
+    html.js-enter .tagline,
+    html.js-enter .col,
+    html.js-enter .legal,
+    html.js-enter .socials a {
+      opacity: 0;
+    }
+
+    html.js-enter .headline-mask {
+      clip-path: inset(-45% -8% -6px -3%);
+    }
+
+    html.js-enter .headline {
+      transform: translate3d(0, 118%, 0);
+    }
+
+    html.js-enter .rule {
+      transform: scaleX(0);
+      transform-origin: left center;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+      html.js-enter .eyebrow,
+      html.js-enter .lede,
+      html.js-enter .cta,
+      html.js-enter .mark,
+      html.js-enter .wordmark,
+      html.js-enter .tagline,
+      html.js-enter .col,
+      html.js-enter .legal,
+      html.js-enter .socials a {
+        opacity: 1 !important;
+      }
+      html.js-enter .headline-mask {
+        clip-path: none !important;
+      }
+      html.js-enter .headline {
+        transform: none !important;
+      }
+      html.js-enter .rule {
+        transform: none !important;
+      }
+    }
+
+    /* ==================================================
+       RESPONSIVE — portrait / narrow (max-aspect-ratio: 5/4)
+       ================================================== */
+    @media (max-aspect-ratio: 5/4) {
+      :root {
+        --u: calc(100vw / 780);
+        --pad: clamp(20px, 5.6vw, 56px);
+      }
+
+      .viewport {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 100dvh;
+        overflow-y: auto;
+      }
+
+      .bg video {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 106%;
+        object-fit: cover;
+        object-position: 80% bottom;
+      }
+
+      .scrim {
+        position: fixed;
+        height: min(56vh, calc(560 * var(--u)));
+        background: linear-gradient(180deg, rgba(6,22,34,0.42) 0%, rgba(6,22,34,0.26) 55%, rgba(6,22,34,0) 100%);
+      }
+
+      .stage {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        padding-left: var(--pad);
+        padding-right: var(--pad);
+      }
+
+      .abs {
+        position: static;
+      }
+
+      .eyebrow {
+        margin-top: clamp(28px, 7vh, 72px);
+        font-size: clamp(10.5px, 2.9vw, 15px);
+        letter-spacing: .09em;
+      }
+
+      .headline-mask {
+        margin-top: clamp(14px, 2.5vh, 22px);
+        overflow: visible;
+      }
+
+      .headline {
+        white-space: normal;
+        font-size: clamp(34px, 9.4vw, 72px);
+        line-height: 1.04;
+      }
+
+      .lede {
+        margin-top: clamp(16px, 2.8vh, 26px);
+        width: auto;
+        max-width: 38ch;
+        font-size: clamp(14.5px, 3.9vw, 18px);
+        line-height: 1.42;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        min-width: clamp(140px, 40vw, 190px);
+        height: clamp(42px, 6vh, 52px);
+        padding: 0 clamp(20px, 6vw, 34px);
+        border-radius: 4px;
+        margin-top: clamp(22px, 3.6vh, 36px);
+        margin-bottom: clamp(40px, 8vh, 80px);
+      }
+
+      .cta span {
+        position: static;
+        font-size: clamp(13.5px, 3.8vw, 16px);
+      }
+
+      .footer {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        height: auto;
+        margin-top: auto;
+        padding: clamp(22px, 3.4vh, 40px) var(--pad) clamp(20px, 3vh, 34px);
+        background: linear-gradient(180deg, rgba(14,9,4,.58), rgba(26,16,5,.60) 55%, rgba(52,36,12,.66));
+        backdrop-filter: blur(28px) saturate(0.9);
+        -webkit-backdrop-filter: blur(28px) saturate(0.9);
+      }
+
+      .finner {
+        position: relative;
+        left: 0;
+        top: 0;
+        transform: none;
+        width: 100%;
+        height: auto;
+      }
+
+      .brandrow {
+        display: flex;
+        align-items: center;
+        gap: clamp(9px, 2.6vw, 14px);
+      }
+
+      .mark {
+        width: clamp(22px, 6vw, 26px);
+        height: clamp(22px, 6vw, 26px);
+      }
+
+      .wordmark {
+        font-size: clamp(20px, 5.2vw, 24px);
+      }
+
+      .tagline {
+        margin-top: clamp(12px, 2vh, 18px);
+        width: auto;
+        max-width: 38ch;
+        font-size: clamp(12.5px, 3.2vw, 14px);
+        line-height: 1.38;
+      }
+
+      .nav {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: clamp(14px, 3.4vw, 30px);
+        margin-top: clamp(26px, 4vh, 38px);
+      }
+
+      .col {
+        position: static;
+      }
+
+      .col h3 {
+        font-size: clamp(13px, 3.4vw, 16px);
+      }
+
+      .col ul {
+        position: static;
+        margin-top: clamp(10px, 1.8vh, 16px);
+      }
+
+      .col li {
+        line-height: clamp(22px, 3.2vh, 28px);
+      }
+
+      .col a {
+        font-size: clamp(12.5px, 3.2vw, 15px);
+      }
+
+      .rule {
+        width: 100%;
+        margin-top: clamp(24px, 3.6vh, 36px);
+        margin-bottom: clamp(18px, 2.8vh, 28px);
+      }
+
+      .footrow {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .legal {
+        font-size: clamp(12px, 3vw, 14px);
+      }
+
+      .socials {
+        gap: clamp(20px, 5vw, 36px);
+      }
+
+      .socials a {
+        width: clamp(22px, 5vw, 28px);
+        height: clamp(22px, 5vw, 28px);
+      }
+    }
+
+    /* Mobile narrow optimizations */
+    @media (max-aspect-ratio: 5/4) and (max-width: 648px) {
+      html, body {
+        overflow: visible;
+      }
+
+      .headline {
+        font-size: clamp(32px, 10.2vw, 56px);
+        max-width: 15ch;
+        text-wrap: balance;
+      }
+
+      .lede {
+        max-width: 34ch;
+      }
+
+      .nav {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .nav .c3 {
+        grid-column: 1 / -1;
+      }
+
+      .nav .c3 ul {
+        columns: 2;
+      }
+
+      .col a {
+        padding-block: clamp(9px, 1.1vh, 11px);
+      }
+
+      .footrow {
+        flex-wrap: nowrap;
+      }
+
+      .legal {
+        white-space: nowrap;
+      }
+
+      .socials {
+        flex-shrink: 0;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .footrow {
+        flex-wrap: wrap;
+      }
+      .legal {
+        white-space: normal;
+      }
+    }
+
+    @media (max-height: 620px) {
+      .eyebrow {
+        margin-top: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport">
+    <!-- Background video & poster -->
+    <div class="bg">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/693205bf-8048-456a-879e-4e0a1b85a098.webp"
+        aria-label="Painted alpine panorama: a lone hiker with a pink backpack faces a snow-capped peak above a sea of clouds"
+      >
+        <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_123836_11a3c5e0-713f-4bef-a8e9-7dd93bdea3b0.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <!-- Aspect-ratio responsive scrim -->
+    <div class="scrim" aria-hidden="true"></div>
+
+    <!-- Left-aligned hero stage -->
+    <div class="stage">
+      <p class="eyebrow abs">Ready when you are</p>
+      
+      <div class="headline-mask abs">
+        <h1 class="headline">Build your future now</h1>
+      </div>
+
+      <p class="lede abs">
+        From branding and websites to marketing and growth systems, everything you need to move forward starts right here.
+      </p>
+
+      <a href="#" class="cta abs" aria-label="Take Control">
+        <span>Take Control</span>
+      </a>
+    </div>
+
+    <!-- Glass footer -->
+    <footer class="footer">
+      <div class="finner">
+        <!-- Brand row: Starburst mark + wordmark -->
+        <div class="brandrow">
+          <svg class="mark abs" viewBox="0 0 100 100" fill="#fff" aria-hidden="true">
+            <path d="M 45.13 1.28 L 54.87 1.28 L 54.87 42.42 L 45.13 38.09 Z"/>
+            <path d="M 79.47 12.10 L 87.90 20.53 L 58.80 49.62 L 53.45 38.13 Z"/>
+            <path d="M 98.72 45.13 L 98.72 54.87 L 57.58 54.87 L 61.91 45.13 Z"/>
+            <path d="M 87.90 79.47 L 79.47 87.90 L 50.38 58.80 L 61.87 53.45 Z"/>
+            <path d="M 54.87 98.72 L 45.13 98.72 L 45.13 57.58 L 54.87 61.91 Z"/>
+            <path d="M 20.53 87.90 L 12.10 79.47 L 41.20 50.38 L 46.55 61.87 Z"/>
+            <path d="M 1.28 54.87 L 1.28 45.13 L 42.42 45.13 L 38.09 54.87 Z"/>
+            <path d="M 12.10 20.53 L 20.53 12.10 L 49.62 41.20 L 38.13 46.55 Z"/>
+          </svg>
+          <span class="wordmark abs">Nexeus</span>
+        </div>
+
+        <p class="tagline abs">
+          Change your future today using marketing and growth systems everything you need starts here.
+        </p>
+
+        <!-- Navigation Columns -->
+        <nav class="nav" aria-label="Footer Navigation">
+          <div class="col c1">
+            <h3>SOLUTIONS</h3>
+            <ul>
+              <li><a href="#">Revenue Acceleration</a></li>
+              <li><a href="#">Search Visibility</a></li>
+              <li><a href="#">Conversion Optimization</a></li>
+              <li><a href="#">Customer Automation</a></li>
+            </ul>
+          </div>
+
+          <div class="col c2">
+            <h3>CAPABILITIES</h3>
+            <ul>
+              <li><a href="#">Web Architecture</a></li>
+              <li><a href="#">Brand Systems</a></li>
+              <li><a href="#">Growth Marketing</a></li>
+              <li><a href="#">E-commerce Infrastructure</a></li>
+            </ul>
+          </div>
+
+          <div class="col c3">
+            <h3>RESOURCES</h3>
+            <ul>
+              <li><a href="#">Case Studies</a></li>
+              <li><a href="#">Growth Insights</a></li>
+              <li><a href="#">Playbooks</a></li>
+              <li><a href="#">Industry Reports</a></li>
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Divider rule -->
+        <div class="rule abs" aria-hidden="true"></div>
+
+        <!-- Foot row: Legal + Social links -->
+        <div class="footrow">
+          <p class="legal abs">® 2025 Nexeus all rights reserved.</p>
+
+          <div class="socials abs" aria-label="Social Media">
+            <!-- LinkedIn -->
+            <a href="#" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 30 30" aria-hidden="true">
+                <path d="M24 4H6C4.9 4 4 4.9 4 6v18c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zM11.5 22H8.3V12.7h3.2V22zM9.9 11.3c-1 0-1.8-.8-1.8-1.8s.8-1.8 1.8-1.8 1.8.8 1.8 1.8-.8 1.8-1.8 1.8zm12.1 10.7h-3.2v-4.9c0-1.2 0-2.7-1.7-2.7s-1.9 1.3-1.9 2.6V22H12V12.7h3.1v1.3h.1c.4-.8 1.5-1.6 3-1.6 3.2 0 3.8 2.1 3.8 4.9V22z"/>
+              </svg>
+            </a>
+
+            <!-- GitHub -->
+            <a href="#" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+            </a>
+
+            <!-- Medium -->
+            <a href="#" aria-label="Medium" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 1043.63 592.71" aria-hidden="true">
+                <path d="M588.67 296.36c0 163.67-131.78 296.35-294.33 296.35S0 460.03 0 296.36 131.78 0 294.34 0s294.33 132.69 294.33 296.36M911.56 296.36c0 154.06-65.89 279-147.17 279s-147.17-124.94-147.17-279 65.88-279 147.16-279 147.17 124.9 147.17 279M1043.63 296.36c0 138-23.17 249.94-51.76 249.94s-51.75-111.91-51.75-249.94 23.17-249.94 51.75-249.94 51.76 111.9 51.76 249.94"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Web Animations API Entrance Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!document.documentElement.classList.contains('js-enter') || document.body.dataset.entered) {
+        return;
+      }
+      document.body.dataset.entered = 'true';
+
+      const isMobile = window.matchMedia('(max-width: 648px)').matches;
+      const d = isMobile ? 0.62 : 1.0;
+      const t = isMobile ? 0.85 : 1.0;
+
+      const EXPO = 'cubic-bezier(.16,1,.3,1)';
+      const SOFT = 'cubic-bezier(.22,.65,.28,1)';
+      const SETTLE = 'cubic-bezier(.33,1,.68,1)';
+
+      const animations = [];
+
+      function run(el, keyframes, options) {
+        if (!el) return;
+        const anim = el.animate(keyframes, {
+          ...options,
+          fill: 'forwards'
+        });
+        animations.push(anim);
+        return anim;
+      }
+
+      // 1. Eyebrow: rise 12px, 560ms, delay 60
+      const eyebrow = document.querySelector('.eyebrow');
+      run(eyebrow, [
+        { opacity: 0, transform: `translate3d(0, ${12 * d}px, 0)` },
+        { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+      ], {
+        duration: 560 * t,
+        delay: 60 * t,
+        easing: SOFT
+      });
+
+      // 2. Headline: 118% -> 0, 950ms, delay 170
+      const headline = document.querySelector('.headline');
+      run(headline, [
+        { transform: 'translate3d(0, 118%, 0)' },
+        { transform: 'translate3d(0, 0, 0)' }
+      ], {
+        duration: 950 * t,
+        delay: 170 * t,
+        easing: EXPO
+      });
+
+      // 3. Lede: rise 14px, 660ms, delay 430
+      const lede = document.querySelector('.lede');
+      run(lede, [
+        { opacity: 0, transform: `translate3d(0, ${14 * d}px, 0)` },
+        { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+      ], {
+        duration: 660 * t,
+        delay: 430 * t,
+        easing: SOFT
+      });
+
+      // 4. CTA: opacity 0 + Y12 + scale(.985) -> none, 580ms, delay 620
+      const cta = document.querySelector('.cta');
+      run(cta, [
+        { opacity: 0, transform: `translate3d(0, ${12 * d}px, 0) scale(0.985)` },
+        { opacity: 1, transform: 'translate3d(0, 0, 0) scale(1)' }
+      ], {
+        duration: 580 * t,
+        delay: 620 * t,
+        easing: SETTLE
+      });
+
+      // 5. Mark + Wordmark: rise 10px, 540ms, delay 600
+      const mark = document.querySelector('.mark');
+      const wordmark = document.querySelector('.wordmark');
+      [mark, wordmark].forEach((el) => {
+        run(el, [
+          { opacity: 0, transform: `translate3d(0, ${10 * d}px, 0)` },
+          { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+        ], {
+          duration: 540 * t,
+          delay: 600 * t,
+          easing: SOFT
+        });
+      });
+
+      // 6. Tagline: rise 10px, 540ms, delay 670
+      const tagline = document.querySelector('.tagline');
+      run(tagline, [
+        { opacity: 0, transform: `translate3d(0, ${10 * d}px, 0)` },
+        { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+      ], {
+        duration: 540 * t,
+        delay: 670 * t,
+        easing: SOFT
+      });
+
+      // 7. Each .col: rise 14px, 580ms, delay 720 + i*70
+      const cols = document.querySelectorAll('.col');
+      cols.forEach((col, idx) => {
+        run(col, [
+          { opacity: 0, transform: `translate3d(0, ${14 * d}px, 0)` },
+          { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+        ], {
+          duration: 580 * t,
+          delay: (720 + idx * 70) * t,
+          easing: SOFT
+        });
+      });
+
+      // 8. Rule: scaleX 0->1, 720ms, delay 980
+      const rule = document.querySelector('.rule');
+      run(rule, [
+        { transform: 'scaleX(0)' },
+        { transform: 'scaleX(1)' }
+      ], {
+        duration: 720 * t,
+        delay: 980 * t,
+        easing: EXPO
+      });
+
+      // 9. Legal: rise 8px, 500ms, delay 1120
+      const legal = document.querySelector('.legal');
+      run(legal, [
+        { opacity: 0, transform: `translate3d(0, ${8 * d}px, 0)` },
+        { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+      ], {
+        duration: 500 * t,
+        delay: 1120 * t,
+        easing: SOFT
+      });
+
+      // 10. Each .socials a: rise 8px, 500ms, delay 1170 + i*60
+      const socialLinks = document.querySelectorAll('.socials a');
+      socialLinks.forEach((link, idx) => {
+        run(link, [
+          { opacity: 0, transform: `translate3d(0, ${8 * d}px, 0)` },
+          { opacity: 1, transform: 'translate3d(0, 0, 0)' }
+        ], {
+          duration: 500 * t,
+          delay: (1170 + idx * 60) * t,
+          easing: SOFT
+        });
+      });
+
+      // Once all animations are complete, clean up js-enter class and reset residual transforms
+      const totalTime = (1170 + 2 * 60 + 500) * t + 50;
+      setTimeout(() => {
+        document.documentElement.classList.remove('js-enter');
+        animations.forEach((anim) => anim.cancel());
+      }, totalTime);
+    });
+  </script>
+</body>
+</html>

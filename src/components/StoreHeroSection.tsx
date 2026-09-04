@@ -1,26 +1,20 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { 
   ArrowUpRight, 
   Sparkles, 
   Star, 
-  Code2, 
-  Zap, 
-  ShieldCheck, 
   ShoppingBag,
-  ExternalLink,
   Plus,
   Check,
-  Award,
-  Layers,
-  Flame,
-  MousePointerClick
+  Award
 } from "lucide-react";
 import { useCart } from "./CartContext";
 import { STORE_ITEMS } from "@/data/store-items";
 import { soundFX } from "@/lib/ui-sounds";
+import StoreControlBar from "./StoreControlBar";
 
 const RECENT_PURCHASES = [
   { name: "Dev from San Francisco", item: "Cyber Ronin 2026", time: "2m ago" },
@@ -28,6 +22,7 @@ const RECENT_PURCHASES = [
   { name: "Agency from London", item: "Figma Cyber UI Kit", time: "11m ago" },
   { name: "Creator from Bangalore", item: "Minimalist Bento Theme", time: "18m ago" },
   { name: "Engineer from Tokyo", item: "Solax CleanTech Platform", time: "24m ago" },
+  { name: "Studio from Dubai", item: "Liquid Glass Motion Kit", time: "31m ago" },
 ];
 
 const MARQUEE_ITEMS = [
@@ -42,43 +37,30 @@ const MARQUEE_ITEMS = [
 ];
 
 export default function StoreHeroSection() {
-  const { addToCart, setIsCartOpen, totalCount } = useCart();
+  const { addToCart, setIsCartOpen, totalCount, formatPrice, t } = useCart();
   const [purchaseIndex, setPurchaseIndex] = useState(0);
   const [addedFlagship, setAddedFlagship] = useState(false);
-
-  // 3D Tilt Card Motion Values
-  const cardRef = useRef<HTMLDivElement>(null);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [12, -12]), { damping: 20, stiffness: 200 });
-  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-12, 12]), { damping: 20, stiffness: 200 });
-
-  const handleCardMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    mouseX.set(x);
-    mouseY.set(y);
-  };
-
-  const handleCardMouseLeave = () => {
-    mouseX.set(0);
-    mouseY.set(0);
-  };
 
   // Rotate live purchases simulation
   useEffect(() => {
     const timer = setInterval(() => {
       setPurchaseIndex((prev) => (prev + 1) % RECENT_PURCHASES.length);
-    }, 4200);
+    }, 4000);
     return () => clearInterval(timer);
+  }, []);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
   }, []);
 
   const flagshipItem = STORE_ITEMS[0]; // Cyber Ronin 2026
 
-  const handleAddFlagship = () => {
+  const handleAddFlagship = (e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
     soundFX.playCartChime();
     addToCart(flagshipItem);
     setAddedFlagship(true);
@@ -88,49 +70,73 @@ export default function StoreHeroSection() {
   const currentPurchase = RECENT_PURCHASES[purchaseIndex];
 
   return (
-    <section className="relative px-3 sm:px-5 md:px-8 pt-24 sm:pt-28 pb-10 bg-[#faf8f5]">
-      {/* ========================================================= */}
-      {/* 1. LARGE SIGNATURE HERO CONTAINER                         */}
-      {/* ========================================================= */}
-      <div className="relative w-full rounded-[2.2rem] sm:rounded-[3.2rem] overflow-hidden bg-gradient-to-br from-[#0a0f1d] via-[#111827] to-[#1e1b4b] text-white shadow-[0_24px_70px_rgba(0,0,0,0.22)] border border-black/[0.08]">
-        
-        {/* Continuous Animated Energy Meshes & Gradients */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
-          <motion.div
-            animate={{
-              scale: [1, 1.3, 1],
-              opacity: [0.2, 0.4, 0.2],
-              x: [0, 50, 0],
-              y: [0, -40, 0],
-            }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute -top-24 left-1/4 w-[700px] h-[550px] bg-red/25 blur-[140px] rounded-full"
+    <section 
+      className="relative w-full overflow-hidden bg-[#142838] text-white shadow-[0_30px_90px_rgba(0,0,0,0.25)] border-b border-black/[0.08]"
+      style={{ transform: "translateZ(0)" }}
+    >
+      {/* Background Looping Alpine Cinematic Video - Edge-to-Edge Full Width */}
+      <div 
+        className="absolute inset-0 pointer-events-none overflow-hidden bg-[#1d8fb8]"
+        style={{ transform: "translateZ(0)" }}
+      >
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/693205bf-8048-456a-879e-4e0a1b85a098.webp"
+          aria-label="Painted alpine panorama: a lone hiker with a pink backpack faces a snow-capped peak above a sea of clouds"
+          className="absolute inset-0 w-full h-full object-cover object-right-bottom scale-100 pointer-events-none"
+          style={{ 
+            filter: "saturate(0.95) contrast(1.04)",
+            transform: "translateZ(0)",
+          }}
+        >
+          <source
+            src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260826_123836_11a3c5e0-713f-4bef-a8e9-7dd93bdea3b0.mp4"
+            type="video/mp4"
           />
-          <motion.div
-            animate={{
-              scale: [1, 1.25, 1],
-              opacity: [0.15, 0.35, 0.15],
-              x: [0, -40, 0],
-              y: [0, 50, 0],
-            }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute bottom-0 right-10 w-[600px] h-[500px] bg-[#3b82f6]/20 blur-[150px] rounded-full"
-          />
-          
-          {/* Subtle Grid Dot Array */}
-          <div 
-            className="absolute inset-0 opacity-[0.06]"
-            style={{
-              backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px)`,
-              backgroundSize: "28px 28px",
-            }}
-          />
-        </div>
+        </video>
 
-        {/* ======================================================= */}
-        {/* TOP STATUS BAR: LIVE TICKER & ANIMATED CART TRIGGER     */}
-        {/* ======================================================= */}
-        <div className="relative z-20 flex flex-col sm:flex-row items-center justify-between gap-3 px-6 sm:px-10 md:px-14 pt-6 sm:pt-8">
+        {/* Directional Left Scrim: protects headline & text contrast while leaving mountain & clouds 100% visible */}
+        <div 
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background: "linear-gradient(90deg, rgba(6, 18, 30, 0.78) 0%, rgba(6, 18, 30, 0.48) 44%, rgba(6, 18, 30, 0.08) 72%, transparent 100%)",
+          }}
+        />
+
+        {/* Top Status Bar Scrim */}
+        <div 
+          className="absolute top-0 left-0 right-0 h-36 pointer-events-none"
+          style={{
+            background: "linear-gradient(180deg, rgba(4, 14, 24, 0.60) 0%, transparent 100%)",
+          }}
+        />
+
+        {/* Bottom Bento Anchor Scrim */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-80 pointer-events-none"
+          style={{
+            background: "linear-gradient(0deg, rgba(6, 16, 26, 0.90) 0%, rgba(6, 16, 26, 0.45) 50%, transparent 100%)",
+          }}
+        />
+        
+        {/* Subtle Grid Dot Array */}
+        <div 
+          className="absolute inset-0 opacity-[0.04] pointer-events-none"
+          style={{
+            backgroundImage: `radial-gradient(rgba(255, 255, 255, 0.45) 1px, transparent 1px)`,
+            backgroundSize: "28px 28px",
+          }}
+        />
+      </div>
+
+      {/* ======================================================= */}
+      {/* TOP STATUS BAR: LIVE TICKER, CONTROLS & CART TRIGGER    */}
+      {/* ======================================================= */}
+      <div className="relative z-20 max-w-[1550px] mx-auto w-full flex flex-col md:flex-row items-center justify-between gap-3 px-4 sm:px-8 md:px-12 pt-28 sm:pt-32">
           
           {/* Animated Recent Sale Alert Ticker */}
           <motion.div
@@ -147,45 +153,51 @@ export default function StoreHeroSection() {
             </span>
             <span className="font-mono text-white/55 text-[11px]">{currentPurchase.time}:</span>
             <span className="text-white font-medium truncate max-w-[200px] sm:max-w-none text-xs">
-              {currentPurchase.name} purchased <strong className="text-white font-semibold">{currentPurchase.item}</strong>
+              {currentPurchase.name} acquired <strong className="text-white font-semibold">{currentPurchase.item}</strong>
             </span>
           </motion.div>
 
-          {/* Floating Cart Trigger with Counter Bounce */}
-          <motion.button
-            type="button"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              soundFX.playOpenChime();
-              setIsCartOpen(true);
-            }}
-            data-cursor-hover
-            className="relative flex items-center gap-2.5 px-4.5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-xs font-semibold text-white transition-all shadow-md group"
-          >
-            <ShoppingBag size={14} className="text-red group-hover:rotate-12 transition-transform" />
-            <span>Cart</span>
-            {totalCount > 0 ? (
-              <motion.span
-                initial={{ scale: 0 }}
-                animate={{ scale: [1, 1.25, 1] }}
-                className="w-5 h-5 rounded-full bg-red text-white text-[10px] font-black flex items-center justify-center shadow-xs"
-              >
-                {totalCount}
-              </motion.span>
-            ) : (
-              <span className="text-white/40 text-[11px] font-mono">0</span>
-            )}
-          </motion.button>
+          {/* Right Controls: Language, Currency & Cart Bag */}
+          <div className="flex items-center gap-2.5">
+            {/* Multi-Language & Multi-Currency Selectors */}
+            <StoreControlBar />
+
+            {/* Floating Cart Trigger with Counter Bounce */}
+            <motion.button
+              type="button"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => {
+                soundFX.playOpenChime();
+                setIsCartOpen(true);
+              }}
+              data-cursor-hover
+              className="relative flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 backdrop-blur-md text-xs font-semibold text-white transition-all shadow-md group"
+            >
+              <ShoppingBag size={14} className="text-red group-hover:rotate-12 transition-transform" />
+              <span>{t("cart")}</span>
+              {totalCount > 0 ? (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: [1, 1.3, 1] }}
+                  className="w-5 h-5 rounded-full bg-red text-white text-[10px] font-black flex items-center justify-center shadow-xs"
+                >
+                  {totalCount}
+                </motion.span>
+              ) : (
+                <span className="text-white/40 text-[11px] font-mono">0</span>
+              )}
+            </motion.button>
+          </div>
         </div>
 
         {/* ======================================================= */}
-        {/* HERO MAIN CONTENT & 3D TILT SHOWCASE                   */}
+        {/* HERO MAIN CONTENT (Cinematic Left-Aligned Layout)       */}
         {/* ======================================================= */}
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center px-6 sm:px-10 md:px-14 pt-6 sm:pt-10 pb-8 sm:pb-10">
+        <div className="relative z-10 max-w-[1550px] mx-auto w-full px-4 sm:px-8 md:px-12 pt-8 sm:pt-14 pb-14 sm:pb-20">
           
           {/* Left Column: Brand Copy & Interactive Quick Actions */}
-          <div className="lg:col-span-7 flex flex-col justify-center text-left">
+          <div className="max-w-2xl lg:max-w-3xl flex flex-col justify-center text-left">
             
             {/* Pill Tag with Shimmer Effect */}
             <motion.div
@@ -196,7 +208,7 @@ export default function StoreHeroSection() {
             >
               <span className="flex h-2 w-2 rounded-full bg-red animate-pulse" />
               <span className="font-mono uppercase tracking-widest text-[11px] text-white/80">
-                Official Digital Store
+                {t("heroPill")}
               </span>
               <span className="text-white/30">|</span>
               <span className="font-semibold text-white flex items-center gap-1">
@@ -205,22 +217,22 @@ export default function StoreHeroSection() {
               </span>
             </motion.div>
 
-            {/* Main Headline */}
+            {/* Main Headline with kinetic styling */}
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.05 }}
               className="font-display text-4xl sm:text-6xl md:text-7xl font-black text-white tracking-tight leading-[1.05] mb-6"
             >
-              Award-Winning <br />
+              {t("heroTitle1")} <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-white/95 to-white/70">
-                Portfolio Themes &amp;
+                {t("heroTitle2")}
               </span>{" "}
               <span
                 className="text-red italic font-serif"
                 style={{ fontFamily: "'Instrument Serif', serif" }}
               >
-                Digital Craft.
+                {t("heroTitle3")}
               </span>
             </motion.h1>
 
@@ -229,10 +241,9 @@ export default function StoreHeroSection() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="text-white/75 text-base sm:text-lg max-w-xl leading-relaxed mb-8"
+              className="text-white/85 text-base sm:text-lg max-w-xl leading-relaxed mb-8 drop-shadow-sm"
             >
-              Production-tested Next.js 16 + React 19 source code, luxury Shopify storefronts, 
-              and bespoke UI/UX systems. Every purchase includes an <strong>official commercial certificate</strong> and direct developer setup.
+              {t("heroSubtitle")}
             </motion.p>
 
             {/* Action Buttons */}
@@ -245,9 +256,9 @@ export default function StoreHeroSection() {
               <a
                 href="#catalog"
                 data-cursor-hover
-                className="group inline-flex items-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-red hover:bg-red-dark text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-[0_10px_25px_rgba(225,6,0,0.4)] hover:scale-105 active:scale-95"
+                className="group inline-flex items-center gap-3 pl-6 pr-2.5 py-2.5 rounded-full bg-red hover:bg-red-dark text-white font-bold text-xs sm:text-sm uppercase tracking-wider transition-all duration-300 shadow-[0_10px_25px_rgba(225,6,0,0.45)] hover:scale-105 active:scale-95"
               >
-                <span>Explore Catalog</span>
+                <span>{t("exploreCatalog")}</span>
                 <span className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:rotate-45">
                   <ArrowUpRight size={16} strokeWidth={2.5} />
                 </span>
@@ -257,7 +268,7 @@ export default function StoreHeroSection() {
                 type="button"
                 onClick={handleAddFlagship}
                 data-cursor-hover
-                className={`inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 shadow-md ${
+                className={`relative inline-flex items-center gap-2 px-6 py-3 rounded-full text-xs sm:text-sm font-semibold transition-all duration-300 shadow-md ${
                   addedFlagship
                     ? "bg-emerald-500 text-white scale-105"
                     : "bg-white/10 hover:bg-white/20 border border-white/25 text-white hover:scale-105 active:scale-95"
@@ -266,12 +277,12 @@ export default function StoreHeroSection() {
                 {addedFlagship ? (
                   <>
                     <Check size={16} />
-                    <span>Added to Cart!</span>
+                    <span>{t("added")}</span>
                   </>
                 ) : (
                   <>
                     <Plus size={16} className="text-red" />
-                    <span>Quick Add Cyber Ronin ($129)</span>
+                    <span>{t("quickAdd")} ({formatPrice(flagshipItem.priceUsd, flagshipItem.priceInr)})</span>
                   </>
                 )}
               </button>
@@ -291,78 +302,13 @@ export default function StoreHeroSection() {
               </div>
               <span className="font-mono text-white/40">•</span>
               <span className="font-medium text-white/90">
-                Rated 4.9/5 by 350+ developers
+                {t("ratedBy")}
               </span>
               <span className="font-mono text-white/40">•</span>
               <span className="inline-flex items-center gap-1.5 text-emerald-400 font-mono text-[11px] bg-emerald-500/10 px-2.5 py-0.5 rounded-full border border-emerald-500/20">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                24 shoppers live
+                28 {t("liveShoppers")}
               </span>
-            </motion.div>
-          </div>
-
-          {/* Right Column: 3D Interactive Tilt Showcase Card */}
-          <div className="lg:col-span-5 relative flex items-center justify-center perspective-[1000px]">
-            <motion.div
-              ref={cardRef}
-              style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-              onMouseMove={handleCardMouseMove}
-              onMouseLeave={handleCardMouseLeave}
-              className="relative w-full max-w-[460px] rounded-3xl overflow-hidden bg-white/[0.08] border border-white/25 backdrop-blur-2xl shadow-[0_30px_90px_rgba(0,0,0,0.55)] p-5 transition-shadow duration-300 hover:shadow-[0_35px_100px_rgba(225,6,0,0.25)]"
-            >
-              {/* Card Window Bar */}
-              <div className="flex items-center justify-between pb-3.5 border-b border-white/10 mb-4">
-                <div className="flex items-center gap-1.5">
-                  <span className="w-2.5 h-2.5 rounded-full bg-red/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-amber-400/80" />
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-400/80" />
-                </div>
-                <span className="text-[10px] font-mono text-white/60">
-                  cyber-ronin-2026.zip
-                </span>
-                <span className="text-[10px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20 flex items-center gap-1">
-                  <Flame size={10} className="text-amber-400" />
-                  Most Popular
-                </span>
-              </div>
-
-              {/* Showcase Screenshot with Glow & Quick Add */}
-              <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-black/40 border border-white/10 mb-4 group">
-                <img
-                  src="https://res.cloudinary.com/dh0amtajw/image/upload/v1783577279/25b3c37a-add8-4e2e-920a-fa6239df736b_jyz3ni.png"
-                  alt="Cyber Ronin Portfolio Theme"
-                  className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-                
-                <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-xs">
-                  <div>
-                    <span className="text-[10px] font-mono uppercase text-red font-bold block">
-                      Flagship Theme
-                    </span>
-                    <span className="font-bold text-white text-sm">Cyber Ronin 2026 Edition</span>
-                  </div>
-                  
-                  <button
-                    type="button"
-                    onClick={handleAddFlagship}
-                    data-cursor-hover
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-red hover:bg-red-dark text-white font-bold text-xs shadow-md transition-all active:scale-95"
-                  >
-                    <ShoppingBag size={13} />
-                    <span>Add to Cart</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Dynamic Highlights Footer */}
-              <div className="p-3 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-between text-[11px] font-mono">
-                <div className="flex items-center gap-1.5 text-emerald-400 font-semibold">
-                  <ShieldCheck size={14} />
-                  <span>Verified License Included</span>
-                </div>
-                <span className="text-white font-bold">$129 / ₹9,999</span>
-              </div>
             </motion.div>
           </div>
         </div>
@@ -384,7 +330,7 @@ export default function StoreHeroSection() {
         {/* ======================================================= */}
         {/* BOTTOM ROW OF 5 BENTO PREVIEW CARDS                     */}
         {/* ======================================================= */}
-        <div className="relative z-20 px-4 sm:px-8 py-6 sm:py-8">
+        <div className="relative z-20 max-w-[1550px] mx-auto w-full px-4 sm:px-8 md:px-12 py-8 sm:py-12">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4">
             
             {/* Card 1: Core Tech Tags */}
@@ -485,8 +431,6 @@ export default function StoreHeroSection() {
 
           </div>
         </div>
-
-      </div>
     </section>
   );
 }

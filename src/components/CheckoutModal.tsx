@@ -1,22 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import QRCode from "qrcode";
 import { 
   X, 
-  CreditCard, 
-  QrCode, 
-  ShieldCheck, 
-  Lock, 
-  Loader2, 
-  ArrowRight, 
+  MessageCircle, 
+  Send, 
   CheckCircle2, 
   Sparkles, 
-  MessageCircle,
-  Smartphone
+  ShieldCheck, 
+  ArrowRight,
+  ExternalLink,
+  Copy,
+  Check,
+  User,
+  Phone,
+  Mail,
+  Building2,
+  FileText
 } from "lucide-react";
 import { useCart } from "./CartContext";
+import { soundFX } from "@/lib/ui-sounds";
+
+const VIKASH_WHATSAPP_NUMBER = "918000165311"; // +91 8000165311
 
 export default function CheckoutModal() {
   const {
@@ -24,91 +30,108 @@ export default function CheckoutModal() {
     isCheckoutOpen,
     setIsCheckoutOpen,
     currency,
-    finalPriceUsd,
-    finalPriceInr,
+    formattedTotal,
     clearCart,
-    setLatestReceipt,
   } = useCart();
 
-  const [paymentMethod, setPaymentMethod] = useState<"upi" | "card" | "paypal">("upi");
   const [buyerName, setBuyerName] = useState("");
-  const [buyerEmail, setBuyerEmail] = useState("");
   const [buyerPhone, setBuyerPhone] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardExpiry, setCardExpiry] = useState("");
-  const [cardCvc, setCardCvc] = useState("");
-  const [upiQrUrl, setUpiQrUrl] = useState<string>("");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [buyerEmail, setBuyerEmail] = useState("");
+  const [buyerCompany, setBuyerCompany] = useState("");
+  const [buyerNotes, setBuyerNotes] = useState("");
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [generatedWhatsAppUrl, setGeneratedWhatsAppUrl] = useState("");
+  const [generatedMessageText, setGeneratedMessageText] = useState("");
+  const [copied, setCopied] = useState(false);
   const [error, setError] = useState("");
 
-  const totalAmount = currency === "USD" ? `$${finalPriceUsd}` : `₹${finalPriceInr.toLocaleString()}`;
+  const totalAmount = formattedTotal;
+  const itemsList = items.length > 0 
+    ? items.map((i) => `• ${i.item.title} (${i.item.categoryLabel})`).join("\n")
+    : "• Custom Portfolio Theme Inquiry";
 
-  // Generate real UPI payment QR code string
-  useEffect(() => {
-    if (isCheckoutOpen) {
-      const upiLink = `upi://pay?pa=8000165311@upi&pn=Vikash%20Choudhary&am=${finalPriceInr}&cu=INR&tn=Digital%20Portfolio%20Theme`;
-      QRCode.toDataURL(upiLink, { width: 220, margin: 1, color: { dark: "#0a0a0a", light: "#ffffff" } })
-        .then((url) => setUpiQrUrl(url))
-        .catch(() => {});
-    }
-  }, [isCheckoutOpen, finalPriceInr]);
-
-  const handleCompleteOrder = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!buyerName || !buyerEmail) {
-      setError("Please fill in your name and email.");
+    if (!buyerName.trim() || !buyerPhone.trim() || !buyerEmail.trim()) {
+      setError("Please fill in your Name, WhatsApp Number, and Email.");
       return;
     }
 
-    setIsProcessing(true);
     setError("");
+    soundFX.playPurchaseChime();
 
-    // Simulate verified secure payment processing
-    setTimeout(async () => {
-      // Generate Unique License Key
-      const randomSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
-      const randomNum = Math.floor(1000 + Math.random() * 9000);
-      const generatedLicenseKey = `LIC-VK-2026-${randomNum}-${randomSuffix}`;
+    // Construct clean, beautifully structured WhatsApp message
+    const waMessage = `🛍️ *NEW PORTFOLIO THEME ORDER INQUIRY*
+━━━━━━━━━━━━━━━━━━━━
+📦 *Selected Theme(s):*
+${itemsList}
 
-      // Notify backend / email via /api/contact
-      try {
-        await fetch("/api/contact", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: buyerName,
-            email: buyerEmail,
-            company: buyerPhone ? `Phone: ${buyerPhone}` : "Store Purchase",
-            budget: totalAmount,
-            service: `Store Order: ${items.map((i) => i.item.title).join(", ")}`,
-            message: `Official Order Completed!\nBuyer: ${buyerName}\nEmail: ${buyerEmail}\nPhone: ${buyerPhone}\nLicense: ${generatedLicenseKey}\nMethod: ${paymentMethod.toUpperCase()}\nItems: ${items.map((i) => i.item.title).join(", ")}\nTotal: ${totalAmount}`,
-          }),
-        });
-      } catch {
-        // Continue even if network notification fails
-      }
+💰 *Total Amount:* ${totalAmount} (${currency})
+━━━━━━━━━━━━━━━━━━━━
+👤 *Customer Information:*
+• *Name:* ${buyerName.trim()}
+• *WhatsApp / Phone:* ${buyerPhone.trim()}
+• *Email:* ${buyerEmail.trim()}
+• *Company / Brand:* ${buyerCompany.trim() || "Individual Founder / Creator"}
 
-      // Save Receipt in state to show personalized certificate modal
-      setLatestReceipt({
-        buyerName,
-        buyerEmail,
-        buyerPhone,
-        licenseKey: generatedLicenseKey,
-        purchaseDate: new Date().toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
+📝 *Requirements / Message:*
+"${buyerNotes.trim() || "I would like to acquire this theme with full commercial license and setup."}"
+
+🌐 *Source:* https://vikash.website/buy-portfolio
+━━━━━━━━━━━━━━━━━━━━
+Hi Vikash! I have submitted this theme order inquiry on your store. Please share the source code and payment details!`;
+
+    const encoded = encodeURIComponent(waMessage);
+    const waUrl = `https://wa.me/${VIKASH_WHATSAPP_NUMBER}?text=${encoded}`;
+
+    setGeneratedWhatsAppUrl(waUrl);
+    setGeneratedMessageText(waMessage);
+    setIsSubmitted(true);
+
+    // Save lead in background via /api/contact as backup
+    try {
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: buyerName,
+          email: buyerEmail,
+          company: buyerCompany ? `${buyerCompany} (Phone: ${buyerPhone})` : `Phone: ${buyerPhone}`,
+          budget: totalAmount,
+          service: `WhatsApp Order: ${items.map((i) => i.item.title).join(", ") || "Portfolio Theme"}`,
+          message: waMessage,
         }),
-        items: items.map((i) => i.item),
-        totalAmount,
-        currency,
-        paymentMethod: paymentMethod.toUpperCase(),
-      });
+      }).catch(() => {});
+    } catch {
+      // Ignore background network errors
+    }
 
-      setIsProcessing(false);
-      setIsCheckoutOpen(false);
+    // Automatically open WhatsApp in a new tab
+    if (typeof window !== "undefined") {
+      window.open(waUrl, "_blank", "noopener,noreferrer");
+    }
+  };
+
+  const handleCopyMessage = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(generatedMessageText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
+
+  const handleClose = () => {
+    setIsCheckoutOpen(false);
+    // If order was submitted, clear cart after closing
+    if (isSubmitted) {
       clearCart();
-    }, 1200);
+      setIsSubmitted(false);
+      setBuyerName("");
+      setBuyerPhone("");
+      setBuyerEmail("");
+      setBuyerCompany("");
+      setBuyerNotes("");
+    }
   };
 
   return (
@@ -120,251 +143,263 @@ export default function CheckoutModal() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsCheckoutOpen(false)}
+            onClick={handleClose}
             className="fixed inset-0 bg-black/75 backdrop-blur-md"
           />
 
-          {/* Checkout Card */}
+          {/* Modal Container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 15 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 15 }}
             transition={{ duration: 0.25 }}
-            className="relative w-full max-w-xl rounded-3xl p-6 sm:p-8 bg-white text-[#0a0a0a] shadow-2xl border border-black/10 z-10 my-8 max-h-[90vh] overflow-y-auto"
+            className="relative w-full max-w-lg rounded-3xl p-6 sm:p-8 bg-white text-[#0a0a0a] shadow-2xl border border-black/10 z-10 my-8 max-h-[92vh] overflow-y-auto"
           >
             {/* Close Button */}
             <button
               type="button"
-              onClick={() => setIsCheckoutOpen(false)}
-              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/60 transition-colors"
+              onClick={handleClose}
+              className="absolute top-5 right-5 w-8 h-8 rounded-full bg-black/[0.04] hover:bg-black/[0.08] flex items-center justify-center text-black/60 hover:text-black transition-colors cursor-pointer"
             >
               <X size={16} />
             </button>
 
-            {/* Header */}
-            <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-red uppercase tracking-wider mb-1">
-                <Lock size={12} />
-                <span>256-Bit Encrypted Checkout</span>
-              </div>
-              <h3 className="font-display text-2xl sm:text-3xl font-bold">
-                Complete Your Acquisition
-              </h3>
-              <p className="text-xs sm:text-sm text-black/60 mt-1">
-                An official, downloadable commercial license certificate will be generated in your name upon completion.
-              </p>
-            </div>
-
-            {error && (
-              <div className="mb-4 p-3 rounded-xl bg-red/10 text-red text-xs border border-red/20 font-medium">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleCompleteOrder} className="space-y-5">
-              {/* 1. Customer Details */}
-              <div className="space-y-3">
-                <span className="text-xs font-mono uppercase tracking-wider text-black/50 block font-semibold">
-                  1. Licensee Information
-                </span>
-
-                <div>
-                  <label className="block text-[11px] font-mono uppercase text-black/60 mb-1">
-                    Your Full Name (Printed on Certificate) *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={buyerName}
-                    onChange={(e) => setBuyerName(e.target.value)}
-                    placeholder="e.g. Alex Hunter"
-                    className="w-full px-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-red text-sm outline-none font-medium text-[#0a0a0a]"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase text-black/60 mb-1">
-                      Email Address (For Code Access) *
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      value={buyerEmail}
-                      onChange={(e) => setBuyerEmail(e.target.value)}
-                      placeholder="alex@example.com"
-                      className="w-full px-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-red text-sm outline-none font-medium text-[#0a0a0a]"
-                    />
+            {!isSubmitted ? (
+              <>
+                {/* Form Header */}
+                <div className="mb-5 pr-8">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-mono font-bold uppercase tracking-wider mb-2.5 border border-emerald-200/60">
+                    <MessageCircle size={13} className="text-emerald-600" />
+                    <span>Direct WhatsApp Connection</span>
                   </div>
-
-                  <div>
-                    <label className="block text-[11px] font-mono uppercase text-black/60 mb-1">
-                      WhatsApp / Phone (Instant Link)
-                    </label>
-                    <input
-                      type="text"
-                      value={buyerPhone}
-                      onChange={(e) => setBuyerPhone(e.target.value)}
-                      placeholder="+91 8000165311"
-                      className="w-full px-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-red text-sm outline-none font-medium text-[#0a0a0a]"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* 2. Payment Method Selector */}
-              <div className="space-y-3 pt-3 border-t border-black/[0.06]">
-                <span className="text-xs font-mono uppercase tracking-wider text-black/50 block font-semibold">
-                  2. Select Payment Method
-                </span>
-
-                <div className="grid grid-cols-3 gap-2">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("upi")}
-                    className={`py-2.5 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "upi"
-                        ? "border-red bg-red/5 text-red shadow-xs font-bold"
-                        : "border-black/[0.08] hover:bg-black/[0.02] text-black/70"
-                    }`}
-                  >
-                    <QrCode size={15} />
-                    <span>UPI / QR</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("card")}
-                    className={`py-2.5 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "card"
-                        ? "border-red bg-red/5 text-red shadow-xs font-bold"
-                        : "border-black/[0.08] hover:bg-black/[0.02] text-black/70"
-                    }`}
-                  >
-                    <CreditCard size={15} />
-                    <span>Card</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod("paypal")}
-                    className={`py-2.5 px-3 rounded-xl border text-xs font-semibold flex items-center justify-center gap-1.5 transition-all ${
-                      paymentMethod === "paypal"
-                        ? "border-red bg-red/5 text-red shadow-xs font-bold"
-                        : "border-black/[0.08] hover:bg-black/[0.02] text-black/70"
-                    }`}
-                  >
-                    <Smartphone size={15} />
-                    <span>PayPal</span>
-                  </button>
+                  <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0a0a0a] tracking-tight leading-snug">
+                    Order Theme &amp; Connect
+                  </h3>
+                  <p className="text-xs sm:text-sm text-black/60 mt-1 leading-relaxed">
+                    Fill in your details below. Your order will be sent directly to Vikash&apos;s WhatsApp (<strong>+91 8000165311</strong>) for instant source code delivery &amp; setup.
+                  </p>
                 </div>
 
-                {/* UPI QR Payment Box */}
-                {paymentMethod === "upi" && (
-                  <div className="p-4 rounded-2xl bg-[#faf8f5] border border-black/[0.06] text-center space-y-3">
-                    <span className="text-xs text-black/70 block">
-                      Scan with <strong>Google Pay, PhonePe, Paytm, or BHIM</strong>:
+                {/* Selected Item Summary Card */}
+                <div className="mb-5 p-3.5 rounded-2xl bg-[#faf8f5] border border-black/[0.06] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-mono uppercase font-bold text-black/50">
+                      Selected Item ({items.length || 1})
                     </span>
-                    {upiQrUrl && (
-                      <div className="w-36 h-36 mx-auto bg-white p-2 rounded-xl shadow-xs border border-black/[0.08] flex items-center justify-center">
-                        <img src={upiQrUrl} alt="UPI QR Code" className="w-full h-full object-contain" />
+                    <span className="font-display text-base font-black text-red">
+                      {totalAmount}
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    {items.length > 0 ? (
+                      items.map((i) => (
+                        <div key={i.item.id} className="flex items-center justify-between text-xs text-black/80 font-medium">
+                          <span className="truncate max-w-[240px]">• {i.item.title}</span>
+                          <span className="font-mono text-black/60 text-[11px]">{i.item.categoryLabel}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-xs text-black/80 font-medium">
+                        • Victor — Graphic Designer Portfolio
                       </div>
                     )}
-                    <div className="text-[11px] font-mono text-black/60">
-                      UPI ID: <span className="font-bold text-black select-all bg-white px-2 py-0.5 rounded border">8000165311@upi</span>
-                    </div>
                   </div>
-                )}
 
-                {/* Card Inputs Box */}
-                {paymentMethod === "card" && (
-                  <div className="space-y-2.5 p-4 rounded-2xl bg-[#faf8f5] border border-black/[0.06]">
-                    <div>
-                      <input
-                        type="text"
-                        value={cardNumber}
-                        onChange={(e) => setCardNumber(e.target.value)}
-                        placeholder="Card Number (4000 1234 5678 9010)"
-                        className="w-full px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] text-xs font-mono outline-none"
-                      />
-                    </div>
-                    <div className="grid grid-cols-2 gap-2">
-                      <input
-                        type="text"
-                        value={cardExpiry}
-                        onChange={(e) => setCardExpiry(e.target.value)}
-                        placeholder="MM / YY"
-                        className="px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] text-xs font-mono outline-none"
-                      />
-                      <input
-                        type="password"
-                        maxLength={4}
-                        value={cardCvc}
-                        onChange={(e) => setCardCvc(e.target.value)}
-                        placeholder="CVC"
-                        className="px-3.5 py-2 rounded-xl bg-white border border-black/[0.08] text-xs font-mono outline-none"
-                      />
-                    </div>
+                  <div className="pt-2 border-t border-black/[0.05] flex items-center justify-between text-[11px] font-mono text-black/55">
+                    <span className="flex items-center gap-1 text-emerald-700 font-semibold">
+                      <ShieldCheck size={12} />
+                      Commercial License Included
+                    </span>
+                    <span>No Payment Gateway Wait</span>
                   </div>
-                )}
-
-                {/* PayPal Box */}
-                {paymentMethod === "paypal" && (
-                  <div className="p-4 rounded-2xl bg-[#faf8f5] border border-black/[0.06] text-center text-xs text-black/70">
-                    Clicking &ldquo;Authorize Order&rdquo; will securely verify your transaction with PayPal protection.
-                  </div>
-                )}
-              </div>
-
-              {/* Order Summary Snapshot */}
-              <div className="p-4 rounded-2xl bg-black/[0.03] border border-black/[0.06] flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-mono uppercase text-black/50 block">
-                    Total Due ({currency})
-                  </span>
-                  <span className="font-display text-2xl font-black text-[#0a0a0a]">
-                    {totalAmount}
-                  </span>
                 </div>
-                <span className="text-xs font-mono text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200 font-semibold">
-                  ✓ Instant Download Ready
-                </span>
-              </div>
 
-              {/* Submit CTA */}
-              <div className="pt-2">
-                <button
-                  type="submit"
-                  disabled={isProcessing}
-                  data-cursor-hover
-                  className="w-full py-4 px-6 rounded-2xl bg-red hover:bg-red-dark text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_10px_25px_rgba(225,6,0,0.35)] disabled:opacity-60 transition-all hover:scale-[1.01] active:scale-[0.99]"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>Verifying &amp; Generating Certificate...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Complete Purchase &amp; Claim Certificate</span>
+                {error && (
+                  <div className="mb-4 p-3 rounded-xl bg-red/10 text-red text-xs border border-red/20 font-medium">
+                    {error}
+                  </div>
+                )}
+
+                {/* Main Order Form */}
+                <form onSubmit={handleFormSubmit} className="space-y-3.5">
+                  {/* Name */}
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
+                      Full Name *
+                    </label>
+                    <div className="relative">
+                      <User size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
+                      <input
+                        type="text"
+                        required
+                        value={buyerName}
+                        onChange={(e) => setBuyerName(e.target.value)}
+                        placeholder="e.g. Rahul Sharma / Alex Hunter"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Phone & Email in 2 columns */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {/* WhatsApp Phone */}
+                    <div>
+                      <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
+                        WhatsApp Number *
+                      </label>
+                      <div className="relative">
+                        <Phone size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
+                        <input
+                          type="tel"
+                          required
+                          value={buyerPhone}
+                          onChange={(e) => setBuyerPhone(e.target.value)}
+                          placeholder="+91 98765 43210"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div>
+                      <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
+                        Email Address *
+                      </label>
+                      <div className="relative">
+                        <Mail size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
+                        <input
+                          type="email"
+                          required
+                          value={buyerEmail}
+                          onChange={(e) => setBuyerEmail(e.target.value)}
+                          placeholder="yourname@gmail.com"
+                          className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Company / Brand (Optional) */}
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
+                      Company / Brand Name <span className="text-black/40 font-normal">(Optional)</span>
+                    </label>
+                    <div className="relative">
+                      <Building2 size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-black/40" />
+                      <input
+                        type="text"
+                        value={buyerCompany}
+                        onChange={(e) => setBuyerCompany(e.target.value)}
+                        placeholder="e.g. Studio Vertex or personal portfolio"
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Requirements / Notes (Optional) */}
+                  <div>
+                    <label className="block text-[11px] font-mono uppercase font-semibold text-black/70 mb-1">
+                      Requirements / Message <span className="text-black/40 font-normal">(Optional)</span>
+                    </label>
+                    <div className="relative">
+                      <FileText size={15} className="absolute left-3.5 top-3 text-black/40" />
+                      <textarea
+                        rows={2}
+                        value={buyerNotes}
+                        onChange={(e) => setBuyerNotes(e.target.value)}
+                        placeholder="e.g. Want setup assistance on Vercel, need custom color palette, etc."
+                        className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-black/[0.03] border border-black/[0.1] focus:border-emerald-600 focus:bg-white text-sm outline-none font-medium text-[#0a0a0a] transition-all resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      data-cursor-hover
+                      className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_10px_25px_rgba(16,185,129,0.35)] active:scale-[0.99] transition-all cursor-pointer"
+                    >
+                      <MessageCircle size={18} />
+                      <span>Send Order via WhatsApp 💬</span>
                       <ArrowRight size={15} />
-                    </>
-                  )}
-                </button>
-              </div>
+                    </button>
+                  </div>
 
-              <div className="text-center">
-                <a
-                  href={`https://wa.me/918000165311?text=Hi%20Vikash,%20I'm%20at%20checkout%20for%20${encodeURIComponent(items.map((i) => i.item.title).join(", "))}%20amount%20${totalAmount}.%20Can%20you%20help%20confirm?`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-xs text-emerald-700 hover:text-emerald-800 font-medium"
-                >
-                  <MessageCircle size={14} />
-                  <span>Need help? Chat with Vikash on WhatsApp</span>
-                </a>
+                  {/* Direct Contact reassurance */}
+                  <div className="text-center pt-1">
+                    <p className="text-[11px] text-black/50 font-mono">
+                      🔒 Your details will be sent directly to Vikash&apos;s WhatsApp (<strong className="text-black/80">+91 8000165311</strong>).
+                    </p>
+                  </div>
+                </form>
+              </>
+            ) : (
+              /* Success / WhatsApp Redirect Screen */
+              <div className="py-6 text-center space-y-5">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-inner">
+                  <CheckCircle2 size={36} />
+                </div>
+
+                <div>
+                  <span className="text-xs font-mono uppercase tracking-wider text-emerald-700 font-bold block mb-1">
+                    Order Details Prepared!
+                  </span>
+                  <h3 className="font-display text-2xl sm:text-3xl font-extrabold text-[#0a0a0a]">
+                    Redirecting to WhatsApp...
+                  </h3>
+                  <p className="text-xs sm:text-sm text-black/60 mt-1.5 max-w-sm mx-auto leading-relaxed">
+                    Thank you, <strong>{buyerName}</strong>! Your order message has been formatted. If WhatsApp did not open automatically, click the button below:
+                  </p>
+                </div>
+
+                {/* Big Green Direct WhatsApp Button */}
+                <div className="space-y-2.5 pt-2">
+                  <a
+                    href={generatedWhatsAppUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-cursor-hover
+                    className="w-full py-4 px-6 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-sm uppercase tracking-wider flex items-center justify-center gap-2.5 shadow-[0_10px_25px_rgba(16,185,129,0.4)] hover:scale-[1.01] active:scale-[0.99] transition-all"
+                  >
+                    <MessageCircle size={18} />
+                    <span>Open WhatsApp Chat Now (+91 8000165311)</span>
+                    <ExternalLink size={15} />
+                  </a>
+
+                  <button
+                    type="button"
+                    onClick={handleCopyMessage}
+                    data-cursor-hover
+                    className="w-full py-2.5 px-4 rounded-xl border border-black/10 hover:bg-black/[0.03] text-xs font-mono font-semibold text-black/70 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  >
+                    {copied ? (
+                      <>
+                        <Check size={14} className="text-emerald-600" />
+                        <span>Copied Message to Clipboard!</span>
+                      </>
+                    ) : (
+                      <>
+                        <Copy size={14} />
+                        <span>Copy Order Message Text</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                {/* Done / Close Button */}
+                <div className="pt-3 border-t border-black/[0.06]">
+                  <button
+                    type="button"
+                    onClick={handleClose}
+                    className="text-xs text-black/50 hover:text-black font-semibold font-mono uppercase tracking-wider"
+                  >
+                    Close Window
+                  </button>
+                </div>
               </div>
-            </form>
+            )}
           </motion.div>
         </div>
       )}
