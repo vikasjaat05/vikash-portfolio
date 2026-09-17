@@ -16,8 +16,8 @@ const HERO_STATIC_BG_MOBILE = "https://res.cloudinary.com/dh0amtajw/image/upload
 const BG_IMAGE_1 = "/images/model_1.png";
 const BG_IMAGE_2 = "/images/model_aligned_2.png";
 
-const WORDS = ["Shopify Plus", "Next.js Web Apps", "AI Prompting", "Speed Optimization", "Liquid Themes", "UI/UX Engineering"];
 const START = 0.6;
+
 
 export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -430,8 +430,8 @@ export default function Hero() {
         </div>
       </motion.div>
 
-      {/* Mobile CTA Buttons — Cleanly placed at desk level right above Marquee */}
-      <div className="block md:hidden relative z-10 px-4 pb-3 flex items-center justify-center gap-3">
+      {/* Mobile CTA Buttons — Cleanly placed at bottom of hero */}
+      <div className="block md:hidden relative z-10 px-4 pb-6 sm:pb-8 flex items-center justify-center gap-3">
         <Link
           href="/contact"
           className="liquid-btn-dark !text-xs !px-5 !py-2.5 !font-semibold gap-1.5 shadow-md"
@@ -445,20 +445,6 @@ export default function Hero() {
         >
           <span>Explore Work (14)</span>
         </Link>
-      </div>
-
-      {/* 3. Infinite Marquee Ticker */}
-      <div className="relative mt-auto border-t border-b border-black/10 py-2.5 sm:py-3 bg-white/85 backdrop-blur-md overflow-hidden z-10">
-        <div className="flex whitespace-nowrap animate-marquee">
-          {[...WORDS, ...WORDS, ...WORDS].map((w, i) => (
-            <span
-              key={i}
-              className="font-display text-base sm:text-2xl font-bold px-3 sm:px-6 flex items-center gap-2 sm:gap-4 text-black/25"
-            >
-              {w} <span className="w-1.5 h-1.5 rounded-full bg-red inline-block" />
-            </span>
-          ))}
-        </div>
       </div>
     </section>
   );

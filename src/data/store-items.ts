@@ -125,4 +125,28 @@ export const STORE_ITEMS: StoreItem[] = [
     liveDemoUrl: "/lgpsm",
     downloadOrRepoNote: "Instant GitHub repository access + clean setup instructions.",
   },
+  {
+    id: "flaneur-luxury-ecommerce-theme",
+    title: "Flaneur — Luxury E-Commerce & Fine Jewelry Storefront",
+    category: "shopify",
+    categoryLabel: "Shopify Plus Theme",
+    badge: "Shopify Bestseller",
+    popular: true,
+    tagline: "High-conversion luxury e-commerce theme engineered for high-AOV jewelry, fashion, and lifestyle brands.",
+    description:
+      "Features bespoke Liquid architecture, slide-out dynamic cart drawer, multi-currency geo-detection, 95+ Core Web Vitals score, and high-converting product detail pages.",
+    priceUsd: "$39",
+    priceInr: "₹2,999",
+    image: "https://res.cloudinary.com/dh0amtajw/image/upload/v1783576778/1fd8772d-4e80-4c1e-b1bb-36b5fe9ed7f4_nda3wy.png",
+    techStack: ["Shopify Liquid", "Tailwind CSS", "JavaScript ES6+", "Core Web Vitals", "Multi-Currency"],
+    features: [
+      "Full custom Shopify Liquid production theme source files",
+      "Slide-out cart drawer with free shipping threshold bar",
+      "Sub-1s page load speed & 95+ Lighthouse performance",
+      "Integrated product zoom, swatch filters & size guides",
+      "Perpetual commercial license for personal & client stores",
+    ],
+    liveDemoUrl: "https://www.flaneurglobal.com/",
+    downloadOrRepoNote: "Instant theme zip download + full customization documentation.",
+  },
 ];

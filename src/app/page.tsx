@@ -2,13 +2,12 @@ import Navbar from "@/components/Navbar";
 import AmbientBackground from "@/components/AmbientBackground";
 import Hero from "@/components/Hero";
 import Clients from "@/components/Clients";
-import TrustBar from "@/components/TrustBar";
 import Services from "@/components/Services";
 import About from "@/components/About";
+import CareerJourney from "@/components/CareerJourney";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import Work from "@/components/Work";
 import Process from "@/components/Process";
-import Team from "@/components/Team";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
@@ -25,13 +24,12 @@ export default async function Home() {
         <Hero />
         <AmbientBackground />
         <Clients />
-        <TrustBar />
         <Services />
-        <About />
+        <About founder={founders[0]} />
+        <CareerJourney />
         <WhyChooseUs />
         <Work />
         <Process />
-        <Team members={founders} />
         <Testimonials />
         <FAQ />
         <CTA />

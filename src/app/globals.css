@@ -1,4 +1,3 @@
-@import url("https://db.onlinewebfonts.com/c/8b75d9dcff6a48c35a46656192adf019?family=FSP+DEMO+-+PODIUM+Sharp+4.11");
 @import "tailwindcss";
 
 :root {
@@ -34,18 +33,28 @@ html.lenis, html.lenis body {
   --color-foreground: var(--foreground);
   --color-red: var(--red);
   --color-red-dark: var(--red-dark);
-  --font-sans: var(--font-outfit);
-  --font-display: var(--font-syne);
-  --font-podium: "FSP DEMO - PODIUM Sharp 4.11", var(--font-syne), sans-serif;
-  --font-inter: var(--font-inter), sans-serif;
+  --font-sans: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-podium: var(--font-sans), "Inter", sans-serif;
+  --font-inter: var(--font-sans), "Inter", sans-serif;
 }
 
 .font-podium {
-  font-family: "FSP DEMO - PODIUM Sharp 4.11", var(--font-syne), sans-serif;
+  font-family: var(--font-sans), "Inter", sans-serif;
 }
 
 .font-inter {
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-sans), "Inter", sans-serif;
+}
+
+body {
+  font-family: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.012em;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-sans), "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  letter-spacing: -0.038em;
 }
 
 @keyframes fade-up {
