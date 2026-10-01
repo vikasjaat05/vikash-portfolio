@@ -19,6 +19,7 @@ import {
   X,
 } from "lucide-react";
 import { useBackgroundAudio } from "./BackgroundAudioContext";
+import AnimatedLogo from "./AnimatedLogo";
 
 // Primary links directly visible in desktop navbar
 const primaryNavLinks = [
@@ -192,33 +193,10 @@ export default function Navbar() {
               : "max-w-[1240px] h-[60px] sm:h-[66px]"
           }`}
         >
-          {/* Brand Logo & Status */}
-          <Link
-            href="/"
-            aria-label="Vikash Choudhary — Home"
-            className="group flex shrink-0 items-center gap-2.5 rounded-full py-1 pl-1 pr-3 transition-colors hover:bg-black/[0.04]"
-          >
-            {/* Custom Monogram Mark */}
-            <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-[#0a0a0a] text-white shadow-xs transition-transform duration-300 group-hover:scale-105">
-              <span className="font-display text-[15px] sm:text-[16px] font-black tracking-tighter leading-none">
-                V
-              </span>
-              <span className="absolute -bottom-0.5 -right-0.5 flex h-3 w-3 items-center justify-center">
-                <span className="absolute h-2 w-2 rounded-full bg-[#e10600] animate-ping opacity-75" />
-                <span className="relative h-2 w-2 rounded-full bg-[#e10600] border-2 border-white" />
-              </span>
-            </div>
-
-            {/* Typography */}
-            <div className="flex flex-col leading-none">
-              <span className="font-display text-[13px] sm:text-[14px] font-bold tracking-[-0.03em] text-[#0a0a0a] group-hover:text-[#e10600] transition-colors">
-                Vikash
-              </span>
-              <span className="text-[9px] sm:text-[10px] font-medium tracking-[0.08em] uppercase text-[#71717a]">
-                Developer
-              </span>
-            </div>
-          </Link>
+          {/* Animated Brand Logo (Same as Footer) */}
+          <div className="shrink-0 flex items-center">
+            <AnimatedLogo onDark={false} />
+          </div>
 
           {/* Desktop Primary Navigation */}
           <nav

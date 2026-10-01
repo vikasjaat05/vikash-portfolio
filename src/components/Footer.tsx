@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import AnimatedHeading from "./AnimatedHeading";
 import AnimatedLogo from "./AnimatedLogo";
 
 const BG_VIDEO =
-  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260510_060007_60275ce7-030c-4668-a160-8f364ec537d3.mp4";
+  "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260928_144832_2b6b23aa-4416-4fcb-9df4-132349c59edc.mp4";
 
 const SERVICES_LINKS = [
   { label: "Web Development", href: "/work/web" },
@@ -29,17 +30,75 @@ const RESOURCES_LINKS = [
 ];
 
 export default function Footer() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const playVideo = () => {
+      if (video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+
+    playVideo();
+
+    // Mobile fallback triggers for power-saver / user-gesture restrictions
+    const onUserInteraction = () => {
+      playVideo();
+    };
+
+    window.addEventListener("touchstart", onUserInteraction, { once: true, passive: true });
+    window.addEventListener("scroll", onUserInteraction, { once: true, passive: true });
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              playVideo();
+            } else {
+              video.pause();
+            }
+          });
+        },
+        { threshold: 0.05 }
+      );
+      observer.observe(video);
+      return () => {
+        observer.disconnect();
+        window.removeEventListener("touchstart", onUserInteraction);
+        window.removeEventListener("scroll", onUserInteraction);
+      };
+    }
+
+    return () => {
+      window.removeEventListener("touchstart", onUserInteraction);
+      window.removeEventListener("scroll", onUserInteraction);
+    };
+  }, []);
+
   return (
     <footer className="relative overflow-hidden bg-black">
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover scale-[1.08]"
-        src={BG_VIDEO}
-      />
-      <div className="absolute inset-0 bg-black/50" />
+      {/* Background Video — Optimized for mobile with dedicated framing and seamless fade */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          aria-hidden="true"
+          tabIndex={-1}
+          disablePictureInPicture
+          className="absolute top-0 left-0 w-full h-[540px] sm:h-[620px] md:h-full object-cover object-[50%_35%] md:object-center scale-100 md:scale-[1.08] transition-transform duration-700"
+          src={BG_VIDEO}
+        />
+        {/* Gradient Overlay for high text legibility and smooth mobile transition */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/60 to-black md:bg-black/55 pointer-events-none" />
+      </div>
 
       <div className="relative z-10 px-6 md:px-10 pt-24 md:pt-32 pb-10">
         <div className="max-w-[1400px] mx-auto">
