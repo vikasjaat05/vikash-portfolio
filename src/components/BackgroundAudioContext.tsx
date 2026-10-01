@@ -107,10 +107,6 @@ export function BackgroundAudioProvider({ children }: { children: ReactNode }) {
     audio.addEventListener("pause", onPause);
     audio.addEventListener("ended", onEnded);
 
-    // Sync initial state
-    setPlaying(!audio.paused);
-    setTrackIndex(currentTrackIndex);
-
     return () => {
       audio.removeEventListener("play", onPlay);
       audio.removeEventListener("pause", onPause);
@@ -138,42 +134,7 @@ export function BackgroundAudioProvider({ children }: { children: ReactNode }) {
   return (
     <BackgroundAudioContext.Provider value={{ playing, toggle, trackTitle, currentTrack, nextTrack }}>
       {children}
-      {/* Global persistent floating sound indicator (visible when audio is playing or on other pages) */}
-      <GlobalPersistentAudioWidget />
     </BackgroundAudioContext.Provider>
-  );
-}
-
-function GlobalPersistentAudioWidget() {
-  const { playing, toggle, trackTitle, nextTrack } = useBackgroundAudio();
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    setShow(true);
-  }, []);
-
-  if (!show || !playing) return null;
-
-  return (
-    <div className="hidden md:flex fixed bottom-5 right-5 z-[999] animate-fade-in pointer-events-auto items-center gap-1.5 bg-[#0a0a0a]/90 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 shadow-2xl">
-      <button
-        onClick={toggle}
-        data-cursor-hover
-        className="flex items-center gap-2 text-white text-xs font-mono hover:text-white/80 transition-colors cursor-pointer"
-        title="Click to Pause Background Music"
-      >
-        {/* Animated Dancing Equalizer Bars */}
-        <div className="flex items-end gap-0.5 h-3.5 w-3.5 justify-center">
-          <span className="w-0.5 bg-white rounded-full animate-[bounce_0.6s_infinite_ease-in-out] h-full" />
-          <span className="w-0.5 bg-white rounded-full animate-[bounce_0.8s_infinite_0.2s_ease-in-out] h-full" />
-          <span className="w-0.5 bg-white rounded-full animate-[bounce_0.5s_infinite_0.4s_ease-in-out] h-full" />
-        </div>
-        <span className="text-[11px] font-semibold tracking-wide max-w-[180px] sm:max-w-[240px] truncate">
-          {trackTitle}
-        </span>
-        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-      </button>
-    </div>
   );
 }
 

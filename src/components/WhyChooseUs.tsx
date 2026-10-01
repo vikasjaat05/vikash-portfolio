@@ -41,7 +41,7 @@ export default function WhyChooseUs() {
 
             <div className="border-t border-black/10">
               {DISCIPLINES.map((d, i) => (
-                <Reveal key={d.href} delay={i * 0.06}>
+                <Reveal key={d.label} delay={i * 0.06}>
                   <Link
                     href={d.href}
                     data-cursor-hover

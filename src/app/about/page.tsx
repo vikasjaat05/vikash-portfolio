@@ -48,8 +48,12 @@ export default async function AboutPage() {
     <>
       <Navbar />
       <main className="relative">
-        <AboutVideoHero />
-        <TrustBar />
+        <FadeSection isTop disableY>
+          <AboutVideoHero />
+        </FadeSection>
+        <FadeSection fadeOffset={0.1}>
+          <TrustBar />
+        </FadeSection>
 
         {/* Profile Section */}
         <section className="px-6 md:px-10 pt-24 md:pt-32 pb-20 md:pb-28">
@@ -203,7 +207,9 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        <CTA />
+        <FadeSection fadeOffset={0.12} disableExit={true}>
+          <CTA />
+        </FadeSection>
       </main>
       <Footer />
     </>

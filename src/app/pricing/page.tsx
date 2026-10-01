@@ -6,6 +6,7 @@ import TrustBar from "@/components/TrustBar";
 import Testimonials from "@/components/Testimonials";
 import FAQ from "@/components/FAQ";
 import CTA from "@/components/CTA";
+import FadeSection from "@/components/FadeSection";
 
 export const metadata: Metadata = {
   title: {
@@ -30,11 +31,25 @@ export default function PricingPage() {
     <>
       <Navbar />
       <main className="relative">
-        <PricingVideoHero />
-        <TrustBar />
-        <Testimonials />
-        <FAQ />
-        <CTA />
+        <FadeSection isTop disableY>
+          <PricingVideoHero />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.1}>
+          <TrustBar />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.1}>
+          <Testimonials />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.1}>
+          <FAQ />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.12} disableExit={true}>
+          <CTA />
+        </FadeSection>
       </main>
       <Footer />
     </>

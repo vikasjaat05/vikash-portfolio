@@ -30,7 +30,6 @@ import {
 } from "lucide-react";
 import { STORE_CATEGORIES, STORE_ITEMS, StoreCategory, StoreItem } from "@/data/store-items";
 import { useCart } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 import DualDevicePreviewModal from "./DualDevicePreviewModal";
 
 type CatalogProps = {
@@ -93,7 +92,6 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
 
   const handleAddToCart = (item: StoreItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    soundFX.playCartChime();
     addToCart(item);
 
     // Trigger local feedback animation
@@ -105,7 +103,6 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
 
   const handleBuyNow = (item: StoreItem, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    soundFX.playCartChime();
     addToCart(item);
     setIsCheckoutOpen(true);
   };
@@ -164,7 +161,6 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
                   key={cat.key}
                   type="button"
                   onClick={() => {
-                    soundFX.playOpenChime();
                     setActiveCategory(cat.key);
                   }}
                   data-cursor-hover
@@ -218,7 +214,7 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
             <div className="relative shrink-0">
               <select
                 value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
+                onChange={(e) => setSortBy(e.target.value as "featured" | "price-asc" | "price-desc")}
                 aria-label="Sort catalog items"
                 className="appearance-none pl-3.5 pr-8 py-2 rounded-full bg-white border border-black/[0.08] text-xs font-semibold text-black/80 focus:border-black/30 outline-none cursor-pointer shadow-2xs transition-colors"
               >
@@ -298,7 +294,6 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
                         <button
                           type="button"
                           onClick={() => {
-                            soundFX.playOpenChime();
                             setPreviewItem(item);
                           }}
                           className="px-6 py-3 rounded-2xl bg-white text-[#0a0a0a] text-xs font-bold shadow-2xl flex items-center gap-2 hover:scale-105 active:scale-95 transition-all cursor-pointer border border-white/60 hover:bg-white"
@@ -523,7 +518,6 @@ export default function BuyPortfolioCatalog({ searchQuery }: CatalogProps) {
             <button
               type="button"
               onClick={() => {
-                soundFX.playOpenChime();
                 setIsCartOpen(true);
               }}
               data-cursor-hover

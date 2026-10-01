@@ -1,11 +1,12 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { Star, Quote, CheckCircle2, Globe2 } from "lucide-react";
 import { TESTIMONIALS } from "@/data/testimonials";
 import Reveal from "./Reveal";
 
 export default function Testimonials() {
+  const reduceMotion = useReducedMotion();
   // Multiply for seamless infinite loop
   const marqueeRow1 = [...TESTIMONIALS, ...TESTIMONIALS];
   const marqueeRow2 = [...TESTIMONIALS.slice(3), ...TESTIMONIALS.slice(0, 3), ...TESTIMONIALS, ...TESTIMONIALS];
@@ -20,7 +21,7 @@ export default function Testimonials() {
           <div className="flex items-center justify-center gap-2.5 mb-4 sm:mb-5">
             <span className="w-2.5 h-2.5 rounded-full bg-red animate-pulse" />
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-black/50">
-              Verified Reviews &amp; Client Feedback
+              Client feedback
             </span>
           </div>
         </Reveal>
@@ -32,10 +33,10 @@ export default function Testimonials() {
       </div>
 
       {/* Auto-Scrolling Horizontal Reviews Carousel (Row 1 - Moving Left) */}
-      <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 sm:py-3">
+      <div className="relative w-full overflow-hidden motion-reduce:overflow-x-auto motion-reduce:[mask-image:none] [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 sm:py-3">
         <motion.div
-          animate={{ x: ["0%", "-50%"] }}
-          transition={{
+          animate={reduceMotion ? undefined : { x: ["0%", "-50%"] }}
+          transition={reduceMotion ? undefined : {
             duration: 35,
             repeat: Infinity,
             ease: "linear",
@@ -50,10 +51,10 @@ export default function Testimonials() {
       </div>
 
       {/* Auto-Scrolling Horizontal Reviews Carousel (Row 2 - Moving Right - Desktop & Tablet) */}
-      <div className="hidden sm:block relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 sm:py-3 mt-2 sm:mt-4">
+      <div className="hidden sm:block motion-reduce:!hidden relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)] py-2 sm:py-3 mt-2 sm:mt-4">
         <motion.div
-          animate={{ x: ["-50%", "0%"] }}
-          transition={{
+          animate={reduceMotion ? undefined : { x: ["-50%", "0%"] }}
+          transition={reduceMotion ? undefined : {
             duration: 40,
             repeat: Infinity,
             ease: "linear",
@@ -105,7 +106,7 @@ function ReviewCard({
               className={i < testimonial.rating ? "text-amber-500 fill-amber-500" : "text-black/15 fill-black/15"}
             />
           ))}
-          <span className="text-[11px] font-bold text-black/60 ml-1.5">5.0 Verified</span>
+          <span className="text-[11px] font-bold text-black/60 ml-1.5">{testimonial.rating.toFixed(1)} / 5</span>
         </div>
 
         {/* Quote */}

@@ -16,6 +16,7 @@ const SERVICES_LINKS = [
 ];
 const COMPANY_LINKS = [
   { label: "About Me", href: "/about" },
+  { label: "Vikash Studio", href: "/agency" },
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "Resume (CV)", href: "/resume" },
@@ -129,13 +130,16 @@ export default function Footer() {
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-8 border-t border-white/15 text-sm text-white/60">
             <span>© {new Date().getFullYear()} Vikash Choudhary. All rights reserved.</span>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
               <Link href="/privacy" data-cursor-hover className="hover:text-white transition-colors">
                 Privacy Policy
               </Link>
               <Link href="/terms" data-cursor-hover className="hover:text-white transition-colors">
                 Terms &amp; Conditions
               </Link>
+              <button type="button" onClick={() => window.dispatchEvent(new Event("show-app-install"))} className="hover:text-white transition-colors">
+                Install App
+              </button>
               <span>Designed &amp; built with care.</span>
             </div>
           </div>

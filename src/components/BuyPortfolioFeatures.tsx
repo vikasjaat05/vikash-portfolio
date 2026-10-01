@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { 
   Code2, 
   Layers, 
-  Volume2, 
+  Search,
   Lock, 
   Sparkles, 
   Smartphone, 
@@ -25,17 +25,17 @@ const FEATURES = [
   },
   {
     icon: <Layers className="text-amber-400" size={24} />,
-    title: "Liquid Glass Bento Dock",
+    title: "Responsive Navigation Header",
     description:
-      "Interactive floating dock inspired by macOS with spring physics, magnification gestures, and frosted glass backdrop-blur shaders on both desktop and mobile.",
+      "Clear desktop navigation and a focused mobile menu with active page states, quick access to every section, and smooth transitions.",
     tag: "Interactive UI",
   },
   {
-    icon: <Volume2 className="text-emerald-400" size={24} />,
-    title: "Ambient Audio & Soundscapes",
+    icon: <Search className="text-emerald-400" size={24} />,
+    title: "Fast Site Search",
     description:
-      "Full background audio player with sound toggles, bouncy music equalizer visualization, and interactive UI clicks for high sensory immersion.",
-    tag: "Audio Engine",
+      "Find key pages from the header or mobile menu, with a keyboard shortcut and quick, accessible results.",
+    tag: "Navigation",
   },
   {
     icon: <Lock className="text-blue-400" size={24} />,

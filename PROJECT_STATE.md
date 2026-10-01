@@ -263,8 +263,8 @@ temporarily via `npm install --no-save @playwright/test` +
 then **uninstalled again after verification** (`npm uninstall --no-save
 @playwright/test`) — it is NOT a permanent dependency. If you need to
 visually verify something similar, follow the same install-verify-uninstall
-pattern rather than leaving it in `package.json`. Preloader takes 6 seconds
-on load — always wait that out (~7s) before screenshotting/interacting in
+pattern rather than leaving it in `package.json`. Preloader takes ~1.8s
+on load (with instant click-to-skip) — wait ~2.5s before screenshotting/interacting in
 any automated test of the homepage.
 
 ---
@@ -273,12 +273,8 @@ any automated test of the homepage.
 
 - Custom PIN-based team login, admin panel to add members
   (`/admin`, `src/components/admin/AdminDashboard.tsx`).
-- Preloader (`src/components/Preloader.tsx`) — fixed 6-second animated
-  loading screen with a Lottie animation, per explicit user request.
-- Lottie player (`src/components/LottiePlayer.tsx`) — loads
-  `dotlottie-wc` (WASM-backed, `@lottiefiles/dotlottie-web` under the
-  hood) imperatively via `customElements.whenDefined`, not Next's
-  `<Script>` — this was deliberate after debugging timing issues.
+- Preloader (`src/components/Preloader.tsx`) — luxury 3D monogram reveal
+  with brand icon emblem, numeric counter, and split curtain exit (~1.8s, click-to-skip).
 - Smooth scroll via Lenis (`SmoothScroll.tsx`), scroll restoration via
   sessionStorage (`ScrollRestoration.tsx`).
 - Background music toggle (`BackgroundAudioContext.tsx`) — hidden YouTube

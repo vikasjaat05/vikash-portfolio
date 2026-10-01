@@ -2,15 +2,12 @@
 
 import Reveal from "./Reveal";
 
-const CLIENTS = [
-  "Lumen Finance",
-  "Nova Retail",
-  "Orbit Group",
-  "Pulse Growth",
-  "Vertex Cloud",
-  "Drift Travel",
-  "Halo Health",
-  "Kindred Foods",
+const FOCUS_AREAS = [
+  "Shopify storefronts",
+  "Custom web apps",
+  "Commerce UX",
+  "Design systems",
+  "Speed optimization",
 ];
 
 export default function Clients() {
@@ -20,19 +17,20 @@ export default function Clients() {
         <Reveal>
           <div className="flex items-center justify-center gap-2 mb-8">
             <span className="w-1.5 h-1.5 rounded-full bg-red animate-pulse" />
-            <p className="text-center text-xs font-semibold uppercase tracking-widest text-black/45">
-              Trusted by ambitious brands &amp; founders
+            <p className="text-center text-xs font-semibold uppercase tracking-widest text-black/60">
+              What I build for growing teams
             </p>
           </div>
         </Reveal>
 
-        <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-          <div className="flex items-center whitespace-nowrap animate-marquee">
-            {[...CLIENTS, ...CLIENTS, ...CLIENTS].map((name, i) => (
+        <div
+          className="clients-marquee-viewport relative overflow-hidden motion-reduce:!overflow-x-auto motion-reduce:![mask-image:none] [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]"
+        >
+          <div className="flex items-center whitespace-nowrap animate-marquee motion-reduce:!animate-none">
+            {[...FOCUS_AREAS, ...FOCUS_AREAS, ...FOCUS_AREAS].map((name, i) => (
               <div key={i} className="inline-flex items-center">
                 <span
-                  data-cursor-hover
-                  className="font-display text-lg sm:text-xl md:text-2xl font-bold px-6 sm:px-8 text-black/35 hover:text-black hover:scale-105 transition-all duration-300 cursor-pointer"
+                  className="font-display text-lg sm:text-xl md:text-2xl font-bold px-6 sm:px-8 text-black/60"
                 >
                   {name}
                 </span>

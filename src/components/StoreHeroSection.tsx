@@ -13,7 +13,6 @@ import {
 } from "lucide-react";
 import { useCart } from "./CartContext";
 import { STORE_ITEMS } from "@/data/store-items";
-import { soundFX } from "@/lib/ui-sounds";
 import StoreControlBar from "./StoreControlBar";
 
 const RECENT_PURCHASES = [
@@ -61,7 +60,6 @@ export default function StoreHeroSection() {
 
   const handleAddFlagship = (e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    soundFX.playCartChime();
     addToCart(flagshipItem);
     setAddedFlagship(true);
     setTimeout(() => setAddedFlagship(false), 2000);
@@ -168,7 +166,6 @@ export default function StoreHeroSection() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => {
-                soundFX.playOpenChime();
                 setIsCartOpen(true);
               }}
               data-cursor-hover
@@ -376,10 +373,10 @@ export default function StoreHeroSection() {
             <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl bg-black/60 backdrop-blur-xl border border-white/10 text-white flex flex-col justify-between min-h-[140px] sm:min-h-[160px] hover:border-white/20 transition-all">
               <div className="flex items-center gap-1.5 text-red text-xs font-mono font-bold">
                 <span className="w-2 h-2 rounded-full bg-red animate-pulse" />
-                <span>Liquid Dock &amp; Audio</span>
+                <span>Navigation &amp; CMS</span>
               </div>
               <p className="text-xs font-semibold leading-snug text-white/90">
-                Ambient Sound Engine + PIN-Protected CMS
+                Site Search + PIN-Protected CMS
               </p>
               <div className="text-[10px] text-white/40 font-mono">
                 Draft / Publish Safety

@@ -12,7 +12,6 @@ import {
   Coins
 } from "lucide-react";
 import { useCart, ALL_COUNTRIES, CountryInfo } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 
 const POPULAR_COUNTRIES = ["IN", "US", "GB", "AE", "DE", "JP", "CA", "AU"];
 
@@ -33,14 +32,13 @@ export default function CountrySelectorModal() {
   }, [searchQuery]);
 
   const handleSelect = (country: CountryInfo) => {
-    soundFX.playCartChime();
     selectCountry(country);
   };
 
   return (
     <AnimatePresence>
       {isCountryModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none">
+        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6 overflow-y-auto select-none">
           {/* Dark Glass Backdrop with Smooth Blur */}
           <motion.div
             initial={{ opacity: 0 }}

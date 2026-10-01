@@ -6,6 +6,7 @@ import TrustBar from "@/components/TrustBar";
 import WorkProjectGallery from "@/components/WorkProjectGallery";
 import StickyProjects from "@/components/StickyProjects";
 import CTA from "@/components/CTA";
+import FadeSection from "@/components/FadeSection";
 
 export const metadata: Metadata = {
   title: {
@@ -30,11 +31,25 @@ export default function WorkIndexPage() {
     <>
       <Navbar />
       <main className="relative">
-        <WorkVideoHero />
-        <TrustBar />
-        <WorkProjectGallery />
-        <StickyProjects />
-        <CTA />
+        <FadeSection isTop disableY>
+          <WorkVideoHero />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.1}>
+          <TrustBar />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.08}>
+          <WorkProjectGallery />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.05} disableY={true}>
+          <StickyProjects />
+        </FadeSection>
+
+        <FadeSection fadeOffset={0.12} disableExit={true}>
+          <CTA />
+        </FadeSection>
       </main>
       <Footer />
     </>

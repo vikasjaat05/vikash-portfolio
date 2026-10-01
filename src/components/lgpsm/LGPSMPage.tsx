@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ShoppingBag, ArrowUpRight, X, ChevronRight, Check } from "lucide-react";
 import ImageRevealBackground from "./ImageRevealBackground";
+import Navbar from "../Navbar";
 
 const BG_IMAGE_1 = "/images/model_1.png";
 
@@ -74,6 +75,7 @@ export default function LGPSMPage() {
 
   return (
     <div className="min-h-screen bg-white text-black font-jakarta flex flex-col justify-between relative overflow-hidden selection:bg-black selection:text-white lgpsm-root">
+      <Navbar />
       {/* Google Fonts Link */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

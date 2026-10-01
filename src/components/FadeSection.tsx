@@ -4,24 +4,66 @@ import { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { ReactNode } from "react";
 
+interface FadeSectionProps {
+  children: ReactNode;
+  className?: string;
+  disableY?: boolean;
+  fadeOffset?: number;
+  disableExit?: boolean;
+  isTop?: boolean;
+  thresholds?: [number, number, number, number];
+}
+
 export default function FadeSection({
   children,
   className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+  disableY = false,
+  fadeOffset = 0.1,
+  disableExit = false,
+  isTop = false,
+  thresholds,
+}: FadeSectionProps) {
   const ref = useRef<HTMLDivElement>(null);
+
   const { scrollYProgress } = useScroll({
     target: ref,
-    offset: ["start end", "end start"],
+    offset: isTop ? ["start start", "end start"] : ["start end", "end start"],
   });
 
-  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-  const y = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [40, 0, 0, -40]);
+  // For top/hero sections: start fully visible at scroll 0, fade out smoothly on exit
+  const topRange = [0, 0.5, 0.95];
+  const topOpacityValues = [1, 1, 0];
+  const topYValues = disableY ? [0, 0, 0] : [0, 0, -24];
+
+  // For mid/bottom sections: fade in on entry from bottom, fade out on exit towards top
+  const standardRange = thresholds || (disableExit
+    ? [0, fadeOffset, 1, 1]
+    : [0, fadeOffset, 1 - fadeOffset, 1]);
+
+  const standardOpacityValues = disableExit ? [0, 1, 1, 1] : [0, 1, 1, 0];
+  const standardYValues = disableY
+    ? [0, 0, 0, 0]
+    : disableExit
+    ? [24, 0, 0, 0]
+    : [24, 0, 0, -24];
+
+  const range = isTop ? topRange : standardRange;
+  const opacityValues = isTop ? topOpacityValues : standardOpacityValues;
+  const yValues = isTop ? topYValues : standardYValues;
+
+  const opacity = useTransform(scrollYProgress, range, opacityValues);
+  const y = useTransform(scrollYProgress, range, yValues);
 
   return (
-    <motion.div ref={ref} style={{ opacity, y }} className={className}>
+    <motion.div
+      ref={ref}
+      style={{
+        opacity,
+        ...(disableY ? {} : { y }),
+        willChange: "opacity, transform",
+      }}
+      className={className}
+    >
       {children}
     </motion.div>
   );

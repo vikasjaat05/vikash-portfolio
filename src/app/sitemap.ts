@@ -32,6 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.9,
     },
     {
+      url: `${BASE_URL}/agency`,
+      lastModified: lastMod,
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
       url: `${BASE_URL}/about/vikash-choudhary`,
       lastModified: lastMod,
       changeFrequency: "monthly",

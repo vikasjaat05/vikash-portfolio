@@ -22,7 +22,6 @@ import {
   Award
 } from "lucide-react";
 import { useCart } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 
 const VIKASH_WHATSAPP_NUMBER = "918000165311"; // +91 8000165311
 
@@ -66,7 +65,6 @@ export default function CheckoutModal() {
 
     setError("");
     setIsSubmitting(true);
-    soundFX.playPurchaseChime();
 
     let serverOrderNumber = "";
     let serverLicenseKey = "";
@@ -109,7 +107,7 @@ export default function CheckoutModal() {
             purchaseDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
             items: items.map((i) => i.item),
             totalAmount: serverTotal,
-            currency: currency as any,
+            currency,
             paymentMethod: "Direct Official Order Inquiry",
           });
         }

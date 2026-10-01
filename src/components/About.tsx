@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   Sparkles,
@@ -11,10 +10,8 @@ import {
   FileText,
   ShoppingBag,
   Gem,
-  Zap,
   Code2,
   Award,
-  Star,
   Gauge,
   Send,
 } from "lucide-react";
@@ -114,7 +111,7 @@ export default function About({ founder }: { founder?: Founder }) {
                 </div>
               </div>
 
-              {/* 4 Interactive Live Stats Counters */}
+              {/* Career summary */}
               <div className="grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-2xs transition-all duration-300 hover:shadow-xs hover:border-red/30">
                   <div className="flex items-center gap-2.5 mb-1.5">
@@ -144,33 +141,6 @@ export default function About({ founder }: { founder?: Founder }) {
                   </p>
                 </div>
 
-                <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-2xs transition-all duration-300 hover:shadow-xs hover:border-red/30">
-                  <div className="flex items-center gap-2.5 mb-1.5">
-                    <div className="w-8 h-8 rounded-xl bg-red/10 text-red flex items-center justify-center shrink-0">
-                      <Star size={16} />
-                    </div>
-                    <div className="font-display text-2xl sm:text-3xl font-extrabold text-black">
-                      <Counter to={98} suffix="%" />
-                    </div>
-                  </div>
-                  <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-black/55">
-                    Client Satisfaction
-                  </p>
-                </div>
-
-                <div className="bg-white border border-black/10 rounded-2xl p-4 shadow-2xs transition-all duration-300 hover:shadow-xs hover:border-red/30">
-                  <div className="flex items-center gap-2.5 mb-1.5">
-                    <div className="w-8 h-8 rounded-xl bg-red/10 text-red flex items-center justify-center shrink-0">
-                      <Gauge size={16} />
-                    </div>
-                    <div className="font-display text-2xl sm:text-3xl font-extrabold text-black">
-                      &lt; 1s
-                    </div>
-                  </div>
-                  <p className="text-[11px] font-mono font-semibold uppercase tracking-wider text-black/55">
-                    Core Web Vitals
-                  </p>
-                </div>
               </div>
             </div>
 
@@ -180,7 +150,7 @@ export default function About({ founder }: { founder?: Founder }) {
                 {/* Verified Role Capsule */}
                 <div className="inline-flex items-center gap-2 border border-black/10 bg-white px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-black/75 mb-5 shadow-2xs">
                   <CheckCircle2 size={15} className="text-red" />
-                  <span>Verified Web &amp; Shopify Developer</span>
+                  <span>Web &amp; Shopify Developer</span>
                 </div>
 
                 <h3 className="font-display text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight mb-4 text-black">

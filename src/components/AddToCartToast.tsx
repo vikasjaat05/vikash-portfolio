@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircle2, ShoppingBag, ArrowRight, X } from "lucide-react";
 import { useCart } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 
 export default function AddToCartToast() {
   const { toast, dismissToast, setIsCartOpen, totalCount, formatPrice, currency } = useCart();
@@ -43,7 +42,6 @@ export default function AddToCartToast() {
           <button
             type="button"
             onClick={() => {
-              soundFX.playOpenChime();
               dismissToast();
               setIsCartOpen(true);
             }}

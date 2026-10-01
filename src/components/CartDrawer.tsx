@@ -18,7 +18,6 @@ import {
   Sparkles
 } from "lucide-react";
 import { useCart, ALL_CURRENCIES } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 
 export default function CartDrawer() {
   const {
@@ -48,7 +47,6 @@ export default function CartDrawer() {
   const handleApplyPromoCode = (code: string) => {
     const res = applyDiscount(code);
     if (res.success) {
-      soundFX.playPurchaseChime();
       setPromoMsg({ text: `Code ${code} applied successfully! 🎉`, success: true });
       setPromoInput("");
     } else {
@@ -63,7 +61,6 @@ export default function CartDrawer() {
   };
 
   const handleProceedToCheckout = () => {
-    soundFX.playOpenChime();
     setIsCartOpen(false);
     setIsCheckoutOpen(true);
   };

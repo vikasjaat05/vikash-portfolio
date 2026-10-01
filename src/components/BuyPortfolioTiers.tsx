@@ -42,8 +42,8 @@ const TIERS: Tier[] = [
     features: [
       "Complete Next.js 16 + React 19 repository",
       "Tailwind CSS v4 & bespoke luxury styling",
-      "Liquid glass floating dock & smooth scrolling",
-      "Ambient sound engine & interactive audio",
+      "Responsive header navigation & smooth scrolling",
+      "Site search & keyboard shortcut",
       "Supabase PIN-protected CMS & migrations",
       "1-Click Vercel deployment configuration",
       "Full commercial license for personal/client site",

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import ContactPageClient from "@/components/ContactPageClient";
+import { getAgencyPlanName } from "@/data/agencyPlans";
 
 export const metadata: Metadata = {
   title: {
@@ -19,6 +20,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function ContactPage() {
-  return <ContactPageClient />;
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ plan?: string | string[] }>;
+}) {
+  const requested = (await searchParams).plan;
+  const requestedPlan = getAgencyPlanName(typeof requested === "string" ? requested : undefined);
+  return <ContactPageClient requestedPlan={requestedPlan} />;
 }

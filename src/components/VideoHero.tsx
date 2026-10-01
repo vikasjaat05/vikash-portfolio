@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import AnimatedHeading from "./AnimatedHeading";
-import MusicCursorToggle from "./MusicCursorToggle";
 import CursorLiquidTrail from "./CursorLiquidTrail";
 
 export default function VideoHero() {
@@ -24,8 +23,6 @@ export default function VideoHero() {
       />
       <div className="absolute inset-0 z-0 bg-black/35" />
       <CursorLiquidTrail targetRef={sectionRef} color="255, 255, 255" />
-
-      <MusicCursorToggle targetRef={sectionRef} />
 
       <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-6 pt-32 pb-40">
         <AnimatedHeading

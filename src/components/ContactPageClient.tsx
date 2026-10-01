@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, MapPin, Clock, Phone, MessageSquare, ArrowUpRight } from "lucide-react";
+import { Mail, MapPin, Phone, MessageSquare, ArrowUpRight } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactVideoHero from "@/components/ContactVideoHero";
@@ -43,14 +43,16 @@ const CONTACT_CHANNELS = [
   },
 ];
 
-export default function ContactPageClient() {
+export default function ContactPageClient({ requestedPlan }: { requestedPlan?: string }) {
   const [prefillEmail, setPrefillEmail] = useState("");
 
   return (
     <>
       <Navbar />
       <main className="relative">
-        <ContactVideoHero onSubmitEmail={setPrefillEmail} />
+        <FadeSection isTop disableY>
+          <ContactVideoHero onSubmitEmail={setPrefillEmail} />
+        </FadeSection>
 
         <section id="contact-form" className="relative px-6 md:px-10 py-20 md:py-28 bg-[#faf8f5]">
           <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] gap-12 lg:gap-16">
@@ -122,7 +124,7 @@ export default function ContactPageClient() {
                 <p className="text-sm text-black/60 mb-8">
                   Fill in your project requirements for an instant consultation.
                 </p>
-                <ContactForm defaultEmail={prefillEmail} />
+                <ContactForm key={requestedPlan ?? "general"} defaultEmail={prefillEmail} requestedPlan={requestedPlan} />
               </div>
             </FadeSection>
           </div>

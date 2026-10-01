@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { playHoverTick, playClickTick } from "@/lib/cursor-sound";
 
 export default function CustomCursor() {
   const dotRef = useRef<HTMLDivElement>(null);
@@ -15,13 +14,6 @@ export default function CustomCursor() {
     let ringX = 0;
     let ringY = 0;
 
-    let soundEnabled = false;
-    const enableSound = () => {
-      soundEnabled = true;
-    };
-    window.addEventListener("pointerdown", enableSound, { once: true });
-    window.addEventListener("keydown", enableSound, { once: true });
-
     const onMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
@@ -31,22 +23,19 @@ export default function CustomCursor() {
       }
     };
 
-    let currentHoverEl: Element | null = null;
     const onOver = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       const hoverEl = target.closest("a, button, [data-cursor-hover]");
       if (hoverEl) {
         ringRef.current?.classList.add("cursor-hover");
-        if (hoverEl !== currentHoverEl && soundEnabled) playHoverTick();
-        currentHoverEl = hoverEl;
+        dotRef.current?.classList.add("cursor-hover");
       } else {
         ringRef.current?.classList.remove("cursor-hover");
-        currentHoverEl = null;
+        dotRef.current?.classList.remove("cursor-hover");
       }
     };
 
     const onDown = () => {
-      if (soundEnabled) playClickTick();
       dotRef.current?.classList.add("cursor-pressed");
       ringRef.current?.classList.add("cursor-pressed");
     };
@@ -78,8 +67,6 @@ export default function CustomCursor() {
       window.removeEventListener("mouseover", onOver);
       window.removeEventListener("mousedown", onDown);
       window.removeEventListener("mouseup", onUp);
-      window.removeEventListener("pointerdown", enableSound);
-      window.removeEventListener("keydown", enableSound);
       cancelAnimationFrame(raf);
     };
   }, []);

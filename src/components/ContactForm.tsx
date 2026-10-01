@@ -12,12 +12,12 @@ const SERVICES = [
   "Speed & CRO Optimization",
 ];
 
-export default function ContactForm({ defaultEmail = "" }: { defaultEmail?: string }) {
+export default function ContactForm({ defaultEmail = "", requestedPlan }: { defaultEmail?: string; requestedPlan?: string }) {
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [budget, setBudget] = useState(BUDGETS[0]);
-  const [service, setService] = useState(SERVICES[0]);
+  const [budget, setBudget] = useState(requestedPlan ? "" : BUDGETS[0]);
+  const [service, setService] = useState(requestedPlan ? "Agency plan enquiry" : SERVICES[0]);
   const [name, setName] = useState("");
   const [email, setEmail] = useState(defaultEmail);
   const [company, setCompany] = useState("");
@@ -33,7 +33,7 @@ export default function ContactForm({ defaultEmail = "" }: { defaultEmail?: stri
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, company, budget, service, message, website }),
+        body: JSON.stringify({ name, email, company, budget, service, message: requestedPlan ? `Agency plan: ${requestedPlan}\n\n${message}` : message, website }),
       });
 
       const data = await res.json();
@@ -71,6 +71,11 @@ export default function ContactForm({ defaultEmail = "" }: { defaultEmail?: stri
 
   return (
     <form onSubmit={handleSubmit} className="relative space-y-8">
+      {requestedPlan && (
+        <p className="rounded-xl border border-red/20 bg-red/5 px-4 py-3 text-sm text-black/75">
+          Selected plan: <strong className="text-black">{requestedPlan}</strong>. Tell us about your project to get a private quote.
+        </p>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <Field label="Full name" required>
           <input
@@ -144,7 +149,7 @@ export default function ContactForm({ defaultEmail = "" }: { defaultEmail?: stri
 
       <Field label="What do you need help with?">
         <div className="flex flex-wrap gap-2 pt-2">
-          {SERVICES.map((s) => (
+          {(requestedPlan ? ["Agency plan enquiry", ...SERVICES] : SERVICES).map((s) => (
             <button
               key={s}
               type="button"

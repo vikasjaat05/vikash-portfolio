@@ -31,10 +31,15 @@ export default function ServicesPage() {
     <>
       <Navbar />
       <main className="relative">
-        <ServicesVideoHero />
-        <TrustBar />
+        <FadeSection isTop disableY>
+          <ServicesVideoHero />
+        </FadeSection>
 
-        <section className="px-6 md:px-10 pb-28 md:pb-36">
+        <FadeSection fadeOffset={0.1}>
+          <TrustBar />
+        </FadeSection>
+
+        <section id="services-list" className="px-6 md:px-10 pb-28 md:pb-36">
           <div className="max-w-[1400px] mx-auto divide-y divide-black/10 border-t border-b border-black/10">
             {SERVICES.map((service) => (
               <FadeSection key={service.index}>
@@ -44,7 +49,9 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <CTA />
+        <FadeSection fadeOffset={0.12} disableExit={true}>
+          <CTA />
+        </FadeSection>
       </main>
       <Footer />
     </>

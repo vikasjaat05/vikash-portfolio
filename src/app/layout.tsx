@@ -123,10 +123,12 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
         <JsonLd />
       </head>
-      <body className="min-h-full flex flex-col bg-[#faf8f5] text-[#0a0a0a]">
+      <body className={`min-h-full max-w-[100vw] overflow-x-clip flex flex-col bg-[#faf8f5] text-[#0a0a0a] ${process.env.NODE_ENV === "development" ? "theme-agency-local" : ""}`}>
         <div className="noise" />
         <SiteChrome>{children}</SiteChrome>
       </body>

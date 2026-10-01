@@ -7,13 +7,13 @@ const contentSecurityPolicy = [
   "form-action 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' 'wasm-unsafe-eval' blob: data: https://www.youtube.com https://s.ytimg.com https://unpkg.com",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob: https://images.higgs.ai https://pub-f170a2592d2c4a1485466404c36807be.r2.dev https://shrug-person-78902957.figma.site https://motionsites.ai https://api.dicebear.com https://res.cloudinary.com https://i.ytimg.com",
+  "img-src 'self' data: blob: https://images.unsplash.com https://images.higgs.ai https://pub-f170a2592d2c4a1485466404c36807be.r2.dev https://shrug-person-78902957.figma.site https://motionsites.ai https://api.dicebear.com https://res.cloudinary.com https://i.ytimg.com",
   "media-src 'self' https: blob: data:",
   "connect-src 'self' https://www.youtube.com https://unpkg.com https://lottie.host https://api.elevenlabs.io wss://api.elevenlabs.io blob: data:",
   "worker-src 'self' blob: data:",
   "child-src 'self' blob: https://tech1-six.vercel.app https://*.vercel.app",
   "frame-src 'self' https://www.youtube.com https://tech1-six.vercel.app https://*.vercel.app",
-  "font-src 'self' data:",
+  "font-src 'self' data: https://fonts.gstatic.com",
 ].join("; ");
 
 const pageSecurityHeaders = [
@@ -29,7 +29,9 @@ const pageSecurityHeaders = [
 const nextConfig: NextConfig = {
   devIndicators: false,
   images: {
+    qualities: [75, 95],
     remotePatterns: [
+      { protocol: "https", hostname: "images.unsplash.com" },
       { protocol: "https", hostname: "images.higgs.ai" },
       { protocol: "https", hostname: "pub-f170a2592d2c4a1485466404c36807be.r2.dev" },
       { protocol: "https", hostname: "shrug-person-78902957.figma.site" },

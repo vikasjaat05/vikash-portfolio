@@ -8,7 +8,6 @@ import {
   ALL_CURRENCIES, 
   CurrencyCode 
 } from "./CartContext";
-import { soundFX } from "@/lib/ui-sounds";
 
 export default function StoreControlBar() {
   const { 
@@ -55,7 +54,6 @@ export default function StoreControlBar() {
       <button
         type="button"
         onClick={() => {
-          soundFX.playOpenChime();
           setIsCountryModalOpen(true);
         }}
         data-cursor-hover
@@ -76,7 +74,6 @@ export default function StoreControlBar() {
         <button
           type="button"
           onClick={() => {
-            soundFX.playOpenChime();
             setCurrOpen((prev) => !prev);
             setCurrSearch("");
           }}

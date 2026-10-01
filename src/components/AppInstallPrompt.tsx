@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { Download, X, Smartphone, CheckCircle2, Share2, PlusSquare, Sparkles } from "lucide-react";
+import { Download, X, Share2, PlusSquare } from "lucide-react";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -13,35 +13,12 @@ interface BeforeInstallPromptEvent extends Event {
 export default function AppInstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
+  const [isIOS] = useState(() => typeof navigator !== "undefined" && /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase()));
   const [showIOSGuide, setShowIOSGuide] = useState(false);
-  const [installed, setInstalled] = useState(false);
+  const [installed, setInstalled] = useState(() => typeof window !== "undefined" && (window.matchMedia("(display-mode: standalone)").matches || (window.navigator as unknown as { standalone?: boolean }).standalone === true));
 
   useEffect(() => {
-    // Check if already installed (standalone mode)
-    if (typeof window !== "undefined") {
-      const isStandalone =
-        window.matchMedia("(display-mode: standalone)").matches ||
-        (window.navigator as unknown as { standalone?: boolean }).standalone === true;
-
-      if (isStandalone) {
-        setInstalled(true);
-        return;
-      }
-
-      // Detect iOS Safari
-      const ua = window.navigator.userAgent.toLowerCase();
-      const isIosDevice = /iphone|ipad|ipod/.test(ua);
-      setIsIOS(isIosDevice);
-
-      // Check if user dismissed prompt recently (within last 3 days)
-      const dismissedAt = localStorage.getItem("app_prompt_dismissed_at");
-      if (dismissedAt) {
-        const timeDiff = Date.now() - parseInt(dismissedAt, 10);
-        if (timeDiff < 3 * 24 * 60 * 60 * 1000) {
-          return; // Skip prompt
-        }
-      }
+    if (!installed) {
 
       // Listen for Android/Desktop PWA beforeinstallprompt
       const handleBeforeInstallPrompt = (e: Event) => {
@@ -51,23 +28,23 @@ export default function AppInstallPrompt() {
 
       window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
 
-      // Show popup after 3.5 seconds
-      const timer = setTimeout(() => {
-        setShowPrompt(true);
-      }, 3500);
+      const handleInstallRequest = () => setShowPrompt(true);
+      window.addEventListener("show-app-install", handleInstallRequest);
 
-      window.addEventListener("appinstalled", () => {
+      const handleInstalled = () => {
         setInstalled(true);
         setShowPrompt(false);
         setDeferredPrompt(null);
-      });
+      };
+      window.addEventListener("appinstalled", handleInstalled);
 
       return () => {
         window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-        clearTimeout(timer);
+        window.removeEventListener("show-app-install", handleInstallRequest);
+        window.removeEventListener("appinstalled", handleInstalled);
       };
     }
-  }, []);
+  }, [installed]);
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -160,9 +137,6 @@ export default function AppInstallPrompt() {
                   <div className="flex items-center gap-1.5 mb-0.5">
                     <span className="text-[10px] font-mono font-bold tracking-wider uppercase text-red bg-red/10 px-2 py-0.5 rounded-full border border-red/20">
                       Official App
-                    </span>
-                    <span className="text-[10px] text-white/50 flex items-center gap-0.5">
-                      <Sparkles size={10} className="text-amber-400" /> 4.9 ★
                     </span>
                   </div>
                   <h3 className="text-sm font-bold text-white tracking-tight leading-tight">
