@@ -18,8 +18,8 @@ export default function FadeSection({
   children,
   className = "",
   disableY = false,
-  fadeOffset = 0.1,
-  disableExit = false,
+  fadeOffset = 0.08,
+  disableExit = true,
   isTop = false,
   thresholds,
 }: FadeSectionProps) {
@@ -31,11 +31,11 @@ export default function FadeSection({
   });
 
   // For top/hero sections: start fully visible at scroll 0, fade out smoothly on exit
-  const topRange = [0, 0.5, 0.95];
+  const topRange = [0, 0.6, 1];
   const topOpacityValues = [1, 1, 0];
-  const topYValues = disableY ? [0, 0, 0] : [0, 0, -24];
+  const topYValues = disableY ? [0, 0, 0] : [0, 0, -20];
 
-  // For mid/bottom sections: fade in on entry from bottom, fade out on exit towards top
+  // For mid/bottom sections: fade in on entry from bottom smoothly, keep stable once entered
   const standardRange = thresholds || (disableExit
     ? [0, fadeOffset, 1, 1]
     : [0, fadeOffset, 1 - fadeOffset, 1]);
@@ -44,8 +44,8 @@ export default function FadeSection({
   const standardYValues = disableY
     ? [0, 0, 0, 0]
     : disableExit
-    ? [24, 0, 0, 0]
-    : [24, 0, 0, -24];
+    ? [20, 0, 0, 0]
+    : [20, 0, 0, -20];
 
   const range = isTop ? topRange : standardRange;
   const opacityValues = isTop ? topOpacityValues : standardOpacityValues;
@@ -60,7 +60,6 @@ export default function FadeSection({
       style={{
         opacity,
         ...(disableY ? {} : { y }),
-        willChange: "opacity, transform",
       }}
       className={className}
     >

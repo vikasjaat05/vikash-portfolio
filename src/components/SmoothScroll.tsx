@@ -9,9 +9,10 @@ export default function SmoothScroll({ ready = true }: { ready?: boolean }) {
 
   useEffect(() => {
     const lenis = new Lenis({
-      duration: 1.1,
+      duration: 0.9,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: false,
     });
     lenisRef.current = lenis;
     setLenisInstance(lenis);
@@ -23,11 +24,16 @@ export default function SmoothScroll({ ready = true }: { ready?: boolean }) {
     }
     raf = requestAnimationFrame(tick);
 
-    const resizeObserver = new ResizeObserver(() => lenis.resize());
+    let resizeTimer: number | null = null;
+    const resizeObserver = new ResizeObserver(() => {
+      if (resizeTimer !== null) cancelAnimationFrame(resizeTimer);
+      resizeTimer = requestAnimationFrame(() => {
+        lenis.resize();
+        resizeTimer = null;
+      });
+    });
     resizeObserver.observe(document.body);
 
-    // Belt-and-suspenders: body height can also change from late-loading fonts
-    // or media without firing another observed resize in time for the next scroll.
     document.fonts?.ready.then(() => lenis.resize());
     window.addEventListener("load", () => lenis.resize());
 

@@ -93,7 +93,8 @@ export default function Navbar() {
   // Detect scroll state for dynamic compact glass appearance
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 24);
+      const isScrolled = window.scrollY > 24;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
     };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });

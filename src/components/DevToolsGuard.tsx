@@ -114,21 +114,6 @@ export default function DevToolsGuard() {
       }
     };
 
-    // 5. Production Debugger Check (Non-destructive, production-only)
-    let debuggerInterval: NodeJS.Timeout | null = null;
-    if (process.env.NODE_ENV === "production") {
-      debuggerInterval = setInterval(() => {
-        const start = performance.now();
-        // eslint-disable-next-line no-debugger
-        debugger;
-        const duration = performance.now() - start;
-        if (duration > 150) {
-          // DevTools was paused on debugger
-          showSecurityAlert("Debugger detected: Protected Environment.");
-        }
-      }, 3500);
-    }
-
     document.addEventListener("keydown", handleKeyDown, { capture: true });
     document.addEventListener("contextmenu", handleContextMenu);
     document.addEventListener("dragstart", handleDragStart);
@@ -137,7 +122,6 @@ export default function DevToolsGuard() {
       document.removeEventListener("keydown", handleKeyDown, { capture: true });
       document.removeEventListener("contextmenu", handleContextMenu);
       document.removeEventListener("dragstart", handleDragStart);
-      if (debuggerInterval) clearInterval(debuggerInterval);
     };
   }, []);
 

@@ -21,36 +21,53 @@ export default function MusicCursorToggle({
     let x = 0;
     let y = 0;
     let raf = 0;
+    let isCurrentlyOverInteractive = false;
+    let rect = target.getBoundingClientRect();
+
+    const updateRect = () => {
+      if (target) rect = target.getBoundingClientRect();
+    };
+    window.addEventListener("resize", updateRect, { passive: true });
+    window.addEventListener("scroll", updateRect, { passive: true });
 
     const onMove = (e: MouseEvent) => {
-      const rect = target.getBoundingClientRect();
       mouseX = e.clientX - rect.left;
       mouseY = e.clientY - rect.top;
 
-      const overInteractive = (e.target as HTMLElement)?.closest(
-        "a, button, [data-cursor-hover], input, textarea"
+      const overInteractive = Boolean(
+        (e.target as HTMLElement)?.closest(
+          "a, button, [data-cursor-hover], input, textarea"
+        )
       );
-      setVisible(!overInteractive);
+      if (overInteractive !== isCurrentlyOverInteractive) {
+        isCurrentlyOverInteractive = overInteractive;
+        setVisible(!overInteractive);
+      }
     };
 
     const onLeave = () => setVisible(false);
-    const onEnter = () => setVisible(true);
+    const onEnter = () => {
+      rect = target.getBoundingClientRect();
+      setVisible(true);
+    };
 
     const animate = () => {
       x += (mouseX - x) * 0.22;
       y += (mouseY - y) * 0.22;
       if (labelRef.current) {
-        labelRef.current.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+        labelRef.current.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) translate(-50%, -50%)`;
       }
       raf = requestAnimationFrame(animate);
     };
 
-    target.addEventListener("mousemove", onMove);
-    target.addEventListener("mouseleave", onLeave);
-    target.addEventListener("mouseenter", onEnter);
+    target.addEventListener("mousemove", onMove, { passive: true });
+    target.addEventListener("mouseleave", onLeave, { passive: true });
+    target.addEventListener("mouseenter", onEnter, { passive: true });
     raf = requestAnimationFrame(animate);
 
     return () => {
+      window.removeEventListener("resize", updateRect);
+      window.removeEventListener("scroll", updateRect);
       target.removeEventListener("mousemove", onMove);
       target.removeEventListener("mouseleave", onLeave);
       target.removeEventListener("mouseenter", onEnter);

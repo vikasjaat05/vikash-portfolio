@@ -10,9 +10,12 @@ export default function PortfolioNavbar() {
   const [active, setActive] = useState("#home");
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 100);
+    const onScroll = () => {
+      const isScrolled = window.scrollY > 100;
+      setScrolled((prev) => (prev !== isScrolled ? isScrolled : prev));
+    };
     onScroll();
-    window.addEventListener("scroll", onScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 

@@ -222,7 +222,7 @@ h4,
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto !important;
 }
 
 body {
@@ -267,22 +267,21 @@ h4,
   pointer-events: none;
   z-index: 9999;
   border-radius: 50%;
-  transform: translate(-50%, -50%);
+  will-change: transform;
 }
 
 .cursor-dot {
   width: 6px;
   height: 6px;
   background: var(--red);
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  transition: opacity 0.2s ease;
 }
 
 .cursor-dot.cursor-pressed {
-  transform: translate(-50%, -50%) scale(0.5);
+  opacity: 0.6;
 }
 
 .cursor-dot.cursor-hover {
-  transform: translate(-50%, -50%) scale(0);
   opacity: 0;
 }
 
@@ -291,12 +290,11 @@ h4,
   height: 34px;
   border: 1.5px solid rgba(225, 6, 0, 0.45);
   box-shadow: 0 0 0 0 rgba(225, 6, 0, 0);
-  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    border-color 0.3s ease,
-    background 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    height 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .cursor-ring.cursor-hover {
@@ -660,38 +658,35 @@ h4,
 }
 
 @keyframes drift-a {
-
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate(6vw, 8vh) scale(1.12);
+    transform: translate3d(6vw, 8vh, 0) scale(1.12);
   }
 }
 
 @keyframes drift-b {
-
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate(-7vw, -6vh) scale(1.08);
+    transform: translate3d(-7vw, -6vh, 0) scale(1.08);
   }
 }
 
 @keyframes drift-c {
-
   0%,
   100% {
-    transform: translate(0, 0) scale(1);
+    transform: translate3d(0, 0, 0) scale(1);
   }
 
   50% {
-    transform: translate(-5vw, 7vh) scale(1.15);
+    transform: translate3d(-5vw, 7vh, 0) scale(1.15);
   }
 }
 

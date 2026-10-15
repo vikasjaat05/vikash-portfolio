@@ -87,8 +87,8 @@ export default function TechBlackHole() {
         {OUTER_ORBIT.map((tech) => {
           const rad = (tech.angle * Math.PI) / 180;
           const radius = 170; // 340px / 2 (responsive via CSS transform)
-          const x = Math.cos(rad) * radius;
-          const y = Math.sin(rad) * radius;
+          const x = (Math.cos(rad) * radius).toFixed(2);
+          const y = (Math.sin(rad) * radius).toFixed(2);
 
           return (
             <div
@@ -121,8 +121,8 @@ export default function TechBlackHole() {
         {MIDDLE_ORBIT.map((tech) => {
           const rad = (tech.angle * Math.PI) / 180;
           const radius = 120; // 240px / 2
-          const x = Math.cos(rad) * radius;
-          const y = Math.sin(rad) * radius;
+          const x = (Math.cos(rad) * radius).toFixed(2);
+          const y = (Math.sin(rad) * radius).toFixed(2);
 
           return (
             <div
@@ -154,8 +154,8 @@ export default function TechBlackHole() {
         {INNER_ORBIT.map((tech) => {
           const rad = (tech.angle * Math.PI) / 180;
           const radius = 75; // 150px / 2
-          const x = Math.cos(rad) * radius;
-          const y = Math.sin(rad) * radius;
+          const x = (Math.cos(rad) * radius).toFixed(2);
+          const y = (Math.sin(rad) * radius).toFixed(2);
 
           return (
             <div

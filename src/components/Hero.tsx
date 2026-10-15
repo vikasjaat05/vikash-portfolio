@@ -92,6 +92,12 @@ export default function Hero() {
     const render = () => {
       if (!isRunning) return;
 
+      // Skip heavy calculations when hero is scrolled out of viewport
+      if (typeof window !== "undefined" && window.scrollY > (sectionRef.current?.offsetHeight || 900) + 100) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
       const w = window.innerWidth;
       const h = window.innerHeight;
       const isMobile = w < 1024;
