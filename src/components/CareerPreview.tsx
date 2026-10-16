@@ -3,19 +3,19 @@ import { ArrowUpRight } from "lucide-react";
 
 const roles = [
   {
-    company: "Flâneur Global",
+    company: "Flaneur Global Silver & Gold, Jaipur",
     role: "Frontend & E-commerce Developer",
-    period: "2025 — Present",
+    period: "Jun 2025 — Present",
   },
   {
     company: "Digital Heroes",
-    role: "Shopify Developer",
-    period: "2025",
+    role: "Shopify Developer (Part-time)",
+    period: "Mar 2026 — Aug 2026",
   },
   {
-    company: "Qudrat Studio",
-    role: "Web Development & Digital Optimization",
-    period: "2025",
+    company: "Qudrat Studio, Jaipur",
+    role: "Web Developer",
+    period: "Jan 2025 — Jun 2025",
   },
 ];
 
